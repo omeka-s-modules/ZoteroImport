@@ -15,6 +15,61 @@ class Import extends AbstractJob
     const BASE_URL = 'https://api.zotero.org';
 
     /**
+     * Cache of selected Omeka resource classes
+     *
+     * @var array
+     */
+    protected $resourceClasses = array(
+        'dcterms' => array(),
+        'dctype' => array(),
+        'bibo' => array(),
+    );
+
+    /**
+     * Priority map between Zotero item types and Omeka resource classes
+     *
+     * @var array
+     */
+    protected $itemTypeMap = array(
+        'artwork'             => array('bibo' => 'Image'),
+        //'attachment'          => 'z:Attachment',
+        'audioRecording'      => array('bibo' => 'AudioDocument'),
+        'bill'                => array('bibo' => 'Bill'),
+        'blogPost'            => array('bibo' => 'Article'),
+        'book'                => array('bibo' => 'Book'),
+        'bookSection'         => array('bibo' => 'BookSection'),
+        'case'                => array('bibo' => 'LegalCaseDocument'),
+        'computerProgram'     => array('bibo' => 'Document'),
+        'conferencePaper'     => array('bibo' => 'Article'),
+        'dictionaryEntry'     => array('bibo' => 'Article'),
+        'document'            => array('bibo' => 'Document'),
+        'email'               => array('bibo' => 'Email'),
+        'encyclopediaArticle' => array('bibo' => 'Article'),
+        'film'                => array('bibo' => 'Film'),
+        'forumPost'           => array('bibo' => 'Article'),
+        'hearing'             => array('bibo' => 'Hearing'),
+        'instantMessage'      => array('bibo' => 'PersonalCommunication'),
+        'interview'           => array('bibo' => 'Interview'),
+        'journalArticle'      => array('bibo' => 'AcademicArticle'),
+        'letter'              => array('bibo' => 'Letter'),
+        'magazineArticle'     => array('bibo' => 'Article'),
+        'manuscript'          => array('bibo' => 'Manuscript'),
+        'map'                 => array('bibo' => 'Map'),
+        'newspaperArticle'    => array('bibo' => 'Article'),
+        'note'                => array('bibo' => 'Note'),
+        'patent'              => array('bibo' => 'Patent'),
+        'podcast'             => array('bibo' => 'AudioDocument'),
+        'presentation'        => array('bibo' => 'Slideshow'),
+        'radioBroadcast'      => array('bibo' => 'AudioDocument'),
+        'report'              => array('bibo' => 'Report'),
+        'statute'             => array('bibo' => 'Statute'),
+        'tvBroadcast'         => array('bibo' => 'AudioVisualDocument'),
+        'thesis'              => array('bibo' => 'Thesis'),
+        'videoRecording'      => array('bibo' => 'AudioVisualDocument'),
+        'webpage'             => array('bibo' => 'Webpage'),
+    );
+
+    /**
      * Perform the import.
      */
     public function perform()
@@ -22,7 +77,13 @@ class Import extends AbstractJob
         $client = $this->getClient();
         $uri = $this->getFirstUri();
 
-        // @todo create omeka item set
+        $this->cacheResourceClasses();
+
+        $api = $this->getServiceLocator()->get('Omeka\ApiManager');
+        //$log = $this->getServiceLocator()->get('Omeka\Logger');
+
+        $itemSetData = array();
+        $itemSet = $api->create('item_sets')->getContent();
 
         do {
             $request = new Request;
@@ -36,13 +97,21 @@ class Import extends AbstractJob
                 ));
             }
 
-            $items = json_decode($response->getBody(), true);
-            if (!is_array($items)) {
+            $zoteroItems = json_decode($response->getBody(), true);
+            if (!is_array($zoteroItems)) {
                 return;
             }
-            foreach ($items as $item) {
-                // @todo map zotero item to omeka item, assign to item set
+
+            $omekaItems = array();
+            foreach ($zoteroItems as $zoteroItem) {
+                $omekaItem = array();
+                $omekaItem['o:item_set'] = array(array('o:id' => $itemSet->id()));
+                $omekaItem = $this->setResourceClass($zoteroItem, $omekaItem);
+                $omekaItems[] = $omekaItem;
             }
+
+            $api->batchCreate('items', $omekaItems);
+            //$log->info(memory_get_usage());
 
         } while ($uri = $this->getLink($response, 'next'));
     }
@@ -125,5 +194,53 @@ class Import extends AbstractJob
             return null;
         }
         return $matches[1][$key];
+    }
+
+    /**
+     * Cache data about selected resource classes.
+     */
+    public function cacheResourceClasses()
+    {
+        $api = $this->getServiceLocator()->get('Omeka\ApiManager');
+
+        $cacheClasses = array(
+            'dcterms' => 'http://purl.org/dc/terms/',
+            'dctype'  => 'http://purl.org/dc/dcmitype/',
+            'bibo'    => 'http://purl.org/ontology/bibo/',
+        );
+
+        foreach ($cacheClasses as $prefix => $namespaceUri) {
+            $classes = $api->search('resource_classes', array(
+                'vocabulary_namespace_uri' => $namespaceUri,
+            ))->getContent();
+            foreach ($classes as $class) {
+                $this->resourceClasses[$prefix][$class->localName()] = $class;
+            }
+        }
+    }
+
+    /**
+     * Set the mapped resource class to the Omeka item data.
+     *
+     * @param array $zoteroItem The Zotero item data
+     * @param array $omekaItem The Omeka item data
+     */
+    public function setResourceClass(array $zoteroItem, array $omekaItem)
+    {
+        $type = $zoteroItem['data']['itemType'];
+        if (!isset($this->itemTypeMap[$type])) {
+            // The Zotero item type has no mapping.
+            return $omekaItem;
+        }
+        foreach ($this->itemTypeMap[$type] as $prefix => $localName) {
+            if (isset($this->resourceClasses[$prefix][$localName])) {
+                // There was a match.
+                $class = $this->resourceClasses[$prefix][$localName];
+                $omekaItem['o:resource_class'] = array('o:id' => $class->id());
+                return $omekaItem;
+            }
+        }
+        // There was no match.
+        return $omekaItem;
     }
 }
