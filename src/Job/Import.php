@@ -59,7 +59,6 @@ class Import extends AbstractJob
         $this->cacheResourceClasses();
 
         $api = $this->getServiceLocator()->get('Omeka\ApiManager');
-        //$log = $this->getServiceLocator()->get('Omeka\Logger');
 
         $itemSetData = array();
         $itemSet = $api->create('item_sets')->getContent();
@@ -89,8 +88,10 @@ class Import extends AbstractJob
                 $omekaItems[] = $omekaItem;
             }
 
-            $api->batchCreate('items', $omekaItems);
-            //$log->info(memory_get_usage());
+            $batchCreate = $api->batchCreate('items', $omekaItems);
+            if ($batchCreate->isError()) {
+                throw new Exception\RuntimeException('There was an error during batch creation');
+            }
 
         } while ($uri = $this->getLink($response, 'next'));
     }
