@@ -10,9 +10,25 @@ use Zend\Http\Response;
 class Import extends AbstractJob
 {
     /**
-     * The Zotero API base URL
+     * Zotero API base URL.
      */
     const BASE_URL = 'https://api.zotero.org';
+
+    /**
+     * Zotero API result limit.
+     */
+    const LIMIT = 100;
+
+    /**
+     * Vocabularies to cache.
+     *
+     * @var array
+     */
+    protected $vocabularies = array(
+        'dcterms' => 'http://purl.org/dc/terms/',
+        'dctype'  => 'http://purl.org/dc/dcmitype/',
+        'bibo'    => 'http://purl.org/ontology/bibo/',
+    );
 
     /**
      * Cache of selected Omeka resource classes
@@ -21,8 +37,19 @@ class Import extends AbstractJob
      */
     protected $resourceClasses = array(
         'dcterms' => array(),
-        'dctype' => array(),
-        'bibo' => array(),
+        'dctype'  => array(),
+        'bibo'    => array(),
+    );
+
+    /**
+     * Cache of selected Omeka properties
+     *
+     * @var array
+     */
+    protected $properties = array(
+        'dcterms' => array(),
+        'dctype'  => array(),
+        'bibo'    => array(),
     );
 
     /**
@@ -40,15 +67,6 @@ class Import extends AbstractJob
     protected $itemFieldMap = array();
 
     /**
-     * Set the priority maps.
-     */
-    public function __construct()
-    {
-        $this->itemTypeMap = require __DIR__ . '/item_type_map.php';
-        $this->itemFieldMap = require __DIR__ . '/item_field_map.php';
-    }
-
-    /**
      * Perform the import.
      */
     public function perform()
@@ -57,6 +75,10 @@ class Import extends AbstractJob
         $uri = $this->getFirstUri();
 
         $this->cacheResourceClasses();
+        $this->cacheProperties();
+
+        $this->itemTypeMap = require __DIR__ . '/item_type_map.php';
+        $this->itemFieldMap = require __DIR__ . '/item_field_map.php';
 
         $api = $this->getServiceLocator()->get('Omeka\ApiManager');
 
@@ -85,12 +107,18 @@ class Import extends AbstractJob
                 $omekaItem = array();
                 $omekaItem['o:item_set'] = array(array('o:id' => $itemSet->id()));
                 $omekaItem = $this->setResourceClass($zoteroItem, $omekaItem);
+                $omekaItem = $this->setValues($zoteroItem, $omekaItem);
                 $omekaItems[] = $omekaItem;
             }
 
             $batchCreate = $api->batchCreate('items', $omekaItems);
             if ($batchCreate->isError()) {
                 throw new Exception\RuntimeException('There was an error during batch creation');
+            }
+
+            if ($this->shouldStop()) {
+                // @todo consider performing cleanup before stopping
+                break;
             }
 
         } while ($uri = $this->getLink($response, 'next'));
@@ -144,7 +172,7 @@ class Import extends AbstractJob
             $path = '/items/top';
         }
 
-        return sprintf('%s%s%s', self::BASE_URL, $prefix, $path);
+        return sprintf('%s%s%s?limit=%s', self::BASE_URL, $prefix, $path, self::LIMIT);
     }
 
     /**
@@ -177,19 +205,12 @@ class Import extends AbstractJob
     }
 
     /**
-     * Cache data about selected resource classes.
+     * Cache selected resource classes.
      */
     public function cacheResourceClasses()
     {
         $api = $this->getServiceLocator()->get('Omeka\ApiManager');
-
-        $cacheClasses = array(
-            'dcterms' => 'http://purl.org/dc/terms/',
-            'dctype'  => 'http://purl.org/dc/dcmitype/',
-            'bibo'    => 'http://purl.org/ontology/bibo/',
-        );
-
-        foreach ($cacheClasses as $prefix => $namespaceUri) {
+        foreach ($this->vocabularies as $prefix => $namespaceUri) {
             $classes = $api->search('resource_classes', array(
                 'vocabulary_namespace_uri' => $namespaceUri,
             ))->getContent();
@@ -200,10 +221,27 @@ class Import extends AbstractJob
     }
 
     /**
+     * Cache selected properties.
+     */
+    public function cacheProperties()
+    {
+        $api = $this->getServiceLocator()->get('Omeka\ApiManager');
+        foreach ($this->vocabularies as $prefix => $namespaceUri) {
+            $properties = $api->search('properties', array(
+                'vocabulary_namespace_uri' => $namespaceUri,
+            ))->getContent();
+            foreach ($properties as $property) {
+                $this->properties[$prefix][$property->localName()] = $property;
+            }
+        }
+    }
+
+    /**
      * Set the mapped resource class to the Omeka item data.
      *
      * @param array $zoteroItem The Zotero item data
      * @param array $omekaItem The Omeka item data
+     * @return array
      */
     public function setResourceClass(array $zoteroItem, array $omekaItem)
     {
@@ -221,6 +259,18 @@ class Import extends AbstractJob
             }
         }
         // There was no match.
+        return $omekaItem;
+    }
+
+    /**
+     * Set the mapped property values to the Omeka item data.
+     *
+     * @param array $zoteroItem The Zotero item data
+     * @param array $omekaItem The Omeka item data
+     * @return array
+     */
+    public function setValues(array $zoteroItem, array $omekaItem)
+    {
         return $omekaItem;
     }
 }
