@@ -60,7 +60,7 @@ class Import extends AbstractJob
     protected $itemTypeMap = array();
 
     /**
-     * Priority map between Zotero item fields and Omeka properties
+     * Map between Zotero item fields and Omeka properties
      *
      * @var array
      */
@@ -83,7 +83,7 @@ class Import extends AbstractJob
         $api = $this->getServiceLocator()->get('Omeka\ApiManager');
 
         $itemSetData = array();
-        $itemSet = $api->create('item_sets')->getContent();
+        $itemSet = $api->create('item_sets', $itemSetData)->getContent();
 
         do {
             $request = new Request;
@@ -271,6 +271,23 @@ class Import extends AbstractJob
      */
     public function setValues(array $zoteroItem, array $omekaItem)
     {
+        foreach ($zoteroItem['data'] as $key => $value) {
+            if (!$value) {
+                continue;
+            }
+            if (!isset($this->itemFieldMap[$key])) {
+                continue;
+            }
+            foreach ($this->itemFieldMap[$key] as $prefix => $localName) {
+                if (isset($this->properties[$prefix][$localName])) {
+                    $property = $this->properties[$prefix][$localName];
+                    $omekaItem[$property->term()][] = array(
+                        '@value' => $value,
+                        'property_id' => $property->id(),
+                    );
+                }
+            }
+        }
         return $omekaItem;
     }
 }

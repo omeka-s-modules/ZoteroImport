@@ -1,7 +1,7 @@
 <?php
 return array(
     'artwork'             => array('bibo' => 'Image'),
-    //'attachment'          => 'z:Attachment',
+    'attachment'          => array('bibo' => 'Document'),
     'audioRecording'      => array('bibo' => 'AudioDocument'),
     'bill'                => array('bibo' => 'Bill'),
     'blogPost'            => array('bibo' => 'Article'),
