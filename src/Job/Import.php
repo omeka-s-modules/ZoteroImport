@@ -282,10 +282,14 @@ class Import extends AbstractJob
             foreach ($this->itemFieldMap[$key] as $prefix => $localName) {
                 if (isset($this->properties[$prefix][$localName])) {
                     $property = $this->properties[$prefix][$localName];
-                    $omekaItem[$property->term()][] = array(
-                        '@value' => $value,
-                        'property_id' => $property->id(),
-                    );
+                    $valueObject = array();
+                    $valueObject['property_id'] = $property->id();
+                    if ('bibo' == $prefix && 'uri' == $localName) {
+                        $valueObject['@id'] = $value;
+                    } else {
+                        $valueObject['@value'] = $value;
+                    }
+                    $omekaItem[$property->term()][] = $valueObject;
                 }
             }
         }
