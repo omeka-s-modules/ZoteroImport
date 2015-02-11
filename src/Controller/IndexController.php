@@ -16,12 +16,8 @@ class IndexController extends AbstractActionController
             $form->setData($data);
             if ($form->isValid()) {
                 $dispatcher = $this->getServiceLocator()->get('Omeka\JobDispatcher');
-                $args = array(
-                    'type' => $this->params()->fromPost('type'),
-                    'id' => $this->params()->fromPost('id'),
-                    'collectionKey' => $this->params()->fromPost('collectionKey', null),
-                );
-                $dispatcher->dispatch('ZoteroImport\Job\Import', $args);
+                $dispatcher->dispatch('ZoteroImport\Job\Import', $form->getData());
+                $this->messenger()->addSuccess('Importing from Zotero');
             } else {
                 $this->messenger()->addError('There was an error during validation');
             }

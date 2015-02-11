@@ -4,8 +4,7 @@ namespace ZoteroImport\Job;
 use Omeka\Job\AbstractJob;
 use Omeka\Job\Exception;
 use Zend\Http\Client;
-use Zend\Http\Request;
-use Zend\Http\Response;
+use ZoteroImport\Http\ZoteroClient;
 
 class Import extends AbstractJob
 {
@@ -70,8 +69,12 @@ class Import extends AbstractJob
      */
     public function perform()
     {
-        $client = $this->getClient();
-        $uri = $this->getFirstUri();
+        $client = new ZoteroClient($this->getServiceLocator());
+        $uri = $client->getFirstUri(
+            $this->getArg('type'),
+            $this->getArg('id'),
+            $this->getArg('collectionKey')
+        );
 
         $this->cacheResourceClasses();
         $this->cacheProperties();
@@ -86,11 +89,7 @@ class Import extends AbstractJob
         $itemSet = $api->create('item_sets', $itemSetData)->getContent();
 
         do {
-            $request = new Request;
-            $request->setUri($uri);
-            $request->getHeaders()->addHeaderLine('Zotero-API-Version', '3');
-
-            $response = $client->send($request);
+            $response = $client->setUri($uri)->send();
             if (!$response->isSuccess()) {
                 throw new Exception\RuntimeException(sprintf(
                     'Requested "%s" got "%s"', $uri, $response->renderStatusLine()
@@ -123,87 +122,7 @@ class Import extends AbstractJob
                 break;
             }
 
-        } while ($uri = $this->getLink($response, 'next'));
-    }
-
-    /**
-     * Get the HTTP client.
-     *
-     * Uses the cURL adapter if the extension is loaded. Otherwise uses the
-     * default socket adapter, setting the sslcapath.
-     * 
-     * @see http://framework.zend.com/manual/current/en/modules/zend.http.client.html#connecting-to-ssl-urls
-     * @return Client
-     */
-    public function getClient()
-    {
-        $clientOptions = array();
-        if (extension_loaded('curl')) {
-            $clientOptions['adapter'] = 'Zend\Http\Client\Adapter\Curl';
-        } else {
-            $clientOptions['sslcapath'] = '/etc/ssl/certs';
-        }
-        return new Client(null, $clientOptions);
-    }
-
-    /**
-     * Get the URI for the first request.
-     *
-     * @return string
-     */
-    public function getFirstUri()
-    {
-        $id = $this->getArg('id');
-        if (!$id) {
-            throw new Exception\InvalidArgumentException('Invalid id');
-        }
-
-        $type = $this->getArg('type');
-        if ('user' == $type) {
-            $prefix = sprintf('/users/%s', $id);
-        } elseif ('group' == $type) {
-            $prefix = sprintf('/groups/%s', $id);
-        } else {
-            throw new Exception\InvalidArgumentException('Invalid library type');
-        }
-
-        $collectionKey = $this->getArg('collectionKey');
-        if ($collectionKey) {
-            $path = sprintf('/collections/%s/items/top', $collectionKey);
-        } else {
-            $path = '/items/top';
-        }
-
-        return sprintf('%s%s%s?limit=%s', self::BASE_URL, $prefix, $path, self::LIMIT);
-    }
-
-    /**
-     * Get a URI from the Link header.
-     *
-     * @param Response $response
-     * @param string $rel The relationship from the current document. Possible
-     * values are first, prev, next, last, alternate.
-     * @return string|null
-     */
-    public function getLink(Response $response, $rel)
-    {
-        $linkHeader = $response->getHeaders()->get('Link');
-        if (!$linkHeader) {
-            return null;
-        }
-        preg_match_all(
-            '/<([^>]+)>; rel="([^"]+)"/',
-            $linkHeader->getFieldValue(),
-            $matches
-        );
-        if (!$matches) {
-            return null;
-        }
-        $key = array_search($rel, $matches[2]);
-        if (false === $key) {
-            return null;
-        }
-        return $matches[1][$key];
+        } while ($uri = $client->getLink($response, 'next'));
     }
 
     /**
@@ -247,6 +166,9 @@ class Import extends AbstractJob
      */
     public function mapResourceClass(array $zoteroItem, array $omekaItem)
     {
+        if (!isset($zoteroItem['data']['itemType'])) {
+            return $omekaItem;
+        }
         $type = $zoteroItem['data']['itemType'];
         if (!isset($this->itemTypeMap[$type])) {
             return $omekaItem;
@@ -258,7 +180,6 @@ class Import extends AbstractJob
                 return $omekaItem;
             }
         }
-        // There was no match.
         return $omekaItem;
     }
 
@@ -271,6 +192,9 @@ class Import extends AbstractJob
      */
     public function mapValues(array $zoteroItem, array $omekaItem)
     {
+        if (!isset($zoteroItem['data'])) {
+            return $omekaItem;
+        }
         foreach ($zoteroItem['data'] as $key => $value) {
             if (!$value) {
                 continue;
@@ -304,6 +228,9 @@ class Import extends AbstractJob
      */
     public function mapNameValues(array $zoteroItem, array $omekaItem)
     {
+        if (!isset($zoteroItem['data']['creators'])) {
+            return $omekaItem;
+        }
         $creators = $zoteroItem['data']['creators'];
         foreach ($creators as $creator) {
             $creatorType = $creator['creatorType'];
@@ -346,6 +273,9 @@ class Import extends AbstractJob
      */
     public function mapSubjectValues(array $zoteroItem, array $omekaItem)
     {
+        if (!isset($zoteroItem['data']['tags'])) {
+            return $omekaItem;
+        }
         $tags = $zoteroItem['data']['tags'];
         foreach ($tags as $tag) {
             $property = $this->properties['dcterms']['subject'];
