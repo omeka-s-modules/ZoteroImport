@@ -35,22 +35,14 @@ class Import extends AbstractJob
      *
      * @var array
      */
-    protected $resourceClasses = array(
-        'dcterms' => array(),
-        'dctype'  => array(),
-        'bibo'    => array(),
-    );
+    protected $resourceClasses = array();
 
     /**
      * Cache of selected Omeka properties
      *
      * @var array
      */
-    protected $properties = array(
-        'dcterms' => array(),
-        'dctype'  => array(),
-        'bibo'    => array(),
-    );
+    protected $properties = array();
 
     /**
      * Priority map between Zotero item types and Omeka resource classes
@@ -67,6 +59,13 @@ class Import extends AbstractJob
     protected $itemFieldMap = array();
 
     /**
+     * Map between Zotero creator types and Omeka properties
+     *
+     * @var array
+     */
+    protected $creatorTypeMap = array();
+
+    /**
      * Perform the import.
      */
     public function perform()
@@ -79,6 +78,7 @@ class Import extends AbstractJob
 
         $this->itemTypeMap = require __DIR__ . '/item_type_map.php';
         $this->itemFieldMap = require __DIR__ . '/item_field_map.php';
+        $this->creatorTypeMap = require __DIR__ . '/creator_type_map.php';
 
         $api = $this->getServiceLocator()->get('Omeka\ApiManager');
 
@@ -107,6 +107,7 @@ class Import extends AbstractJob
                 $omekaItem = array();
                 $omekaItem['o:item_set'] = array(array('o:id' => $itemSet->id()));
                 $omekaItem = $this->setResourceClass($zoteroItem, $omekaItem);
+                $omekaItem = $this->setCreatorValues($zoteroItem, $omekaItem);
                 $omekaItem = $this->setValues($zoteroItem, $omekaItem);
                 $omekaItems[] = $omekaItem;
             }
@@ -263,7 +264,7 @@ class Import extends AbstractJob
     }
 
     /**
-     * Set the mapped property values to the Omeka item data.
+     * Set the mapped item fields to Omeka item values.
      *
      * @param array $zoteroItem The Zotero item data
      * @param array $omekaItem The Omeka item data
@@ -283,6 +284,48 @@ class Import extends AbstractJob
                     $property = $this->properties[$prefix][$localName];
                     $omekaItem[$property->term()][] = array(
                         '@value' => $value,
+                        'property_id' => $property->id(),
+                    );
+                }
+            }
+        }
+        return $omekaItem;
+    }
+
+    /**
+     * Set the mapped creator fields to Omeka item values.
+     *
+     * @param array $zoteroItem The Zotero item data
+     * @param array $omekaItem The Omeka item data
+     * @return array
+     */
+    public function setCreatorValues(array $zoteroItem, array $omekaItem)
+    {
+        $creators = $zoteroItem['data']['creators'];
+        foreach ($creators as $creator) {
+            $creatorType = $creator['creatorType'];
+            if (!isset($this->creatorTypeMap[$creatorType])) {
+                continue;
+            }
+            $name = array();
+            if (isset($creator['name'])) {
+                $name[] = $creator['name'];
+            }
+            if (isset($creator['firstName'])) {
+                $name[] = $creator['firstName'];
+            }
+            if (isset($creator['lastName'])) {
+                $name[] = $creator['lastName'];
+            }
+            if (!$name) {
+                continue;
+            }
+            $name = implode(' ', $name);
+            foreach ($this->creatorTypeMap[$creatorType] as $prefix => $localName) {
+                if (isset($this->properties[$prefix][$localName])) {
+                    $property = $this->properties[$prefix][$localName];
+                    $omekaItem[$property->term()][] = array(
+                        '@value' => $name,
                         'property_id' => $property->id(),
                     );
                 }
