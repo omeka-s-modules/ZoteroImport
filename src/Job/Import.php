@@ -100,6 +100,9 @@ class Import extends AbstractJob
 
             $omekaItems = array();
             foreach ($zoteroItems as $zoteroItem) {
+                if ('note' == $zoteroItem['data']['itemType']) {
+                    continue;
+                }
                 $omekaItem = array();
                 $omekaItem['o:item_set'] = array(array('o:id' => $itemSet->id()));
                 $omekaItem = $this->mapResourceClass($zoteroItem, $omekaItem);
