@@ -72,9 +72,6 @@ class Import extends AbstractJob
 
         $api = $this->getServiceLocator()->get('Omeka\ApiManager');
 
-        $itemSetData = array();
-        $itemSet = $api->create('item_sets', $itemSetData)->getContent();
-
         do {
             $response = $client->setUri($uri)->send();
             if (!$response->isSuccess()) {
@@ -85,7 +82,21 @@ class Import extends AbstractJob
 
             $zoteroItems = json_decode($response->getBody(), true);
             if (!is_array($zoteroItems)) {
-                return;
+                break;
+            }
+
+            if (!isset($itemSet)) {
+                $titleProperty = $this->properties['dcterms']['title'];
+                $creatorProperty = $this->properties['dcterms']['creator'];
+                $itemSetData = array(
+                    $titleProperty->term() => array(
+                        array(
+                            '@value' => $zoteroItems[0]['library']['name'],
+                            'property_id' => $titleProperty->id(),
+                        ),
+                    ),
+                );
+                $itemSet = $api->create('item_sets', $itemSetData)->getContent();
             }
 
             $omekaItems = array();
