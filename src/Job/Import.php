@@ -9,16 +9,6 @@ use ZoteroImport\Http\ZoteroClient;
 class Import extends AbstractJob
 {
     /**
-     * Zotero API base URL.
-     */
-    const BASE_URL = 'https://api.zotero.org';
-
-    /**
-     * Zotero API result limit.
-     */
-    const LIMIT = 100;
-
-    /**
      * Vocabularies to cache.
      *
      * @var array
