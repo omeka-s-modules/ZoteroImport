@@ -70,11 +70,8 @@ class Import extends AbstractJob
     public function perform()
     {
         $client = new ZoteroClient($this->getServiceLocator());
-        $uri = $client->getFirstUri(
-            $this->getArg('type'),
-            $this->getArg('id'),
-            $this->getArg('collectionKey')
-        );
+        $uri = $client->getFirstUri($this->getArg('type'), $this->getArg('id'),
+            $this->getArg('collectionKey'), 100);
 
         $this->cacheResourceClasses();
         $this->cacheProperties();

@@ -13,11 +13,6 @@ class ZoteroClient
     const BASE_URL = 'https://api.zotero.org';
 
     /**
-     * Zotero API result limit.
-     */
-    const LIMIT = 100;
-
-    /**
      * @var Client The HTTP client.
      */
     protected $client;
@@ -62,12 +57,17 @@ class ZoteroClient
      * @param string $type The Zotero library type, "user" or "group"
      * @param int $id The Zotero library identifier
      * @param string $collectionKey The Zotero collection key
+     * @param int $limit The Zotero API result limit
      * @return string
      */
-    public function getFirstUri($type, $id, $collectionKey = null)
+    public function getFirstUri($type, $id, $collectionKey = null, $limit = 100)
     {
         if (!is_numeric($id)) {
             throw new \InvalidArgumentException('Invalid Zotero library ID');
+        }
+
+        if (!is_numeric($limit)) {
+            throw new \InvalidArgumentException('Invalid Zotero API result limit');
         }
 
         if ('user' == $type) {
@@ -84,7 +84,7 @@ class ZoteroClient
             $path = '/items/top';
         }
 
-        return sprintf('%s%s%s?limit=%s', self::BASE_URL, $prefix, $path, self::LIMIT);
+        return sprintf('%s%s%s?limit=%s', self::BASE_URL, $prefix, $path, $limit);
     }
 
     /**
