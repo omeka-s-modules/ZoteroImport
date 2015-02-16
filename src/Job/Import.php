@@ -63,6 +63,14 @@ class Import extends AbstractJob
         $uri = $client->getFirstUri($this->getArg('type'), $this->getArg('id'),
             $this->getArg('collectionKey'), 100);
 
+        $api = $this->getServiceLocator()->get('Omeka\ApiManager');
+
+        $response = $api->read('item_sets', $this->getArg('itemSet'));
+        if ($response->isError()) {
+            throw new Exception\RuntimeException('There was an error during item set read.');
+        }
+        $itemSet = $response->getContent();
+
         $this->cacheResourceClasses();
         $this->cacheProperties();
 
@@ -70,33 +78,17 @@ class Import extends AbstractJob
         $this->itemFieldMap = require __DIR__ . '/item_field_map.php';
         $this->creatorTypeMap = require __DIR__ . '/creator_type_map.php';
 
-        $api = $this->getServiceLocator()->get('Omeka\ApiManager');
-
         do {
             $response = $client->setUri($uri)->send();
             if (!$response->isSuccess()) {
                 throw new Exception\RuntimeException(sprintf(
-                    'Requested "%s" got "%s"', $uri, $response->renderStatusLine()
+                    'Requested "%s" got "%s".', $uri, $response->renderStatusLine()
                 ));
             }
 
             $zoteroItems = json_decode($response->getBody(), true);
             if (!is_array($zoteroItems)) {
                 break;
-            }
-
-            if (!isset($itemSet)) {
-                $titleProperty = $this->properties['dcterms']['title'];
-                $creatorProperty = $this->properties['dcterms']['creator'];
-                $itemSetData = array(
-                    $titleProperty->term() => array(
-                        array(
-                            '@value' => $zoteroItems[0]['library']['name'],
-                            'property_id' => $titleProperty->id(),
-                        ),
-                    ),
-                );
-                $itemSet = $api->create('item_sets', $itemSetData)->getContent();
             }
 
             $omekaItems = array();
@@ -115,7 +107,7 @@ class Import extends AbstractJob
 
             $batchCreate = $api->batchCreate('items', $omekaItems);
             if ($batchCreate->isError()) {
-                throw new Exception\RuntimeException('There was an error during batch creation');
+                throw new Exception\RuntimeException('There was an error during item batch create.');
             }
 
             if ($this->shouldStop()) {

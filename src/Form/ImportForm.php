@@ -2,6 +2,7 @@
 namespace ZoteroImport\Form;
 
 use Omeka\Form\AbstractForm;
+use Omeka\Form\Element\ResourceSelect;
 
 class ImportForm extends AbstractForm
 {
@@ -9,11 +10,27 @@ class ImportForm extends AbstractForm
     {
         $translator = $this->getTranslator();
 
+        $serviceLocator = $this->getServiceLocator();
+        $auth = $serviceLocator->get('Omeka\AuthenticationService');
+        $itemSetSelect = new ResourceSelect($serviceLocator);
+        $itemSetSelect->setName('itemSet')
+            ->setAttribute('required', true)
+            ->setLabel('Import into')
+            ->setEmptyOption('Select Item Set...')
+            ->setResourceValueOptions(
+                'item_sets',
+                array('owner_id' => $auth->getIdentity()),
+                function ($itemSet, $serviceLocator) {
+                    return $itemSet->displayTitle('[no title]');
+                }
+            );
+        $this->add($itemSetSelect);
+
         $this->add(array(
             'name' => 'type',
             'type' => 'radio',
             'options' => array(
-                'label' =>  $translator->translate('Library Type'),
+                'label' =>  $translator->translate('Zotero Library Type'),
                 //'info' => $translator->translate(''),
                 'value_options' => array(
                     'user' => 'User',
@@ -29,7 +46,7 @@ class ImportForm extends AbstractForm
             'name' => 'id',
             'type' => 'text',
             'options' => array(
-                'label' => $translator->translate('Library ID'),
+                'label' => $translator->translate('Zotero Library ID'),
                 //'info' => $translator->translate(''),
             ),
             'attributes' => array(
@@ -41,12 +58,20 @@ class ImportForm extends AbstractForm
             'name' => 'collectionKey',
             'type' => 'text',
             'options' => array(
-                'label' => $translator->translate('Collection Key'),
+                'label' => $translator->translate('Zotero Collection Key'),
                 //'info' => $translator->translate(''),
             ),
         ));
 
         $inputFilter = $this->getInputFilter();
+
+        $inputFilter->add(array(
+            'name' => 'itemSet',
+            'required' => true,
+            'validators' => array(
+                array('name' => 'Digits'),
+            ),
+        ));
 
         $inputFilter->add(array(
             'name' => 'type',
