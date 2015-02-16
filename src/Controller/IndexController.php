@@ -16,7 +16,13 @@ class IndexController extends AbstractActionController
             $data = $this->params()->fromPost();
             $form->setData($data);
             if ($form->isValid()) {
-                $args = $form->getData();
+                $data = $form->getData();
+                $args = array(
+                    'itemSet' => $data['itemSet'],
+                    'type' => $data['type'],
+                    'id' => $data['id'],
+                    'collectionKey' => $data['collectionKey'],
+                );
                 // Validate the Zotero API request.
                 $client = new ZoteroClient($this->getServiceLocator());
                 $uri = $client->getFirstUri($args['type'], $args['id'],
