@@ -8,6 +8,13 @@ use Zend\Http\Response;
 class Import extends AbstractJob
 {
     /**
+     * Zotero API client
+     *
+     * @var Client
+     */
+    protected $client;
+
+    /**
      * Vocabularies to cache.
      *
      * @var array
@@ -62,12 +69,12 @@ class Import extends AbstractJob
         if ($this->getArg('apiKey')) {
             $headers['Authorization'] = sprintf('Bearer %s', $this->getArg('apiKey'));
         }
-        $client = $this->getServiceLocator()->get('Omeka\HttpClient');
-        $client->setHeaders($headers);
+        $this->client = $this->getServiceLocator()->get('Omeka\HttpClient');
+        $this->client->setHeaders($headers);
 
-        $uri = new Uri($this->getArg('type'), $this->getArg('id'));
-        $uri->setCollectionKey($this->getArg('collectionKey'));
-        $uri = $uri->getUri();
+        $apiUri = new Uri($this->getArg('type'), $this->getArg('id'));
+        $apiUri->setCollectionKey($this->getArg('collectionKey'));
+        $uri = $apiUri->getUri();
 
         $api = $this->getServiceLocator()->get('Omeka\ApiManager');
 
@@ -85,13 +92,7 @@ class Import extends AbstractJob
         $this->creatorTypeMap = require __DIR__ . '/creator_type_map.php';
 
         do {
-            $response = $client->setUri($uri)->send();
-            if (!$response->isSuccess()) {
-                throw new Exception\RuntimeException(sprintf(
-                    'Requested "%s" got "%s".', $uri, $response->renderStatusLine()
-                ));
-            }
-
+            $response = $this->getResponse($uri);
             $zoteroItems = json_decode($response->getBody(), true);
             if (!is_array($zoteroItems)) {
                 break;
@@ -108,6 +109,7 @@ class Import extends AbstractJob
                 $omekaItem = $this->mapNameValues($zoteroItem, $omekaItem);
                 $omekaItem = $this->mapSubjectValues($zoteroItem, $omekaItem);
                 $omekaItem = $this->mapValues($zoteroItem, $omekaItem);
+                $omekaItem = $this->importAttachments($apiUri, $zoteroItem, $omekaItem);
                 $omekaItems[] = $omekaItem;
             }
 
@@ -122,6 +124,24 @@ class Import extends AbstractJob
             }
 
         } while ($uri = $this->getLink($response, 'next'));
+    }
+
+    /**
+     * Get a response from the Zotero API.
+     *
+     * @param string $uri
+     * @return Response
+     */
+    public function getResponse($uri)
+    {
+        echo $uri . PHP_EOL;
+        $response = $this->client->setUri($uri)->send();
+        if (!$response->isSuccess()) {
+            throw new Exception\RuntimeException(sprintf(
+                'Requested "%s" got "%s".', $uri, $response->renderStatusLine()
+            ));
+        }
+        return $response;
     }
 
     /**
@@ -285,6 +305,38 @@ class Import extends AbstractJob
                 'property_id' => $property->id(),
             );
         }
+        return $omekaItem;
+    }
+
+    /**
+     * Import attachments.
+     *
+     * @param Uri $apiUri
+     * @param array $zoteroItem The Zotero item data
+     * @param array $omekaItem The Omeka item data
+     */
+    public function importAttachments(Uri $apiUri, array $zoteroItem, array $omekaItem)
+    {
+        if (!$this->getArg('apiKey')
+            ||!isset($zoteroItem['meta']['numChildren'])
+            || !$zoteroItem['meta']['numChildren']
+        ) {
+            return $omekaItem;
+        }
+        $uri = $apiUri->getUri($zoteroItem['key'], true);
+        do {
+            $response = $this->getResponse($uri);
+            $zoteroChildren = json_decode($response->getBody(), true);
+            foreach ($zoteroChildren as $zoteroChild) {
+                if ('attachment' != $zoteroChild['data']['itemType']) {
+                    continue;
+                }
+                if (!in_array($zoteroChild['data']['linkMode'], array('imported_url', 'imported_file'))) {
+                    continue;
+                }
+                // @todo import attachments
+            }
+        } while ($uri = $this->getLink($response, 'next'));
         return $omekaItem;
     }
 

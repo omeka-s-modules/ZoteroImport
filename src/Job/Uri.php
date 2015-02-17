@@ -74,17 +74,27 @@ class Uri
      *
      * @return string
      */
-    public function getUri()
+    public function getUri($itemKey = null, $children = false, $file = false)
     {
         if ('user' == $this->type) {
             $path = sprintf('/users/%s', $this->id);
         } else {
             $path = sprintf('/groups/%s', $this->id);
         }
-        if ($this->collectionKey) {
+        if ($this->collectionKey && !$itemKey) {
             $path .= sprintf('/collections/%s', $this->collectionKey);
         }
-        $path .= '/items/top';
+        $path .= '/items';
+        if ($itemKey) {
+            $path .= sprintf('/%s', $itemKey);
+            if ($children) {
+                $path .= '/children';
+            } elseif ($file) {
+                $path .= '/file';
+            }
+        } else {
+            $path .= '/top';
+        }
         return sprintf('%s%s?limit=%s', self::BASE, $path, $this->limit);
     }
 }
