@@ -16,7 +16,7 @@ class ImportForm extends AbstractForm
         $itemSetSelect->setName('itemSet')
             ->setAttribute('required', true)
             ->setLabel('Import into')
-            ->setOption('info', $translator->translate('Required. Into which item set would you like the items to be imported?'))
+            ->setOption('info', $translator->translate('Required. Import items into this item set.'))
             ->setEmptyOption('Select Item Set...')
             ->setResourceValueOptions(
                 'item_sets',
@@ -31,8 +31,8 @@ class ImportForm extends AbstractForm
             'name' => 'type',
             'type' => 'radio',
             'options' => array(
-                'label' =>  $translator->translate('Zotero Library Type'),
-                'info' => $translator->translate('Required. Is this library a user or group library?'),
+                'label' =>  $translator->translate('Library Type'),
+                'info' => $translator->translate('Required. Is this a user or group library?'),
                 'value_options' => array(
                     'user' => 'User',
                     'group' => 'Group',
@@ -47,7 +47,7 @@ class ImportForm extends AbstractForm
             'name' => 'id',
             'type' => 'text',
             'options' => array(
-                'label' => $translator->translate('Zotero Library ID'),
+                'label' => $translator->translate('Library ID'),
                 'info' => $translator->translate('Required. The user ID can be found on the "Feeds/API" section of the Zotero settings page. The group ID can be found on the Zotero group library page by looking at the URL of "Subscribe to this feed".'),
             ),
             'attributes' => array(
@@ -59,7 +59,7 @@ class ImportForm extends AbstractForm
             'name' => 'collectionKey',
             'type' => 'text',
             'options' => array(
-                'label' => $translator->translate('Zotero Collection Key'),
+                'label' => $translator->translate('Collection Key'),
                 'info' => $translator->translate('Not required. The collection key can be found on the Zotero library page by looking at the URL when looking at the collection.'),
             ),
         ));
