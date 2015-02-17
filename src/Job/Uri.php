@@ -11,42 +11,63 @@ class Uri
     /**
      * @var string
      */
-    protected $uri;
+    protected $type;
 
     /**
-     * Set a Zotero URI.
+     * @var string
+     */
+    protected $id;
+
+    /**
+     * @var string
+     */
+    protected $collectionKey;
+
+    /**
+     * @var int
+     */
+    protected $limit = 100;
+
+
+    /**
+     * Construct a Zotero URI.
      *
      * @param string $type The Zotero library type, "user" or "group"
-     * @param int $id The Zotero library identifier
-     * @param string $collectionKey The Zotero collection key
-     * @param int $limit The Zotero API result limit
-     * @return string
+     * @param int $id The Zotero library ID
      */
-    public function __construct($type, $id, $collectionKey = null, $limit = 100)
+    public function __construct($type, $id)
     {
+        if (!in_array($type, array('user', 'group'))) {
+            throw new \InvalidArgumentException('Invalid Zotero library type');
+        }
         if (!is_numeric($id)) {
             throw new \InvalidArgumentException('Invalid Zotero library ID');
         }
+        $this->type = $type;
+        $this->id = $id;
+    }
 
+    /**
+     * Set a collection key.
+     *
+     * @param string $collectionKey
+     */
+    public function setCollectionKey($collectionKey)
+    {
+        $this->collectionKey = $collectionKey;
+    }
+
+    /**
+     * Set a result limit.
+     *
+     * @param int $limit
+     */
+    public function setLimit($limit)
+    {
         if (!is_numeric($limit)) {
             throw new \InvalidArgumentException('Invalid Zotero API result limit');
         }
-
-        if ('user' == $type) {
-            $prefix = sprintf('/users/%s', $id);
-        } elseif ('group' == $type) {
-            $prefix = sprintf('/groups/%s', $id);
-        } else {
-            throw new \InvalidArgumentException('Invalid Zotero library type');
-        }
-
-        if ($collectionKey) {
-            $path = sprintf('/collections/%s/items/top', $collectionKey);
-        } else {
-            $path = '/items/top';
-        }
-
-        $this->uri = sprintf('%s%s%s?limit=%s', self::BASE, $prefix, $path, $limit);
+        $this->limit = $limit;
     }
 
     /**
@@ -56,6 +77,15 @@ class Uri
      */
     public function getUri()
     {
-        return $this->uri;
+        if ('user' == $this->type) {
+            $path = sprintf('/users/%s', $this->id);
+        } else {
+            $path = sprintf('/groups/%s', $this->id);
+        }
+        if ($this->collectionKey) {
+            $path .= sprintf('/collections/%s', $this->collectionKey);
+        }
+        $path .= '/items/top';
+        return sprintf('%s%s?limit=%s', self::BASE, $path, $this->limit);
     }
 }
