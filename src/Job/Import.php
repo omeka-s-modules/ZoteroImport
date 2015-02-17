@@ -3,8 +3,7 @@ namespace ZoteroImport\Job;
 
 use Omeka\Job\AbstractJob;
 use Omeka\Job\Exception;
-use Zend\Http\Client;
-use ZoteroImport\Http\ZoteroClient;
+use Zend\Http\Response;
 
 class Import extends AbstractJob
 {
@@ -59,9 +58,12 @@ class Import extends AbstractJob
      */
     public function perform()
     {
-        $client = new ZoteroClient($this->getServiceLocator());
-        $uri = $client->getFirstUri($this->getArg('type'), $this->getArg('id'),
+        $client = $this->getServiceLocator()->get('Omeka\HttpClient');
+        $client->setHeaders(array('Zotero-API-Version' => '3'));
+
+        $uri = new Uri($this->getArg('type'), $this->getArg('id'),
             $this->getArg('collectionKey'), 100);
+        $uri = $uri->getUri();
 
         $api = $this->getServiceLocator()->get('Omeka\ApiManager');
 
@@ -115,7 +117,7 @@ class Import extends AbstractJob
                 break;
             }
 
-        } while ($uri = $client->getLink($response, 'next'));
+        } while ($uri = $this->getLink($response, 'next'));
     }
 
     /**
@@ -278,5 +280,34 @@ class Import extends AbstractJob
             );
         }
         return $omekaItem;
+    }
+
+    /**
+     * Get a URI from the Link header.
+     *
+     * @param Response $response
+     * @param string $rel The relationship from the current document. Possible
+     * values are first, prev, next, last, alternate.
+     * @return string|null
+     */
+    public function getLink(Response $response, $rel)
+    {
+        $linkHeader = $response->getHeaders()->get('Link');
+        if (!$linkHeader) {
+            return null;
+        }
+        preg_match_all(
+            '/<([^>]+)>; rel="([^"]+)"/',
+            $linkHeader->getFieldValue(),
+            $matches
+        );
+        if (!$matches) {
+            return null;
+        }
+        $key = array_search($rel, $matches[2]);
+        if (false === $key) {
+            return null;
+        }
+        return $matches[1][$key];
     }
 }

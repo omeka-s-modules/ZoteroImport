@@ -4,7 +4,7 @@ namespace ZoteroImport\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use ZoteroImport\Form\ImportForm;
-use ZoteroImport\Http\ZoteroClient;
+use ZoteroImport\Job\Uri;
 
 class IndexController extends AbstractActionController
 {
@@ -15,6 +15,7 @@ class IndexController extends AbstractActionController
         if ($this->getRequest()->isPost()) {
             $data = $this->params()->fromPost();
             $form->setData($data);
+
             if ($form->isValid()) {
                 $data = $form->getData();
                 $args = array(
@@ -23,11 +24,12 @@ class IndexController extends AbstractActionController
                     'id' => $data['id'],
                     'collectionKey' => $data['collectionKey'],
                 );
+
                 // Validate the Zotero API request.
-                $client = new ZoteroClient($this->getServiceLocator());
-                $uri = $client->getFirstUri($args['type'], $args['id'],
-                    $args['collectionKey'], 1);
-                $response = $client->setUri($uri)->send();
+                $client = $this->getServiceLocator()->get('Omeka\HttpClient');
+                $uri = new Uri($args['type'], $args['id'], $args['collectionKey'], 1);
+                $response = $client->setUri($uri->getUri())->send();
+
                 if ($response->isSuccess()) {
                     $dispatcher = $this->getServiceLocator()->get('Omeka\JobDispatcher');
                     $dispatcher->dispatch('ZoteroImport\Job\Import', $args);
