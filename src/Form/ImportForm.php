@@ -16,6 +16,7 @@ class ImportForm extends AbstractForm
         $itemSetSelect->setName('itemSet')
             ->setAttribute('required', true)
             ->setLabel('Import into')
+            ->setOption('info', $translator->translate('Required. Into which item set would you like the items to be imported?'))
             ->setEmptyOption('Select Item Set...')
             ->setResourceValueOptions(
                 'item_sets',
@@ -31,7 +32,7 @@ class ImportForm extends AbstractForm
             'type' => 'radio',
             'options' => array(
                 'label' =>  $translator->translate('Zotero Library Type'),
-                //'info' => $translator->translate(''),
+                'info' => $translator->translate('Required. Is this library a user or group library?'),
                 'value_options' => array(
                     'user' => 'User',
                     'group' => 'Group',
@@ -47,7 +48,7 @@ class ImportForm extends AbstractForm
             'type' => 'text',
             'options' => array(
                 'label' => $translator->translate('Zotero Library ID'),
-                //'info' => $translator->translate(''),
+                'info' => $translator->translate('Required. The user ID can be found on the "Feeds/API" section of the Zotero settings page. The group ID can be found on the Zotero group library page by looking at the URL of "Subscribe to this feed".'),
             ),
             'attributes' => array(
                 'required' => true,
@@ -59,7 +60,7 @@ class ImportForm extends AbstractForm
             'type' => 'text',
             'options' => array(
                 'label' => $translator->translate('Zotero Collection Key'),
-                //'info' => $translator->translate(''),
+                'info' => $translator->translate('Not required. The collection key can be found on the Zotero library page by looking at the URL when looking at the collection.'),
             ),
         ));
 
