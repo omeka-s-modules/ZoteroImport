@@ -64,6 +64,15 @@ class ImportForm extends AbstractForm
             ),
         ));
 
+        $this->add(array(
+            'name' => 'apiKey',
+            'type' => 'text',
+            'options' => array(
+                'label' => $translator->translate('API Key'),
+                'info' => $translator->translate('Required for non-public libraries and file import.'),
+            ),
+        ));
+
         $inputFilter = $this->getInputFilter();
 
         $inputFilter->add(array(
@@ -104,6 +113,15 @@ class ImportForm extends AbstractForm
 
         $inputFilter->add(array(
             'name' => 'collectionKey',
+            'required' => false,
+            'filters' => array(
+                array('name' => 'StringTrim'),
+                array('name' => 'Null'),
+            ),
+        ));
+
+        $inputFilter->add(array(
+            'name' => 'apiKey',
             'required' => false,
             'filters' => array(
                 array('name' => 'StringTrim'),

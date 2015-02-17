@@ -58,11 +58,15 @@ class Import extends AbstractJob
      */
     public function perform()
     {
+        $headers = array('Zotero-API-Version' => '3');
+        if ($this->getArg('apiKey')) {
+            $headers['Authorization'] = sprintf('Bearer %s', $this->getArg('apiKey'));
+        }
         $client = $this->getServiceLocator()->get('Omeka\HttpClient');
-        $client->setHeaders(array('Zotero-API-Version' => '3'));
+        $client->setHeaders($headers);
 
-        $uri = new Uri($this->getArg('type'), $this->getArg('id'),
-            $this->getArg('collectionKey'), 100);
+        $uri = new Uri($this->getArg('type'), $this->getArg('id'));
+        $uri->setCollectionKey($this->getArg('collectionKey'));
         $uri = $uri->getUri();
 
         $api = $this->getServiceLocator()->get('Omeka\ApiManager');

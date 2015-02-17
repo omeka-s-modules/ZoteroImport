@@ -28,7 +28,6 @@ class Uri
      */
     protected $limit = 100;
 
-
     /**
      * Construct a Zotero URI.
      *

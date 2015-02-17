@@ -23,14 +23,10 @@ class IndexController extends AbstractActionController
                     'type' => $data['type'],
                     'id' => $data['id'],
                     'collectionKey' => $data['collectionKey'],
+                    'apiKey' => $data['apiKey'],
                 );
 
-                // Validate the Zotero API request.
-                $client = $this->getServiceLocator()->get('Omeka\HttpClient');
-                $uri = new Uri($args['type'], $args['id'], $args['collectionKey'], 1);
-                $response = $client->setUri($uri->getUri())->send();
-
-                if ($response->isSuccess()) {
+                if ($this->isValidRequest($args)) {
                     $dispatcher = $this->getServiceLocator()->get('Omeka\JobDispatcher');
                     $dispatcher->dispatch('ZoteroImport\Job\Import', $args);
                     // Clear the form.
@@ -47,5 +43,28 @@ class IndexController extends AbstractActionController
         $view = new ViewModel;
         $view->setVariable('form', $form);
         return $view;
+    }
+
+    /**
+     * Validate a Zotero API request.
+     *
+     * @param array $args
+     * @return bool
+     */
+    public function isValidRequest(array $args)
+    {
+        $uri = new Uri($args['type'], $args['id']);
+        $uri->setCollectionKey($args['collectionKey']);
+        $uri->setLimit(1);
+
+        $headers = array();
+        if ($args['apiKey']) {
+            $headers['Authorization'] = sprintf('Bearer %s', $args['apiKey']);
+        }
+        $client = $this->getServiceLocator()->get('Omeka\HttpClient');
+        $client->setHeaders($headers);
+
+        $response = $client->setUri($uri->getUri())->send();
+        return $response->isSuccess();
     }
 }
