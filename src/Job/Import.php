@@ -40,14 +40,14 @@ class Import extends AbstractJob
     protected $itemTypeMap = array();
 
     /**
-     * Map between Zotero item fields and Omeka properties
+     * Priority map between Zotero item fields and Omeka properties
      *
      * @var array
      */
     protected $itemFieldMap = array();
 
     /**
-     * Map between Zotero creator types and Omeka properties
+     * Priority map between Zotero creator types and Omeka properties
      *
      * @var array
      */
@@ -208,6 +208,7 @@ class Import extends AbstractJob
                         $valueObject['@value'] = $value;
                     }
                     $omekaItem[$property->term()][] = $valueObject;
+                    continue 2;
                 }
             }
         }
@@ -253,6 +254,7 @@ class Import extends AbstractJob
                         '@value' => $name,
                         'property_id' => $property->id(),
                     );
+                    continue 2;
                 }
             }
         }
