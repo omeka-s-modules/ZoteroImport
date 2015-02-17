@@ -134,7 +134,6 @@ class Import extends AbstractJob
      */
     public function getResponse($uri)
     {
-        echo $uri . PHP_EOL;
         $response = $this->client->setUri($uri)->send();
         if (!$response->isSuccess()) {
             throw new Exception\RuntimeException(sprintf(
