@@ -3,7 +3,9 @@ namespace ZoteroImport\Job;
 
 use Omeka\Job\AbstractJob;
 use Omeka\Job\Exception;
+use Zend\Http\Client;
 use Zend\Http\Response;
+use ZoteroImport\Job\Uri;
 
 class Import extends AbstractJob
 {
@@ -13,6 +15,13 @@ class Import extends AbstractJob
      * @var Client
      */
     protected $client;
+
+    /**
+     * Zotero API URI
+     *
+     * @var Uri
+     */
+    protected $uri;
 
     /**
      * Vocabularies to cache.
@@ -72,9 +81,9 @@ class Import extends AbstractJob
         $this->client = $this->getServiceLocator()->get('Omeka\HttpClient');
         $this->client->setHeaders($headers);
 
-        $apiUri = new Uri($this->getArg('type'), $this->getArg('id'));
-        $apiUri->setCollectionKey($this->getArg('collectionKey'));
-        $uri = $apiUri->getUri();
+        $this->uri = new Uri($this->getArg('type'), $this->getArg('id'));
+        $this->uri->setCollectionKey($this->getArg('collectionKey'));
+        $uri = $this->uri->getUri();
 
         $api = $this->getServiceLocator()->get('Omeka\ApiManager');
 
@@ -109,7 +118,7 @@ class Import extends AbstractJob
                 $omekaItem = $this->mapNameValues($zoteroItem, $omekaItem);
                 $omekaItem = $this->mapSubjectValues($zoteroItem, $omekaItem);
                 $omekaItem = $this->mapValues($zoteroItem, $omekaItem);
-                $omekaItem = $this->importAttachments($apiUri, $zoteroItem, $omekaItem);
+                $omekaItem = $this->importChildAttachments($zoteroItem, $omekaItem);
                 $omekaItems[] = $omekaItem;
             }
 
@@ -308,13 +317,12 @@ class Import extends AbstractJob
     }
 
     /**
-     * Import attachments.
+     * Import child attachments.
      *
-     * @param Uri $apiUri
      * @param array $zoteroItem The Zotero item data
      * @param array $omekaItem The Omeka item data
      */
-    public function importAttachments(Uri $apiUri, array $zoteroItem, array $omekaItem)
+    public function importChildAttachments(array $zoteroItem, array $omekaItem)
     {
         if (!$this->getArg('apiKey')
             ||!isset($zoteroItem['meta']['numChildren'])
@@ -322,7 +330,7 @@ class Import extends AbstractJob
         ) {
             return $omekaItem;
         }
-        $uri = $apiUri->getUri($zoteroItem['key'], true);
+        $uri = $this->uri->getUri($zoteroItem['key'], true);
         do {
             $response = $this->getResponse($uri);
             $zoteroChildren = json_decode($response->getBody(), true);

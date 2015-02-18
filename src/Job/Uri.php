@@ -72,6 +72,9 @@ class Uri
     /**
      * Get the Zotero URI.
      *
+     * @param string $itemKey Query an item by key
+     * @param bool $children Query item children
+     * @param bool $file Query item file
      * @return string
      */
     public function getUri($itemKey = null, $children = false, $file = false)
