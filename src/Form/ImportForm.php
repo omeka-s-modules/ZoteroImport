@@ -3,6 +3,7 @@ namespace ZoteroImport\Form;
 
 use Omeka\Form\AbstractForm;
 use Omeka\Form\Element\ResourceSelect;
+use Zend\Validator\Callback;
 
 class ImportForm extends AbstractForm
 {
@@ -73,11 +74,23 @@ class ImportForm extends AbstractForm
             ),
         ));
 
+        $this->add(array(
+            'name' => 'importFiles',
+            'type' => 'checkbox',
+            'options' => array(
+                'label' => $translator->translate('Import Files'),
+                'info' => $translator->translate('The API key is required to import files.'),
+            ),
+        ));
+
         $inputFilter = $this->getInputFilter();
 
         $inputFilter->add(array(
             'name' => 'itemSet',
             'required' => true,
+            'filters' => array(
+                array('name' => 'Int'),
+            ),
             'validators' => array(
                 array('name' => 'Digits'),
             ),
@@ -104,7 +117,7 @@ class ImportForm extends AbstractForm
             'name' => 'id',
             'required' => true,
             'filters' => array(
-                array('name' => 'StringTrim'),
+                array('name' => 'Int'),
             ),
             'validators' => array(
                 array('name' => 'Digits'),
@@ -126,6 +139,27 @@ class ImportForm extends AbstractForm
             'filters' => array(
                 array('name' => 'StringTrim'),
                 array('name' => 'Null'),
+            ),
+        ));
+
+        $inputFilter->add(array(
+            'name' => 'importFiles',
+            'required' => false,
+            'filters' => array(
+                array('name' => 'Boolean'),
+            ),
+            'validators' => array(
+                array(
+                    'name' => 'Callback',
+                    'options' => array(
+                        'messages' => array(
+                            Callback::INVALID_VALUE => 'An API key is required to import files.',
+                        ),
+                        'callback' => function ($importFiles, $context) {
+                            return $importFiles ? (bool) $context['apiKey'] : true;
+                        },
+                    ),
+                ),
             ),
         ));
     }

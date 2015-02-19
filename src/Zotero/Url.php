@@ -84,6 +84,17 @@ class Url
     }
 
     /**
+     * The user id and privileges of the given API key.
+     *
+     * @param string $key
+     * @return string
+     */
+    public static function key($key)
+    {
+        return sprintf('%s/keys/%s?v=3', self::BASE, $key);
+    }
+
+    /**
      * Build and return a URL query string
      *
      * @param srray $params
