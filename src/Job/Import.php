@@ -5,7 +5,7 @@ use Omeka\Job\AbstractJob;
 use Omeka\Job\Exception;
 use Zend\Http\Client;
 use Zend\Http\Response;
-use ZoteroImport\Job\Uri;
+use ZoteroImport\Zotero\Url;
 
 class Import extends AbstractJob
 {
@@ -17,11 +17,11 @@ class Import extends AbstractJob
     protected $client;
 
     /**
-     * Zotero API URI
+     * Zotero API URL
      *
-     * @var Uri
+     * @var Url
      */
-    protected $uri;
+    protected $url;
 
     /**
      * Vocabularies to cache.
@@ -75,15 +75,19 @@ class Import extends AbstractJob
     public function perform()
     {
         $headers = array('Zotero-API-Version' => '3');
-        if ($this->getArg('apiKey')) {
-            $headers['Authorization'] = sprintf('Bearer %s', $this->getArg('apiKey'));
+        if ($apiKey = $this->getArg('apiKey')) {
+            $headers['Authorization'] = sprintf('Bearer %s', $apiKey);
         }
         $this->client = $this->getServiceLocator()->get('Omeka\HttpClient');
         $this->client->setHeaders($headers);
 
-        $this->uri = new Uri($this->getArg('type'), $this->getArg('id'));
-        $this->uri->setCollectionKey($this->getArg('collectionKey'));
-        $uri = $this->uri->getUri();
+        $params = array('limit' => 100);
+        $this->url = new Url($this->getArg('type'), $this->getArg('id'));
+        if ($collectionKey = $this->getArg('collectionKey')) {
+            $url = $this->url->collectionItemsTop($collectionKey, $params);
+        } else {
+            $url = $this->url->itemsTop($params);
+        }
 
         $api = $this->getServiceLocator()->get('Omeka\ApiManager');
 
@@ -101,7 +105,7 @@ class Import extends AbstractJob
         $this->creatorTypeMap = require __DIR__ . '/creator_type_map.php';
 
         do {
-            $response = $this->getResponse($uri);
+            $response = $this->getResponse($url);
             $zoteroItems = json_decode($response->getBody(), true);
             if (!is_array($zoteroItems)) {
                 break;
@@ -132,21 +136,21 @@ class Import extends AbstractJob
                 break;
             }
 
-        } while ($uri = $this->getLink($response, 'next'));
+        } while ($url = $this->getLink($response, 'next'));
     }
 
     /**
      * Get a response from the Zotero API.
      *
-     * @param string $uri
+     * @param string $url
      * @return Response
      */
-    public function getResponse($uri)
+    public function getResponse($url)
     {
-        $response = $this->client->setUri($uri)->send();
+        $response = $this->client->setUri($url)->send();
         if (!$response->isSuccess()) {
             throw new Exception\RuntimeException(sprintf(
-                'Requested "%s" got "%s".', $uri, $response->renderStatusLine()
+                'Requested "%s" got "%s".', $url, $response->renderStatusLine()
             ));
         }
         return $response;
@@ -330,9 +334,9 @@ class Import extends AbstractJob
         ) {
             return $omekaItem;
         }
-        $uri = $this->uri->getUri($zoteroItem['key'], true);
+        $url = $this->url->itemChildren($zoteroItem['key'], array('limit' => 100));
         do {
-            $response = $this->getResponse($uri);
+            $response = $this->getResponse($url);
             $zoteroChildren = json_decode($response->getBody(), true);
             foreach ($zoteroChildren as $zoteroChild) {
                 if ('attachment' != $zoteroChild['data']['itemType']) {
@@ -343,12 +347,12 @@ class Import extends AbstractJob
                 }
                 // @todo import attachments
             }
-        } while ($uri = $this->getLink($response, 'next'));
+        } while ($url = $this->getLink($response, 'next'));
         return $omekaItem;
     }
 
     /**
-     * Get a URI from the Link header.
+     * Get a URL from the Link header.
      *
      * @param Response $response
      * @param string $rel The relationship from the current document. Possible

@@ -4,7 +4,7 @@ namespace ZoteroImport\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use ZoteroImport\Form\ImportForm;
-use ZoteroImport\Job\Uri;
+use ZoteroImport\Zotero\Url;
 
 class IndexController extends AbstractActionController
 {
@@ -27,16 +27,20 @@ class IndexController extends AbstractActionController
                 );
 
                 // Validate a Zotero API request.
-                $uri = new Uri($args['type'], $args['id']);
-                $uri->setCollectionKey($args['collectionKey']);
-                $uri->setLimit(1);
+                $params = array('limit' => 1);
+                $url = new Url($args['type'], $args['id']);
+                if ($collectionKey = $args['collectionKey']) {
+                    $url = $url->collectionItemsTop($collectionKey, $params);
+                } else {
+                    $url = $url->itemsTop($params);
+                }
                 $headers = array();
                 if ($args['apiKey']) {
                     $headers['Authorization'] = sprintf('Bearer %s', $args['apiKey']);
                 }
                 $client = $this->getServiceLocator()->get('Omeka\HttpClient');
                 $client->setHeaders($headers);
-                $response = $client->setUri($uri->getUri())->send();
+                $response = $client->setUri($url)->send();
 
                 if ($response->isSuccess()) {
                     $dispatcher = $this->getServiceLocator()->get('Omeka\JobDispatcher');
