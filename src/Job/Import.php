@@ -122,7 +122,10 @@ class Import extends AbstractJob
                 $omekaItem = $this->mapNameValues($zoteroItem, $omekaItem);
                 $omekaItem = $this->mapSubjectValues($zoteroItem, $omekaItem);
                 $omekaItem = $this->mapValues($zoteroItem, $omekaItem);
-                $omekaItem = $this->importChildAttachments($zoteroItem, $omekaItem);
+                if ($this->getArg('importAttachments') && $this->getArg('apiKey')) {
+                    $omekaItem = $this->mapAttachment($zoteroItem, $omekaItem);
+                    $omekaItem = $this->mapChildAttachments($zoteroItem, $omekaItem);
+                }
                 $omekaItems[] = $omekaItem;
             }
 
@@ -321,15 +324,15 @@ class Import extends AbstractJob
     }
 
     /**
-     * Import child attachments.
+     * Map child attachments.
      *
      * @param array $zoteroItem The Zotero item data
      * @param array $omekaItem The Omeka item data
+     * @return string
      */
-    public function importChildAttachments(array $zoteroItem, array $omekaItem)
+    public function mapChildAttachments(array $zoteroItem, array $omekaItem)
     {
-        if (!$this->getArg('apiKey')
-            ||!isset($zoteroItem['meta']['numChildren'])
+        if (!isset($zoteroItem['meta']['numChildren'])
             || !$zoteroItem['meta']['numChildren']
         ) {
             return $omekaItem;
@@ -339,15 +342,28 @@ class Import extends AbstractJob
             $response = $this->getResponse($url);
             $zoteroChildren = json_decode($response->getBody(), true);
             foreach ($zoteroChildren as $zoteroChild) {
-                if ('attachment' != $zoteroChild['data']['itemType']) {
-                    continue;
-                }
-                if (!in_array($zoteroChild['data']['linkMode'], array('imported_url', 'imported_file'))) {
-                    continue;
-                }
-                // @todo import attachments
+                $omekaItem = $this->mapAttachment($zoteroChild, $omekaItem);
             }
         } while ($url = $this->getLink($response, 'next'));
+        return $omekaItem;
+    }
+
+    /**
+     * Map an attachment.
+     *
+     * @param array $zoteroItem The Zotero item data
+     * @param array $omekaItem The Omeka item data
+     * @return string
+      */
+    public function mapAttachment($zoteroItem, $omekaItem)
+    {
+        if ('attachment' != $zoteroItem['data']['itemType']) {
+            return $omekaItem;
+        }
+        if (!in_array($zoteroItem['data']['linkMode'], array('imported_url', 'imported_file'))) {
+            return $omekaItem;
+        }
+        // @todo map attachment
         return $omekaItem;
     }
 
