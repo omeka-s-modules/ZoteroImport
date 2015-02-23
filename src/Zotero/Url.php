@@ -71,6 +71,19 @@ class Url
     }
 
     /**
+     * The URL to an item file.
+     *
+     * @param string $itemKey
+     * @param array $params
+     * @return string
+     */
+    public function itemFile($itemKey, array $params = array())
+    {
+        return sprintf('%s/%s/%s/items/%s/file?%s', self::BASE, $this->type,
+            $this->id, $itemKey, $this->getParams($params));
+    }
+
+    /**
      * The set of top-level items within a specific collection in the library
      *
      * @param string $collectionKey
