@@ -1,5 +1,15 @@
 <?php
 return array(
+    'api_adapters' => array(
+        'invokables' => array(
+            'zotero_imports' => 'ZoteroImport\Api\Adapter\Entity\ZoteroImportAdapter',
+        ),
+    ),
+    'entity_manager' => array(
+        'mapping_classes_paths' => array(
+            OMEKA_PATH . '/module/ZoteroImport/src/Model/Entity',
+        ),
+    ),
     'controllers' => array(
         'invokables' => array(
             'ZoteroImport\Controller\Index' => 'ZoteroImport\Controller\IndexController',

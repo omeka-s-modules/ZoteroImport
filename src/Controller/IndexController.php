@@ -39,7 +39,13 @@ class IndexController extends AbstractActionController
                         ));
                     } else {
                         $dispatcher = $this->getServiceLocator()->get('Omeka\JobDispatcher');
-                        $dispatcher->dispatch('ZoteroImport\Job\Import', $args);
+                        $job = $dispatcher->dispatch('ZoteroImport\Job\Import', $args);
+
+                        $this->api()->create('zotero_imports', array(
+                            'o:job' => array('o:id' => $job->getId()),
+                            'version' => $response->getHeaders()->get('Last-Modified-Version')->getFieldValue(),
+                        ));
+
                         $form = new ImportForm($this->getServiceLocator()); // Clear the form.
                         $this->messenger()->addSuccess('Importing from Zotero');
                     }
@@ -101,7 +107,7 @@ class IndexController extends AbstractActionController
         } else {
             $url = $url->itemsTop($params);
         }
-        $headers = array();
+        $headers = array('Zotero-API-Version' => '3');
         if ($args['apiKey']) {
             $headers['Authorization'] = sprintf('Bearer %s', $args['apiKey']);
         }
