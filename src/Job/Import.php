@@ -122,10 +122,8 @@ class Import extends AbstractJob
                 $omekaItem = $this->mapNameValues($zoteroItem, $omekaItem);
                 $omekaItem = $this->mapSubjectValues($zoteroItem, $omekaItem);
                 $omekaItem = $this->mapValues($zoteroItem, $omekaItem);
-                if ($this->getArg('importAttachments') && $this->getArg('apiKey')) {
-                    $omekaItem = $this->mapAttachment($zoteroItem, $omekaItem);
-                    $omekaItem = $this->mapChildAttachments($zoteroItem, $omekaItem);
-                }
+                $omekaItem = $this->mapAttachment($zoteroItem, $omekaItem);
+                $omekaItem = $this->mapChildAttachments($zoteroItem, $omekaItem);
                 $omekaItems[] = $omekaItem;
             }
 
@@ -360,21 +358,42 @@ class Import extends AbstractJob
         if ('attachment' != $zoteroItem['data']['itemType']) {
             return $omekaItem;
         }
-        if (!in_array($zoteroItem['data']['linkMode'], array('imported_url', 'imported_file'))) {
-            return $omekaItem;
-        }
-        $property = $this->properties['dcterms']['title'];
-        $omekaItem['o:media'][] = array(
-            'o:type'     => 'file',
-            'o:source'   => $this->url->itemFile($zoteroItem['key']),
-            'ingest_uri' => $this->url->itemFile($zoteroItem['key'], array('key' => $this->getArg('apiKey'))),
-            $property->term() => array(
-                array(
-                    '@value' => $zoteroItem['data']['title'],
+
+        switch ($zoteroItem['data']['linkMode']) {
+            case 'imported_url':
+            case 'imported_file':
+                if (!$this->getArg('importAttachments') || !$this->getArg('apiKey')) {
+                    break;
+                }
+                $property = $this->properties['dcterms']['title'];
+                $omekaItem['o:media'][] = array(
+                    'o:type'     => 'file',
+                    'o:source'   => $this->url->itemFile($zoteroItem['key']),
+                    'ingest_uri' => $this->url->itemFile(
+                        $zoteroItem['key'],
+                        array('key' => $this->getArg('apiKey'))
+                    ),
+                    $property->term() => array(
+                        array(
+                            '@value' => $zoteroItem['data']['title'],
+                            'property_id' => $property->id(),
+                        ),
+                    ),
+                );
+                break;
+            case 'linked_url':
+                $property = $this->properties['bibo']['uri'];
+                $omekaItem[$property->term()][] = array(
+                    '@id' => $zoteroItem['data']['url'],
                     'property_id' => $property->id(),
-                ),
-            ),
-        );
+                );
+                break;
+            case 'linked_file':
+                // nothing to save for a linked file
+            default:
+                break;
+        }
+
         return $omekaItem;
     }
 
