@@ -74,21 +74,6 @@ class Import extends AbstractJob
      */
     public function perform()
     {
-        $headers = array('Zotero-API-Version' => '3');
-        if ($apiKey = $this->getArg('apiKey')) {
-            $headers['Authorization'] = sprintf('Bearer %s', $apiKey);
-        }
-        $this->client = $this->getServiceLocator()->get('Omeka\HttpClient');
-        $this->client->setHeaders($headers);
-
-        $params = array('limit' => 100);
-        $this->url = new Url($this->getArg('type'), $this->getArg('id'));
-        if ($collectionKey = $this->getArg('collectionKey')) {
-            $url = $this->url->collectionItemsTop($collectionKey, $params);
-        } else {
-            $url = $this->url->itemsTop($params);
-        }
-
         $api = $this->getServiceLocator()->get('Omeka\ApiManager');
 
         $response = $api->read('item_sets', $this->getArg('itemSet'));
@@ -97,6 +82,42 @@ class Import extends AbstractJob
         }
         $itemSet = $response->getContent();
 
+        $headers = array('Zotero-API-Version' => '3');
+        if ($apiKey = $this->getArg('apiKey')) {
+            $headers['Authorization'] = sprintf('Bearer %s', $apiKey);
+        }
+        $this->client = $this->getServiceLocator()->get('Omeka\HttpClient');
+        $this->client->setHeaders($headers);
+
+        $params = array('since' => '0', 'format' => 'versions');
+        $this->url = new Url($this->getArg('type'), $this->getArg('id'));
+
+        $url = $this->url->items($params);
+        $response = $this->getResponse($url);
+        $zItemKeys = array_keys(json_decode($response->getBody(), true));
+
+        // Cache all Zotero parent and child items.
+        $zParentItems = array();
+        $zChildItems = array();
+        foreach (array_chunk($zItemKeys, 50, true) as $zItemKeysChunk) {
+            $params = array('itemKey' => implode(',', $zItemKeysChunk));
+            $url = $this->url->items($params);
+
+            $response = $this->getResponse($url);
+            $zItems = json_decode($response->getBody(), true);
+
+            foreach ($zItems as $zItem) {
+                if ('note' == $zItem['data']['itemType']) {
+                    continue; // do not import notes
+                }
+                if (isset($zItem['data']['parentItem'])) {
+                    $zChildItems[$zItem['data']['parentItem']][] = $zItem;
+                } else {
+                    $zParentItems[$zItem['key']] = $zItem;
+                }
+            }
+        }
+
         $this->cacheResourceClasses();
         $this->cacheProperties();
 
@@ -104,40 +125,35 @@ class Import extends AbstractJob
         $this->itemFieldMap = require __DIR__ . '/item_field_map.php';
         $this->creatorTypeMap = require __DIR__ . '/creator_type_map.php';
 
-        do {
-            $response = $this->getResponse($url);
-            $zoteroItems = json_decode($response->getBody(), true);
-            if (!is_array($zoteroItems)) {
-                break;
-            }
-
-            $omekaItems = array();
-            foreach ($zoteroItems as $zoteroItem) {
-                if ('note' == $zoteroItem['data']['itemType']) {
-                    continue;
+        // Map Zotero items to Omeka items.
+        $oItems = array();
+        foreach ($zParentItems as $zParentItemKey => $zParentItem) {
+            $oItem = array();
+            $oItem['o:item_set'] = array(array('o:id' => $itemSet->id()));
+            $oItem = $this->mapResourceClass($zParentItem, $oItem);
+            $oItem = $this->mapNameValues($zParentItem, $oItem);
+            $oItem = $this->mapSubjectValues($zParentItem, $oItem);
+            $oItem = $this->mapValues($zParentItem, $oItem);
+            $oItem = $this->mapAttachment($zParentItem, $oItem);
+            if (isset($zChildItems[$zParentItemKey])) {
+                foreach ($zChildItems[$zParentItemKey] as $zChildItem) {
+                    $oItem = $this->mapAttachment($zChildItem, $oItem);
                 }
-                $omekaItem = array();
-                $omekaItem['o:item_set'] = array(array('o:id' => $itemSet->id()));
-                $omekaItem = $this->mapResourceClass($zoteroItem, $omekaItem);
-                $omekaItem = $this->mapNameValues($zoteroItem, $omekaItem);
-                $omekaItem = $this->mapSubjectValues($zoteroItem, $omekaItem);
-                $omekaItem = $this->mapValues($zoteroItem, $omekaItem);
-                $omekaItem = $this->mapAttachment($zoteroItem, $omekaItem);
-                $omekaItem = $this->mapChildAttachments($zoteroItem, $omekaItem);
-                $omekaItems[] = $omekaItem;
             }
+            $oItems[] = $oItem;
+        }
 
-            $batchCreate = $api->batchCreate('items', $omekaItems);
+        // Batch create Omeka items.
+        foreach (array_chunk($oItems, 50, true) as $oItemsChunk) {
+            $batchCreate = $api->batchCreate('items', $oItemsChunk);
             if ($batchCreate->isError()) {
                 throw new Exception\RuntimeException('There was an error during item batch create.');
             }
-
             if ($this->shouldStop()) {
                 // @todo consider performing cleanup before stopping
                 break;
             }
-
-        } while ($url = $this->getLink($response, 'next'));
+        }
     }
 
     /**
@@ -318,31 +334,6 @@ class Import extends AbstractJob
                 'property_id' => $property->id(),
             );
         }
-        return $omekaItem;
-    }
-
-    /**
-     * Map child attachments.
-     *
-     * @param array $zoteroItem The Zotero item data
-     * @param array $omekaItem The Omeka item data
-     * @return string
-     */
-    public function mapChildAttachments(array $zoteroItem, array $omekaItem)
-    {
-        if (!isset($zoteroItem['meta']['numChildren'])
-            || !$zoteroItem['meta']['numChildren']
-        ) {
-            return $omekaItem;
-        }
-        $url = $this->url->itemChildren($zoteroItem['key'], array('limit' => 100));
-        do {
-            $response = $this->getResponse($url);
-            $zoteroChildren = json_decode($response->getBody(), true);
-            foreach ($zoteroChildren as $zoteroChild) {
-                $omekaItem = $this->mapAttachment($zoteroChild, $omekaItem);
-            }
-        } while ($url = $this->getLink($response, 'next'));
         return $omekaItem;
     }
 
