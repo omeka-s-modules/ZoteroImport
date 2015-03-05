@@ -91,8 +91,12 @@ class Import extends AbstractJob
 
         $params = array('since' => '0', 'format' => 'versions');
         $this->url = new Url($this->getArg('type'), $this->getArg('id'));
+        if ($collectionKey = $this->getArg('collectionKey')) {
+             $url = $this->url->collectionItems($collectionKey, $params);
+        } else {
+            $url = $this->url->items($params);
+        }
 
-        $url = $this->url->items($params);
         $response = $this->getResponse($url);
         $zItemKeys = array_keys(json_decode($response->getBody(), true));
 

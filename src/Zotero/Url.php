@@ -58,31 +58,6 @@ class Url
     }
 
     /**
-     * The set of all top-level items in the library
-     *
-     * @param array $params
-     * @return string
-     */
-    public function itemsTop(array $params = array())
-    {
-        return sprintf('%s/%s/%s/items/top%s', self::BASE, $this->type,
-            $this->id, $this->getParams($params));
-    }
-
-    /**
-     * The set of all child items under a specific item
-     *
-     * @param string $itemKey
-     * @param array $params
-     * @return string
-     */
-    public function itemChildren($itemKey, array $params = array())
-    {
-        return sprintf('%s/%s/%s/items/%s/children%s', self::BASE, $this->type,
-            $this->id, $itemKey, $this->getParams($params));
-    }
-
-    /**
      * The URL to an item file.
      *
      * @param string $itemKey
@@ -96,15 +71,15 @@ class Url
     }
 
     /**
-     * The set of top-level items within a specific collection in the library
+     * The set of items within a specific collection in the library
      *
      * @param string $collectionKey
      * @param array $params
      * @return string
      */
-    public function collectionItemsTop($collectionKey, array $params = array())
+    public function collectionItems($collectionKey, array $params = array())
     {
-        return sprintf('%s/%s/%s/collections/%s/items/top%s', self::BASE,
+        return sprintf('%s/%s/%s/collections/%s/items%s', self::BASE,
             $this->type, $this->id, $collectionKey, $this->getParams($params));
     }
 

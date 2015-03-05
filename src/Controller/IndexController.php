@@ -100,12 +100,12 @@ class IndexController extends AbstractActionController
      */
     public function sendApiRequest(array $args)
     {
-        $params = array('limit' => 1);
+        $params = array('limit' => 1, 'since' => '0', 'format' => 'versions');
         $url = new Url($args['type'], $args['id']);
         if ($collectionKey = $args['collectionKey']) {
-            $url = $url->collectionItemsTop($collectionKey, $params);
+            $url = $url->collectionItems($collectionKey, $params);
         } else {
-            $url = $url->itemsTop($params);
+            $url = $url->items($params);
         }
         $headers = array('Zotero-API-Version' => '3');
         if ($args['apiKey']) {
