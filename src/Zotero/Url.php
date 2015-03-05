@@ -46,6 +46,18 @@ class Url
     }
 
     /**
+     * The set of all items in the library
+     *
+     * @param array $params
+     * @return string
+     */
+    public function items(array $params = array())
+    {
+        return sprintf('%s/%s/%s/items%s', self::BASE, $this->type,
+            $this->id, $this->getParams($params));
+    }
+
+    /**
      * The set of all top-level items in the library
      *
      * @param array $params
@@ -53,7 +65,7 @@ class Url
      */
     public function itemsTop(array $params = array())
     {
-        return sprintf('%s/%s/%s/items/top?%s', self::BASE, $this->type,
+        return sprintf('%s/%s/%s/items/top%s', self::BASE, $this->type,
             $this->id, $this->getParams($params));
     }
 
@@ -66,7 +78,7 @@ class Url
      */
     public function itemChildren($itemKey, array $params = array())
     {
-        return sprintf('%s/%s/%s/items/%s/children?%s', self::BASE, $this->type,
+        return sprintf('%s/%s/%s/items/%s/children%s', self::BASE, $this->type,
             $this->id, $itemKey, $this->getParams($params));
     }
 
@@ -79,7 +91,7 @@ class Url
      */
     public function itemFile($itemKey, array $params = array())
     {
-        return sprintf('%s/%s/%s/items/%s/file?%s', self::BASE, $this->type,
+        return sprintf('%s/%s/%s/items/%s/file%s', self::BASE, $this->type,
             $this->id, $itemKey, $this->getParams($params));
     }
 
@@ -92,7 +104,7 @@ class Url
      */
     public function collectionItemsTop($collectionKey, array $params = array())
     {
-        return sprintf('%s/%s/%s/collections/%s/items/top?%s', self::BASE,
+        return sprintf('%s/%s/%s/collections/%s/items/top%s', self::BASE,
             $this->type, $this->id, $collectionKey, $this->getParams($params));
     }
 
@@ -115,10 +127,13 @@ class Url
      */
     public function getParams(array $params)
     {
-        $paramStr = '';
-        foreach ($params as $key => $value) {
-            $paramStr .= sprintf('%s=%s', $key, $value);
+        if (!$params) {
+            return '';
         }
-        return $paramStr;
+        $paramArr = array();
+        foreach ($params as $key => $value) {
+            $paramArr[] = sprintf('%s=%s', $key, $value);
+        }
+        return '?' . implode('&', $paramArr);
     }
 }
