@@ -75,7 +75,7 @@ class ImportForm extends AbstractForm
         ));
 
         $this->add(array(
-            'name' => 'importAttachments',
+            'name' => 'importFiles',
             'type' => 'checkbox',
             'options' => array(
                 'label' => $translator->translate('Import Files'),
@@ -143,7 +143,7 @@ class ImportForm extends AbstractForm
         ));
 
         $inputFilter->add(array(
-            'name' => 'importAttachments',
+            'name' => 'importFiles',
             'required' => false,
             'filters' => array(
                 array('name' => 'Boolean'),
@@ -155,8 +155,8 @@ class ImportForm extends AbstractForm
                         'messages' => array(
                             Callback::INVALID_VALUE => 'An API key is required to import files.',
                         ),
-                        'callback' => function ($importAttachments, $context) {
-                            return $importAttachments ? (bool) $context['apiKey'] : true;
+                        'callback' => function ($importFiles, $context) {
+                            return $importFiles ? (bool) $context['apiKey'] : true;
                         },
                     ),
                 ),

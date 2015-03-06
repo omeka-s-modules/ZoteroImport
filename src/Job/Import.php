@@ -357,7 +357,7 @@ class Import extends AbstractJob
         switch ($zoteroItem['data']['linkMode']) {
             case 'imported_url':
             case 'imported_file':
-                if (!$this->getArg('importAttachments') || !$this->getArg('apiKey')) {
+                if (!$this->getArg('importFiles') || !$this->getArg('apiKey')) {
                     break;
                 }
                 $property = $this->properties['dcterms']['title'];

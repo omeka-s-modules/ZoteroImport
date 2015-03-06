@@ -24,7 +24,7 @@ class IndexController extends AbstractActionController
                     'id' => $data['id'],
                     'collectionKey' => $data['collectionKey'],
                     'apiKey' => $data['apiKey'],
-                    'importAttachments' => $data['importAttachments'],
+                    'importFiles' => $data['importFiles'],
                 );
 
                 if ($args['apiKey'] && !$this->apiKeyIsValid($args)) {
