@@ -1,6 +1,7 @@
 <?php
 namespace ZoteroImport\Job;
 
+use DateTime;
 use Omeka\Job\AbstractJob;
 use Omeka\Job\Exception;
 use Zend\Http\Client;
@@ -89,7 +90,7 @@ class Import extends AbstractJob
         $this->client = $this->getServiceLocator()->get('Omeka\HttpClient');
         $this->client->setHeaders($headers);
 
-        $params = array('since' => '0', 'format' => 'versions');
+        $params = array('since' => $this->getArg('version', 0), 'format' => 'versions');
         $this->url = new Url($this->getArg('type'), $this->getArg('id'));
         if ($collectionKey = $this->getArg('collectionKey')) {
              $url = $this->url->collectionItems($collectionKey, $params);
@@ -113,6 +114,10 @@ class Import extends AbstractJob
             foreach ($zItems as $zItem) {
                 if ('note' == $zItem['data']['itemType']) {
                     continue; // do not import notes
+                }
+                $dateAdded = new DateTime($zItem['data']['dateAdded']);
+                if ($dateAdded->getTimestamp() < $this->getArg('timestamp', 0)) {
+                    continue; // only import items added since last import
                 }
                 if (isset($zItem['data']['parentItem'])) {
                     $zChildItems[$zItem['data']['parentItem']][] = $zItem;
