@@ -19,14 +19,14 @@ class IndexController extends AbstractActionController
             if ($form->isValid()) {
                 $data = $form->getData();
                 $args = array(
-                    'itemSet' => $data['itemSet'],
-                    'type' => $data['type'],
-                    'id' => $data['id'],
+                    'itemSet'       => $data['itemSet'],
+                    'type'          => $data['type'],
+                    'id'            => $data['id'],
                     'collectionKey' => $data['collectionKey'],
-                    'apiKey' => $data['apiKey'],
-                    'importFiles' => $data['importFiles'],
-                    'version' => 0,
-                    'timestamp' => 0,
+                    'apiKey'        => $data['apiKey'],
+                    'importFiles'   => $data['importFiles'],
+                    'version'       => 0,
+                    'timestamp'     => 0,
                 );
 
                 if ($args['apiKey'] && !$this->apiKeyIsValid($args)) {

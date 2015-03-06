@@ -72,6 +72,24 @@ class Import extends AbstractJob
 
     /**
      * Perform the import.
+     *
+     * Accepts the following arguments:
+     *
+     * - itemSet:       The Omeka item set ID (int)
+     * - type:          The Zotero library type (user, group)
+     * - id:            The Zotero library ID (int)
+     * - collectionKey: The Zotero collection key (string)
+     * - apiKey:        The Zotero API key (string)
+     * - importFiles:   Whether to import file attachments (bool)
+     * - version:       The Zotero Last-Modified-Version of the last import (int)
+     * - timestamp:     The Omeka Job::$started timestamp of the last import (int)
+     *
+     * Roughly follows Zotero's recommended steps for synchronizing a Zotero Web
+     * API client with the Zotero server. But for the purposes of this job, a
+     * "sync" only imports parent items (and their children) that have been
+     * added to Zotero since the last import.
+     *
+     * @see https://www.zotero.org/support/dev/web_api/v3/syncing#full-library_syncing
      */
     public function perform()
     {
