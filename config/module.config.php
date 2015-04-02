@@ -25,8 +25,6 @@ return array(
             array(
                 'label'      => 'Zotero Import',
                 'route'      => 'zotero-import',
-                'controller' => 'ZoteroImport',
-                'action'     => 'index',
                 'resource'   => 'ZoteroImport\Controller\Index',
             ),
         ),
