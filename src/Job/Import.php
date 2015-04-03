@@ -387,7 +387,7 @@ class Import extends AbstractJob
                 $omekaItem['o:media'][] = array(
                     'o:type'     => 'url',
                     'o:source'   => $this->url->itemFile($zoteroItem['key']),
-                    'ingest_uri' => $this->url->itemFile(
+                    'ingest_url' => $this->url->itemFile(
                         $zoteroItem['key'],
                         array('key' => $this->getArg('apiKey'))
                     ),
