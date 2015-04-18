@@ -400,12 +400,7 @@ class Import extends AbstractJob
                 );
                 break;
             case 'linked_url':
-                $property = $this->properties['bibo']['uri'];
-                $omekaItem[$property->term()][] = array(
-                    '@id' => $zoteroItem['data']['url'],
-                    'property_id' => $property->id(),
-                );
-                break;
+                // @id url already mapped in mapValues()
             case 'linked_file':
                 // nothing to save for a linked file
             default:
