@@ -1,7 +1,7 @@
 <?php
-namespace ZoteroImport\Api\Adapter\Entity;
+namespace ZoteroImport\Api\Adapter;
 
-use Omeka\Api\Adapter\Entity\AbstractEntityAdapter;
+use Omeka\Api\Adapter\AbstractEntityAdapter;
 use Omeka\Api\Request;
 use Omeka\Entity\EntityInterface;
 use Omeka\Stdlib\ErrorStore;
@@ -15,7 +15,7 @@ class ZoteroImportAdapter extends AbstractEntityAdapter
 
     public function getRepresentationClass()
     {
-        return 'ZoteroImport\Api\Representation\Entity\ZoteroImportRepresentation';
+        return 'ZoteroImport\Api\Representation\ZoteroImportRepresentation';
     }
 
     public function getEntityClass()

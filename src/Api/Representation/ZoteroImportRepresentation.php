@@ -1,7 +1,7 @@
 <?php
-namespace ZoteroImport\Api\Representation\Entity;
+namespace ZoteroImport\Api\Representation;
 
-use Omeka\Api\Representation\Entity\AbstractEntityRepresentation;
+use Omeka\Api\Representation\AbstractEntityRepresentation;
 
 class ZoteroImportRepresentation extends AbstractEntityRepresentation
 {

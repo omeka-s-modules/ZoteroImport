@@ -2,7 +2,7 @@
 return array(
     'api_adapters' => array(
         'invokables' => array(
-            'zotero_imports' => 'ZoteroImport\Api\Adapter\Entity\ZoteroImportAdapter',
+            'zotero_imports' => 'ZoteroImport\Api\Adapter\ZoteroImportAdapter',
         ),
     ),
     'entity_manager' => array(
