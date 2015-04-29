@@ -3,7 +3,7 @@ namespace ZoteroImport\Api\Adapter\Entity;
 
 use Omeka\Api\Adapter\Entity\AbstractEntityAdapter;
 use Omeka\Api\Request;
-use Omeka\Model\Entity\EntityInterface;
+use Omeka\Entity\EntityInterface;
 use Omeka\Stdlib\ErrorStore;
 
 class ZoteroImportAdapter extends AbstractEntityAdapter
@@ -20,7 +20,7 @@ class ZoteroImportAdapter extends AbstractEntityAdapter
 
     public function getEntityClass()
     {
-        return 'ZoteroImport\Model\Entity\ZoteroImport';
+        return 'ZoteroImport\Entity\ZoteroImport';
     }
 
     public function hydrate(Request $request, EntityInterface $entity,

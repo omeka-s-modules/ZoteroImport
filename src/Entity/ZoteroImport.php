@@ -1,8 +1,8 @@
 <?php
-namespace ZoteroImport\Model\Entity;
+namespace ZoteroImport\Entity;
 
-use Omeka\Model\Entity\AbstractEntity;
-use Omeka\Model\Entity\Job;
+use Omeka\Entity\AbstractEntity;
+use Omeka\Entity\Job;
 
 /**
  * @Entity
@@ -17,7 +17,7 @@ class ZoteroImport extends AbstractEntity
     protected $id;
 
     /**
-     * @OneToOne(targetEntity="Omeka\Model\Entity\Job")
+     * @OneToOne(targetEntity="Omeka\Entity\Job")
      * @JoinColumn(onDelete="SET NULL")
      */
     protected $job;

@@ -7,7 +7,7 @@ return array(
     ),
     'entity_manager' => array(
         'mapping_classes_paths' => array(
-            OMEKA_PATH . '/module/ZoteroImport/src/Model/Entity',
+            OMEKA_PATH . '/module/ZoteroImport/src/Entity',
         ),
     ),
     'controllers' => array(
