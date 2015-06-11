@@ -146,7 +146,7 @@ class ImportForm extends AbstractForm
             'name' => 'importFiles',
             'required' => false,
             'filters' => array(
-                array('name' => 'Boolean'),
+                array('name' => 'ToInt'),
             ),
             'validators' => array(
                 array(
