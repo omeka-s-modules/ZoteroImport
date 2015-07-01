@@ -23,47 +23,24 @@ return array(
     'navigation' => array(
         'admin' => array(
             array(
-                'label'      => 'Zotero Import',
-                'route'      => 'zotero-import',
-                'resource'   => 'ZoteroImport\Controller\Index',
+                'label'    => 'Zotero Import',
+                'route'    => 'admin/zotero-import',
+                'resource' => 'ZoteroImport\Controller\Index',
             ),
         ),
     ),
     'router' => array(
         'routes' => array(
-            'zotero-import' => array(
-                'type' => 'Literal',
-                'options' => array(
-                    'route' => '/admin/zotero-import',
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'ZoteroImport\Controller',
-                        'controller'    => 'Index',
-                        'action'        => 'index',
-                    ),
-                ),
-                'may_terminate' => true,
+            'admin' => array(
                 'child_routes' => array(
-                    'default' => array(
-                        'type' => 'Segment',
+                    'zotero-import' => array(
+                        'type' => 'Literal',
                         'options' => array(
-                            'route' => '/[:controller[/:action]]',
-                            'constraints' => array(
-                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
-                        ),
-                    ),
-                    'id' => array(
-                        'type' => 'Segment',
-                        'options' => array(
-                            'route' => '/:controller/:id[/[:action]]',
-                            'constraints' => array(
-                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'id'         => '\d+',
-                            ),
+                            'route' => '/zotero-import',
                             'defaults' => array(
-                                'action' => 'show',
+                                '__NAMESPACE__' => 'ZoteroImport\Controller',
+                                'controller'    => 'Index',
+                                'action'        => 'index',
                             ),
                         ),
                     ),
