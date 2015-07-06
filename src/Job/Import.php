@@ -176,7 +176,7 @@ class Import extends AbstractJob
                 // @todo cache item IDs and delete them before returning
                 return;
             }
-            $batchCreate = $api->batchCreate('items', $oItemsChunk);
+            $batchCreate = $api->batchCreate('items', $oItemsChunk, array(), true);
             if ($batchCreate->isError()) {
                 throw new Exception\RuntimeException('There was an error during item batch create.');
             }
