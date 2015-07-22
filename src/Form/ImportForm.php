@@ -23,7 +23,7 @@ class ImportForm extends AbstractForm
                 'item_sets',
                 array('owner_id' => $auth->getIdentity()),
                 function ($itemSet, $serviceLocator) {
-                    return $itemSet->displayTitle('[no title]');
+                    return $itemSet->displayTitle();
                 }
             );
         $this->add($itemSetSelect);
