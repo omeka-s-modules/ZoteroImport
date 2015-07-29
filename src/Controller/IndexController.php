@@ -62,6 +62,16 @@ class IndexController extends AbstractActionController
         return $view;
     }
 
+    public function syncNewAction()
+    {
+        // get zotero imports run by the current user that have not already been synced
+        $imports = $this->api()->search('zotero_imports');
+
+        $view = new ViewModel;
+        $view->setVariable('imports', $imports->getContent());
+        return $view;
+    }
+
     /**
      * Validate a Zotero API key.
      *

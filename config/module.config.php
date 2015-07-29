@@ -28,19 +28,36 @@ return array(
                 'resource' => 'ZoteroImport\Controller\Index',
             ),
         ),
+        'zoteroimport' => array(
+            array(
+                'label' => 'Import',
+                'route'    => 'admin/zotero-import',
+                'action' => 'index',
+                'resource' => 'ZoteroImport\Controller\Index',
+            ),
+            array(
+                'label' => 'Sync New',
+                'route'    => 'admin/zotero-import',
+                'action' => 'sync-new',
+                'resource' => 'ZoteroImport\Controller\Index',
+            ),
+        ),
     ),
     'router' => array(
         'routes' => array(
             'admin' => array(
                 'child_routes' => array(
                     'zotero-import' => array(
-                        'type' => 'Literal',
+                        'type' => 'Segment',
                         'options' => array(
-                            'route' => '/zotero-import',
+                            'route' => '/zotero-import[/:action]',
+                            'constraints' => array(
+                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
                             'defaults' => array(
                                 '__NAMESPACE__' => 'ZoteroImport\Controller',
-                                'controller'    => 'Index',
-                                'action'        => 'index',
+                                'controller' => 'index',
+                                'action' => 'index',
                             ),
                         ),
                     ),

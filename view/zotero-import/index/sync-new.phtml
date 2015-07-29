@@ -1,0 +1,8 @@
+<nav class="section-nav">
+    <?php echo $this->navigation('Zend\Navigation\ZoteroImport')->menu(); ?>
+</nav>
+<ul>
+<?php foreach ($imports as $import): ?>
+    <li><?php echo $import->version(); ?></li>
+<?php endforeach; ?>
+</ul>
