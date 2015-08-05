@@ -176,9 +176,6 @@ class Import extends AbstractJob
                 return;
             }
             $response = $api->batchCreate('items', $oItemsChunk, array(), true);
-            if ($response->isError()) {
-                throw new Exception\RuntimeException('There was an error during item batch create.');
-            }
         }
     }
 
