@@ -167,7 +167,7 @@ class Import extends AbstractJob
                     $oItem = $this->mapAttachment($zChildItem, $oItem);
                 }
             }
-            $oItems[] = $oItem;
+            $oItems[$zParentItemKey] = $oItem;
         }
 
         // Batch create Omeka items.
@@ -176,8 +176,8 @@ class Import extends AbstractJob
                 // @todo cache item IDs and delete them before returning
                 return;
             }
-            $batchCreate = $api->batchCreate('items', $oItemsChunk, array(), true);
-            if ($batchCreate->isError()) {
+            $response = $api->batchCreate('items', $oItemsChunk, array(), true);
+            if ($response->isError()) {
                 throw new Exception\RuntimeException('There was an error during item batch create.');
             }
         }
