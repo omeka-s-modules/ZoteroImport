@@ -173,7 +173,6 @@ class Import extends AbstractJob
         // Batch create Omeka items.
         foreach (array_chunk($oItems, 50, true) as $oItemsChunk) {
             if ($this->shouldStop()) {
-                // @todo cache item IDs and delete them before returning
                 return;
             }
             $response = $api->batchCreate('items', $oItemsChunk, array(), true);
