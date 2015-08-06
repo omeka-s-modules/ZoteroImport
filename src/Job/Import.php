@@ -167,19 +167,15 @@ class Import extends AbstractJob
                     $oItem = $this->mapAttachment($zChildItem, $oItem);
                 }
             }
-            $oItems[] = $oItem;
+            $oItems[$zParentItemKey] = $oItem;
         }
 
         // Batch create Omeka items.
         foreach (array_chunk($oItems, 50, true) as $oItemsChunk) {
             if ($this->shouldStop()) {
-                // @todo cache item IDs and delete them before returning
                 return;
             }
-            $batchCreate = $api->batchCreate('items', $oItemsChunk, array(), true);
-            if ($batchCreate->isError()) {
-                throw new Exception\RuntimeException('There was an error during item batch create.');
-            }
+            $response = $api->batchCreate('items', $oItemsChunk, array(), true);
         }
     }
 
