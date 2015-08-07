@@ -32,13 +32,13 @@ return array(
             array(
                 'label' => 'Import',
                 'route'    => 'admin/zotero-import',
-                'action' => 'index',
+                'action' => 'import',
                 'resource' => 'ZoteroImport\Controller\Index',
             ),
             array(
-                'label' => 'Sync New',
+                'label' => 'Browse Imports',
                 'route'    => 'admin/zotero-import',
-                'action' => 'sync-new',
+                'action' => 'browse',
                 'resource' => 'ZoteroImport\Controller\Index',
             ),
         ),
@@ -57,7 +57,7 @@ return array(
                             'defaults' => array(
                                 '__NAMESPACE__' => 'ZoteroImport\Controller',
                                 'controller' => 'index',
-                                'action' => 'index',
+                                'action' => 'import',
                             ),
                         ),
                     ),
