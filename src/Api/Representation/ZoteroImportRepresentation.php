@@ -17,14 +17,24 @@ class ZoteroImportRepresentation extends AbstractEntityRepresentation
         );
     }
 
+    public function job()
+    {
+        return $this->getAdapter('jobs')
+            ->getRepresentation(null, $this->getData()->getJob());
+    }
+
     public function version()
     {
         return $this->getData()->getVersion();
     }
 
-    public function owner()
+    public function name()
     {
-        return $this->getAdapter('jobs')
-            ->getRepresentation(null, $this->getData()->getJob());
+        return $this->getData()->getName();
+    }
+
+    public function libraryUrl()
+    {
+        return $this->getData()->getUrl();
     }
 }

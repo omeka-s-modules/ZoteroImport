@@ -36,5 +36,11 @@ class ZoteroImportAdapter extends AbstractEntityAdapter
         if (isset($data['version'])) {
             $entity->setVersion($data['version']);
         }
+        if (isset($data['name'])) {
+            $entity->setName($data['name']);
+        }
+        if (isset($data['url'])) {
+            $entity->setUrl($data['url']);
+        }
     }
 }

@@ -135,7 +135,7 @@ class Import extends AbstractJob
                 }
                 $dateAdded = new DateTime($zItem['data']['dateAdded']);
                 if ($dateAdded->getTimestamp() < $this->getArg('timestamp', 0)) {
-                    continue; // only import items added since last import
+                    continue; // only import items added since the passed timestamp
                 }
                 if (isset($zItem['data']['parentItem'])) {
                     $zChildItems[$zItem['data']['parentItem']][] = $zItem;

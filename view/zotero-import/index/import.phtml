@@ -4,5 +4,8 @@
 <div id="page-actions">
     <button><?php echo $this->escapeHtml($this->translate('Submit')); ?></button>
 </div>
+<nav class="section-nav">
+    <?php echo $this->navigation('Zend\Navigation\ZoteroImport')->menu(); ?>
+</nav>
 <?php echo $this->formElements($form); ?>
 <?php echo $this->form()->closeTag(); ?>

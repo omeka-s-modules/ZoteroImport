@@ -8,7 +8,7 @@ use ZoteroImport\Zotero\Url;
 
 class IndexController extends AbstractActionController
 {
-    public function indexAction()
+    public function importAction()
     {
         $form = new ImportForm($this->getServiceLocator());
 
@@ -18,6 +18,10 @@ class IndexController extends AbstractActionController
 
             if ($form->isValid()) {
                 $data = $form->getData();
+                $timestamp = 0;
+                if ($data['dateAdded']) {
+                    $timestamp = (int) (new \DateTime($data['dateAdded']))->format('U');
+                }
                 $args = array(
                     'itemSet'       => $data['itemSet'],
                     'type'          => $data['type'],
@@ -26,7 +30,7 @@ class IndexController extends AbstractActionController
                     'apiKey'        => $data['apiKey'],
                     'importFiles'   => $data['importFiles'],
                     'version'       => 0,
-                    'timestamp'     => 0,
+                    'timestamp'     => $timestamp,
                 );
 
                 if ($args['apiKey'] && !$this->apiKeyIsValid($args)) {
@@ -35,6 +39,7 @@ class IndexController extends AbstractActionController
                     );
                 } else {
                     $response = $this->sendApiRequest($args);
+                    $body = json_decode($response->getBody(), true);
                     if (!$response->isSuccess()) {
                         $this->messenger()->addError(sprintf(
                             'Error when requesting Zotero library: %s', $response->getReasonPhrase()
@@ -46,6 +51,8 @@ class IndexController extends AbstractActionController
                         $this->api()->create('zotero_imports', array(
                             'o:job' => array('o:id' => $job->getId()),
                             'version' => $response->getHeaders()->get('Last-Modified-Version')->getFieldValue(),
+                            'name' => $body[0]['library']['name'],
+                            'url' => $body[0]['library']['links']['alternate']['href'],
                         ));
 
                         $form = new ImportForm($this->getServiceLocator()); // Clear the form.
@@ -59,6 +66,15 @@ class IndexController extends AbstractActionController
 
         $view = new ViewModel;
         $view->setVariable('form', $form);
+        return $view;
+    }
+
+    public function browseAction()
+    {
+        $imports = $this->api()->search('zotero_imports'/*, array('owner_id' => $currentUserId)*/);
+
+        $view = new ViewModel;
+        $view->setVariable('imports', $imports->getContent());
         return $view;
     }
 
@@ -102,7 +118,7 @@ class IndexController extends AbstractActionController
      */
     public function sendApiRequest(array $args)
     {
-        $params = array('limit' => 1, 'since' => '0', 'format' => 'versions');
+        $params = array('limit' => 1, 'since' => '0');
         $url = new Url($args['type'], $args['id']);
         if ($collectionKey = $args['collectionKey']) {
             $url = $url->collectionItems($collectionKey, $params);
