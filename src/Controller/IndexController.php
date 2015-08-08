@@ -18,6 +18,10 @@ class IndexController extends AbstractActionController
 
             if ($form->isValid()) {
                 $data = $form->getData();
+                $timestamp = 0;
+                if ($data['dateAdded']) {
+                    $timestamp = (int) (new \DateTime($data['dateAdded']))->format('U');
+                }
                 $args = array(
                     'itemSet'       => $data['itemSet'],
                     'type'          => $data['type'],
@@ -26,7 +30,7 @@ class IndexController extends AbstractActionController
                     'apiKey'        => $data['apiKey'],
                     'importFiles'   => $data['importFiles'],
                     'version'       => 0,
-                    'timestamp'     => 0,
+                    'timestamp'     => $timestamp,
                 );
 
                 if ($args['apiKey'] && !$this->apiKeyIsValid($args)) {
@@ -67,7 +71,7 @@ class IndexController extends AbstractActionController
 
     public function browseAction()
     {
-        $imports = $this->api()->search('zotero_imports');
+        $imports = $this->api()->search('zotero_imports'/*, array('owner_id' => $currentUserId)*/);
 
         $view = new ViewModel;
         $view->setVariable('imports', $imports->getContent());
