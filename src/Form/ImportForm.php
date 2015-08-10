@@ -84,11 +84,11 @@ class ImportForm extends AbstractForm
         ));
 
         $this->add(array(
-            'name' => 'dateAdded',
+            'name' => 'addedAfter',
             'type' => 'datetime-local',
             'options' => array(
                 'format' => 'Y-m-d\TH:i',
-                'label' => $translator->translate('Date Added'),
+                'label' => $translator->translate('Added after'),
                 'info' => $translator->translate('Only import items that have been added to Zotero after this datetime.'),
             ),
         ));
@@ -174,7 +174,7 @@ class ImportForm extends AbstractForm
         ));
 
         $inputFilter->add(array(
-            'name' => 'dateAdded',
+            'name' => 'addedAfter',
             'required' => false,
         ));
     }

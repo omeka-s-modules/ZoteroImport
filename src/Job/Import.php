@@ -82,12 +82,12 @@ class Import extends AbstractJob
      * - apiKey:        The Zotero API key (string)
      * - importFiles:   Whether to import file attachments (bool)
      * - version:       The Zotero Last-Modified-Version of the last import (int)
-     * - timestamp:     The Omeka Job::$started timestamp of the last import (int)
+     * - timestamp:     The Zotero dateAdded timestamp (UTC) to begin importing (int)
      *
      * Roughly follows Zotero's recommended steps for synchronizing a Zotero Web
      * API client with the Zotero server. But for the purposes of this job, a
      * "sync" only imports parent items (and their children) that have been
-     * added to Zotero since the last import.
+     * added to Zotero since the passed timestamp.
      *
      * @see https://www.zotero.org/support/dev/web_api/v3/syncing#full-library_syncing
      */
@@ -108,7 +108,15 @@ class Import extends AbstractJob
         $this->client = $this->getServiceLocator()->get('Omeka\HttpClient');
         $this->client->setHeaders($headers);
 
-        $params = array('since' => $this->getArg('version', 0), 'format' => 'versions');
+        // Sort by ascending date added so items are imported roughly in the
+        // same order. This way, if there is an error during an import, users
+        // can estimate when to set the "Added after" field.
+        $params = array(
+            'since'     => $this->getArg('version', 0),
+            'format'    => 'versions',
+            'sort'      => 'dateAdded',
+            'direction' => 'asc',
+        );
         $this->url = new Url($this->getArg('type'), $this->getArg('id'));
         if ($collectionKey = $this->getArg('collectionKey')) {
              $url = $this->url->collectionItems($collectionKey, $params);
@@ -135,7 +143,9 @@ class Import extends AbstractJob
                 }
                 $dateAdded = new DateTime($zItem['data']['dateAdded']);
                 if ($dateAdded->getTimestamp() < $this->getArg('timestamp', 0)) {
-                    continue; // only import items added since the passed timestamp
+                    // Only import items added since the passed timestamp. Note
+                    // that the timezone must be UTC.
+                    continue;
                 }
                 if (isset($zItem['data']['parentItem'])) {
                     $zChildItems[$zItem['data']['parentItem']][] = $zItem;

@@ -1,6 +1,8 @@
 <?php
 namespace ZoteroImport\Controller;
 
+use DateTime;
+use DateTimeZone;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use ZoteroImport\Form\ImportForm;
@@ -19,8 +21,10 @@ class IndexController extends AbstractActionController
             if ($form->isValid()) {
                 $data = $form->getData();
                 $timestamp = 0;
-                if ($data['dateAdded']) {
-                    $timestamp = (int) (new \DateTime($data['dateAdded']))->format('U');
+                if ($data['addedAfter']) {
+                    $addedAfter = new DateTime($data['addedAfter'],
+                        new DateTimeZone('UTC'));
+                    $timestamp = (int) $addedAfter->format('U');
                 }
                 $args = array(
                     'itemSet'       => $data['itemSet'],
@@ -71,10 +75,12 @@ class IndexController extends AbstractActionController
 
     public function browseAction()
     {
-        $imports = $this->api()->search('zotero_imports'/*, array('owner_id' => $currentUserId)*/);
+        $this->setBrowseDefaults('id');
+        $response = $this->api()->search('zotero_imports', $this->params()->fromQuery());
+        $this->paginator($response->getTotalResults(), $this->params()->fromQuery('page'));
 
         $view = new ViewModel;
-        $view->setVariable('imports', $imports->getContent());
+        $view->setVariable('imports', $response->getContent());
         return $view;
     }
 
