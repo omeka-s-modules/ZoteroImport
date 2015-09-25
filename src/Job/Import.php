@@ -391,7 +391,7 @@ class Import extends AbstractJob
                 }
                 $property = $this->properties['dcterms']['title'];
                 $omekaItem['o:media'][] = array(
-                    'o:type'     => 'url',
+                    'o:ingester' => 'url',
                     'o:source'   => $this->url->itemFile($zoteroItem['key']),
                     'ingest_url' => $this->url->itemFile(
                         $zoteroItem['key'],
