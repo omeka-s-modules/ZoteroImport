@@ -8,10 +8,10 @@ class ZoteroImportRepresentation extends AbstractEntityRepresentation
     public function getJsonLd()
     {
         return array(
-            'version' => $this->getData()->getVersion(),
+            'version' => $this->resource->getVersion(),
             'o:job' => $this->getReference(
                 null,
-                $this->getData()->getJob(),
+                $this->resource->getJob(),
                 $this->getAdapter('jobs')
             ),
         );
@@ -20,21 +20,21 @@ class ZoteroImportRepresentation extends AbstractEntityRepresentation
     public function job()
     {
         return $this->getAdapter('jobs')
-            ->getRepresentation(null, $this->getData()->getJob());
+            ->getRepresentation($this->resource->getJob());
     }
 
     public function version()
     {
-        return $this->getData()->getVersion();
+        return $this->resource->getVersion();
     }
 
     public function name()
     {
-        return $this->getData()->getName();
+        return $this->resource->getName();
     }
 
     public function libraryUrl()
     {
-        return $this->getData()->getUrl();
+        return $this->resource->getUrl();
     }
 }
