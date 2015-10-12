@@ -5,6 +5,11 @@ use Omeka\Api\Representation\AbstractEntityRepresentation;
 
 class ZoteroImportRepresentation extends AbstractEntityRepresentation
 {
+    public function getJsonLdType()
+    {
+        return 'o:ZoteroImport';
+    }
+
     public function getJsonLd()
     {
         return array(
