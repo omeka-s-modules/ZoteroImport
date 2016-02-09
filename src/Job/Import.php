@@ -290,8 +290,10 @@ class Import extends AbstractJob
                     $valueObject['property_id'] = $property->id();
                     if ('bibo' == $prefix && 'uri' == $localName) {
                         $valueObject['@id'] = $value;
+                        $valueObject['type'] = 'uri';
                     } else {
                         $valueObject['@value'] = $value;
+                        $valueObject['type'] = 'literal';
                     }
                     $omekaItem[$property->term()][] = $valueObject;
                     continue 2;
@@ -339,6 +341,7 @@ class Import extends AbstractJob
                     $omekaItem[$property->term()][] = array(
                         '@value' => $name,
                         'property_id' => $property->id(),
+                        'type' => 'literal',
                     );
                     continue 2;
                 }
@@ -365,6 +368,7 @@ class Import extends AbstractJob
             $omekaItem[$property->term()][] = array(
                 '@value' => $tag['tag'],
                 'property_id' => $property->id(),
+                'type' => 'literal',
             );
         }
         return $omekaItem;
@@ -401,6 +405,7 @@ class Import extends AbstractJob
                         array(
                             '@value' => $zoteroItem['data']['title'],
                             'property_id' => $property->id(),
+                            'type' => 'literal',
                         ),
                     ),
                 );
