@@ -24,14 +24,4 @@ class Module extends AbstractModule
         $connection->exec('ALTER TABLE zotero_import DROP FOREIGN KEY FK_82A3EEB8BE04EA9;');
         $connection->exec('DROP TABLE zotero_import');
     }
-
-    public function upgrade($oldVersion, $newVersion,
-        ServiceLocatorInterface $serviceLocator)
-    {
-        $connection = $serviceLocator->get('Omeka\Connection');
-        if (version_compare($oldVersion, '1.1', '<')) {
-            $connection->exec('ALTER TABLE zotero_import ADD name VARCHAR(255) NOT NULL, ADD url VARCHAR(255) NOT NULL;');
-        }
-    }
 }
-
