@@ -9,16 +9,13 @@ class ImportForm extends AbstractForm
 {
     public function buildForm()
     {
-        $translator = $this->getTranslator();
-
         $serviceLocator = $this->getServiceLocator();
-        $auth = $serviceLocator->get('Omeka\AuthenticationService');
         $itemSetSelect = new ResourceSelect($serviceLocator);
         $itemSetSelect->setName('itemSet')
             ->setAttribute('required', true)
-            ->setLabel('Import into')
-            ->setOption('info', $translator->translate('Required. Import items into this item set.'))
-            ->setEmptyOption('Select Item Set...')
+            ->setLabel('Import into') // @translate
+            ->setOption('info', 'Required. Import items into this item set.') // @translate
+            ->setEmptyOption('Select Item Set...') // @translate
             ->setResourceValueOptions(
                 'item_sets',
                 array('owner_id' => $auth->getIdentity()),
@@ -32,11 +29,11 @@ class ImportForm extends AbstractForm
             'name' => 'type',
             'type' => 'radio',
             'options' => array(
-                'label' =>  $translator->translate('Library Type'),
-                'info' => $translator->translate('Required. Is this a user or group library?'),
+                'label' =>  'Library Type',  // @translate
+                'info' => 'Required. Is this a user or group library?', // @translate
                 'value_options' => array(
-                    'user' => 'User',
-                    'group' => 'Group',
+                    'user' => 'User', // @translate
+                    'group' => 'Group', // @translate
                 ),
             ),
             'attributes' => array(
@@ -48,8 +45,8 @@ class ImportForm extends AbstractForm
             'name' => 'id',
             'type' => 'text',
             'options' => array(
-                'label' => $translator->translate('Library ID'),
-                'info' => $translator->translate('Required. The user ID can be found on the "Feeds/API" section of the Zotero settings page. The group ID can be found on the Zotero group library page by looking at the URL of "Subscribe to this feed".'),
+                'label' => 'Library ID', // @translate
+                'info' => 'Required. The user ID can be found on the "Feeds/API" section of the Zotero settings page. The group ID can be found on the Zotero group library page by looking at the URL of "Subscribe to this feed".', // @translate
             ),
             'attributes' => array(
                 'required' => true,
@@ -60,8 +57,8 @@ class ImportForm extends AbstractForm
             'name' => 'collectionKey',
             'type' => 'text',
             'options' => array(
-                'label' => $translator->translate('Collection Key'),
-                'info' => $translator->translate('Not required. The collection key can be found on the Zotero library page by looking at the URL when looking at the collection.'),
+                'label' => 'Collection Key', // @translate
+                'info' => 'Not required. The collection key can be found on the Zotero library page by looking at the URL when looking at the collection.', // @translate
             ),
         ));
 
@@ -69,8 +66,8 @@ class ImportForm extends AbstractForm
             'name' => 'apiKey',
             'type' => 'text',
             'options' => array(
-                'label' => $translator->translate('API Key'),
-                'info' => $translator->translate('Required for non-public libraries and file import.'),
+                'label' => 'API Key', // @translate
+                'info' => 'Required for non-public libraries and file import.', // @translate
             ),
         ));
 
@@ -78,8 +75,8 @@ class ImportForm extends AbstractForm
             'name' => 'importFiles',
             'type' => 'checkbox',
             'options' => array(
-                'label' => $translator->translate('Import Files'),
-                'info' => $translator->translate('The API key is required to import files.'),
+                'label' => 'Import Files', // @translate
+                'info' => 'The API key is required to import files.', // @translate
             ),
         ));
 
@@ -88,8 +85,8 @@ class ImportForm extends AbstractForm
             'type' => 'datetime-local',
             'options' => array(
                 'format' => 'Y-m-d\TH:i',
-                'label' => $translator->translate('Added after'),
-                'info' => $translator->translate('Only import items that have been added to Zotero after this datetime.'),
+                'label' => 'Added after', // @translate
+                'info' => 'Only import items that have been added to Zotero after this datetime.', // @translate
             ),
         ));
 
@@ -163,7 +160,7 @@ class ImportForm extends AbstractForm
                     'name' => 'Callback',
                     'options' => array(
                         'messages' => array(
-                            Callback::INVALID_VALUE => 'An API key is required to import files.',
+                            Callback::INVALID_VALUE => 'An API key is required to import files.', // @translate
                         ),
                         'callback' => function ($importFiles, $context) {
                             return $importFiles ? (bool) $context['apiKey'] : true;
