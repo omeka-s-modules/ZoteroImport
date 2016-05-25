@@ -21,7 +21,7 @@ return array(
         ),
     ),
     'navigation' => array(
-        'AdminGlobal' => array(
+        'AdminModule' => array(
             array(
                 'label'    => 'Zotero Import',
                 'route'    => 'admin/zotero-import',
