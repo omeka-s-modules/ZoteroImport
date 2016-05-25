@@ -10,6 +10,7 @@ class ImportForm extends AbstractForm
     public function buildForm()
     {
         $serviceLocator = $this->getServiceLocator();
+        $auth = $serviceLocator->get('Omeka\AuthenticationService');
         $itemSetSelect = new ResourceSelect($serviceLocator);
         $itemSetSelect->setName('itemSet')
             ->setAttribute('required', true)
