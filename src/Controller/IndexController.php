@@ -12,7 +12,7 @@ class IndexController extends AbstractActionController
 {
     public function importAction()
     {
-        $form = new ImportForm($this->getServiceLocator());
+        $form = $this->getForm(ImportForm::class);
 
         if ($this->getRequest()->isPost()) {
             $data = $this->params()->fromPost();
@@ -59,8 +59,8 @@ class IndexController extends AbstractActionController
                             'url' => $body[0]['library']['links']['alternate']['href'],
                         ));
 
-                        $form = new ImportForm($this->getServiceLocator()); // Clear the form.
                         $this->messenger()->addSuccess('Importing from Zotero');
+                        return $this->redirect()->refresh();
                     }
                 }
             } else {

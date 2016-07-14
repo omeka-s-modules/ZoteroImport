@@ -15,6 +15,11 @@ return array(
             'ZoteroImport\Controller\Index' => 'ZoteroImport\Controller\IndexController',
         ),
     ),
+    'form_elements' => array(
+        'factories' => array(
+            'ZoteroImport\Form\ImportForm' => 'ZoteroImport\Service\ImportFormFactory',
+        ),
+    ),
     'view_manager' => array(
         'template_path_stack'      => array(
             OMEKA_PATH . '/modules/ZoteroImport/view',

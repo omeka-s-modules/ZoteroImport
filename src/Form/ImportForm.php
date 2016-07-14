@@ -1,30 +1,36 @@
 <?php
 namespace ZoteroImport\Form;
 
-use Omeka\Form\AbstractForm;
+use Zend\Authentication\AuthenticationService;
+use Zend\Form\Form;
 use Omeka\Form\Element\ResourceSelect;
 use Zend\Validator\Callback;
 
-class ImportForm extends AbstractForm
+class ImportForm extends Form
 {
-    public function buildForm()
+    /**
+     * @var AuthenticationService
+     */
+    protected $auth;
+
+    public function init()
     {
-        $serviceLocator = $this->getServiceLocator();
-        $auth = $serviceLocator->get('Omeka\AuthenticationService');
-        $itemSetSelect = new ResourceSelect($serviceLocator);
-        $itemSetSelect->setName('itemSet')
-            ->setAttribute('required', true)
-            ->setLabel('Import into') // @translate
-            ->setOption('info', 'Required. Import items into this item set.') // @translate
-            ->setEmptyOption('Select Item Set...') // @translate
-            ->setResourceValueOptions(
-                'item_sets',
-                array('owner_id' => $auth->getIdentity()),
-                function ($itemSet, $serviceLocator) {
-                    return $itemSet->displayTitle();
-                }
-            );
-        $this->add($itemSetSelect);
+        $this->add([
+            'name' => 'itemSet',
+            'type' => ResourceSelect::class,
+            'options' => [
+                'label' => 'Import into', // @translate
+                'info' => 'Required. Import items into this item set.', // @translate
+                'empty_option' => 'Select Item Set...', // @translate
+                'resource_value_options' => [
+                    'resource' => 'item_sets',
+                    'query' => ['owner_id' => $this->auth->getIdentity()],
+                    'option_text_callback' => function ($itemSet) {
+                        return $itemSet->displayTitle();
+                    },
+                ],
+            ],
+        ]);
 
         $this->add(array(
             'name' => 'type',
@@ -175,5 +181,10 @@ class ImportForm extends AbstractForm
             'name' => 'addedAfter',
             'required' => false,
         ));
+    }
+
+    public function setAuth(AuthenticationService $auth)
+    {
+        $this->auth = $auth;
     }
 }
