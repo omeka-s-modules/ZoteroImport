@@ -32,155 +32,155 @@ class ImportForm extends Form
             ],
         ]);
 
-        $this->add(array(
+        $this->add([
             'name' => 'type',
             'type' => 'radio',
-            'options' => array(
+            'options' => [
                 'label' =>  'Library Type',  // @translate
                 'info' => 'Required. Is this a user or group library?', // @translate
-                'value_options' => array(
+                'value_options' => [
                     'user' => 'User', // @translate
                     'group' => 'Group', // @translate
-                ),
-            ),
-            'attributes' => array(
+                ],
+            ],
+            'attributes' => [
                 'required' => true,
-            ),
-        ));
+            ],
+        ]);
 
-        $this->add(array(
+        $this->add([
             'name' => 'id',
             'type' => 'text',
-            'options' => array(
+            'options' => [
                 'label' => 'Library ID', // @translate
                 'info' => 'Required. The user ID can be found on the "Feeds/API" section of the Zotero settings page. The group ID can be found on the Zotero group library page by looking at the URL of "Subscribe to this feed".', // @translate
-            ),
-            'attributes' => array(
+            ],
+            'attributes' => [
                 'required' => true,
-            ),
-        ));
+            ],
+        ]);
 
-        $this->add(array(
+        $this->add([
             'name' => 'collectionKey',
             'type' => 'text',
-            'options' => array(
+            'options' => [
                 'label' => 'Collection Key', // @translate
                 'info' => 'Not required. The collection key can be found on the Zotero library page by looking at the URL when looking at the collection.', // @translate
-            ),
-        ));
+            ],
+        ]);
 
-        $this->add(array(
+        $this->add([
             'name' => 'apiKey',
             'type' => 'text',
-            'options' => array(
+            'options' => [
                 'label' => 'API Key', // @translate
                 'info' => 'Required for non-public libraries and file import.', // @translate
-            ),
-        ));
+            ],
+        ]);
 
-        $this->add(array(
+        $this->add([
             'name' => 'importFiles',
             'type' => 'checkbox',
-            'options' => array(
+            'options' => [
                 'label' => 'Import Files', // @translate
                 'info' => 'The API key is required to import files.', // @translate
-            ),
-        ));
+            ],
+        ]);
 
-        $this->add(array(
+        $this->add([
             'name' => 'addedAfter',
             'type' => 'datetime-local',
-            'options' => array(
+            'options' => [
                 'format' => 'Y-m-d\TH:i',
                 'label' => 'Added after', // @translate
                 'info' => 'Only import items that have been added to Zotero after this datetime.', // @translate
-            ),
-        ));
+            ],
+        ]);
 
         $inputFilter = $this->getInputFilter();
 
-        $inputFilter->add(array(
+        $inputFilter->add([
             'name' => 'itemSet',
             'required' => true,
-            'filters' => array(
-                array('name' => 'Int'),
-            ),
-            'validators' => array(
-                array('name' => 'Digits'),
-            ),
-        ));
+            'filters' => [
+                ['name' => 'Int'],
+            ],
+            'validators' => [
+                ['name' => 'Digits'],
+            ],
+        ]);
 
-        $inputFilter->add(array(
+        $inputFilter->add([
             'name' => 'type',
             'required' => true,
-            'filters' => array(
-                array('name' => 'StringTrim'),
-                array('name' => 'StringToLower'),
-            ),
-            'validators' => array(
-                array(
+            'filters' => [
+                ['name' => 'StringTrim'],
+                ['name' => 'StringToLower'],
+            ],
+            'validators' => [
+                [
                     'name' => 'InArray',
-                    'options' => array(
-                        'haystack' => array('user', 'group'),
-                    ),
-                ),
-            ),
-        ));
+                    'options' => [
+                        'haystack' => ['user', 'group'],
+                    ],
+                ],
+            ],
+        ]);
 
-        $inputFilter->add(array(
+        $inputFilter->add([
             'name' => 'id',
             'required' => true,
-            'filters' => array(
-                array('name' => 'Int'),
-            ),
-            'validators' => array(
-                array('name' => 'Digits'),
-            ),
-        ));
+            'filters' => [
+                ['name' => 'Int'],
+            ],
+            'validators' => [
+                ['name' => 'Digits'],
+            ],
+        ]);
 
-        $inputFilter->add(array(
+        $inputFilter->add([
             'name' => 'collectionKey',
             'required' => false,
-            'filters' => array(
-                array('name' => 'StringTrim'),
-                array('name' => 'Null'),
-            ),
-        ));
+            'filters' => [
+                ['name' => 'StringTrim'],
+                ['name' => 'Null'],
+            ],
+        ]);
 
-        $inputFilter->add(array(
+        $inputFilter->add([
             'name' => 'apiKey',
             'required' => false,
-            'filters' => array(
-                array('name' => 'StringTrim'),
-                array('name' => 'Null'),
-            ),
-        ));
+            'filters' => [
+                ['name' => 'StringTrim'],
+                ['name' => 'Null'],
+            ],
+        ]);
 
-        $inputFilter->add(array(
+        $inputFilter->add([
             'name' => 'importFiles',
             'required' => false,
-            'filters' => array(
-                array('name' => 'ToInt'),
-            ),
-            'validators' => array(
-                array(
+            'filters' => [
+                ['name' => 'ToInt'],
+            ],
+            'validators' => [
+                [
                     'name' => 'Callback',
-                    'options' => array(
-                        'messages' => array(
+                    'options' => [
+                        'messages' => [
                             Callback::INVALID_VALUE => 'An API key is required to import files.', // @translate
-                        ),
+                        ],
                         'callback' => function ($importFiles, $context) {
                             return $importFiles ? (bool) $context['apiKey'] : true;
                         },
-                    ),
-                ),
-            ),
-        ));
+                    ],
+                ],
+            ],
+        ]);
 
-        $inputFilter->add(array(
+        $inputFilter->add([
             'name' => 'addedAfter',
             'required' => false,
-        ));
+        ]);
     }
 
     public function setAuth(AuthenticationService $auth)

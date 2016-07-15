@@ -51,7 +51,7 @@ class Url
      * @param array $params
      * @return string
      */
-    public function items(array $params = array())
+    public function items(array $params = [])
     {
         return sprintf('%s/%s/%s/items%s', self::BASE, $this->type,
             $this->id, $this->getParams($params));
@@ -64,7 +64,7 @@ class Url
      * @param array $params
      * @return string
      */
-    public function itemFile($itemKey, array $params = array())
+    public function itemFile($itemKey, array $params = [])
     {
         return sprintf('%s/%s/%s/items/%s/file%s', self::BASE, $this->type,
             $this->id, $itemKey, $this->getParams($params));
@@ -77,7 +77,7 @@ class Url
      * @param array $params
      * @return string
      */
-    public function collectionItems($collectionKey, array $params = array())
+    public function collectionItems($collectionKey, array $params = [])
     {
         return sprintf('%s/%s/%s/collections/%s/items%s', self::BASE,
             $this->type, $this->id, $collectionKey, $this->getParams($params));
@@ -105,7 +105,7 @@ class Url
         if (!$params) {
             return '';
         }
-        $paramArr = array();
+        $paramArr = [];
         foreach ($params as $key => $value) {
             $paramArr[] = sprintf('%s=%s', $key, $value);
         }

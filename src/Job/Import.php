@@ -29,46 +29,46 @@ class Import extends AbstractJob
      *
      * @var array
      */
-    protected $vocabularies = array(
+    protected $vocabularies = [
         'dcterms' => 'http://purl.org/dc/terms/',
         'dctype'  => 'http://purl.org/dc/dcmitype/',
         'bibo'    => 'http://purl.org/ontology/bibo/',
-    );
+    ];
 
     /**
      * Cache of selected Omeka resource classes
      *
      * @var array
      */
-    protected $resourceClasses = array();
+    protected $resourceClasses = [];
 
     /**
      * Cache of selected Omeka properties
      *
      * @var array
      */
-    protected $properties = array();
+    protected $properties = [];
 
     /**
      * Priority map between Zotero item types and Omeka resource classes
      *
      * @var array
      */
-    protected $itemTypeMap = array();
+    protected $itemTypeMap = [];
 
     /**
      * Priority map between Zotero item fields and Omeka properties
      *
      * @var array
      */
-    protected $itemFieldMap = array();
+    protected $itemFieldMap = [];
 
     /**
      * Priority map between Zotero creator types and Omeka properties
      *
      * @var array
      */
-    protected $creatorTypeMap = array();
+    protected $creatorTypeMap = [];
 
     /**
      * Perform the import.
@@ -101,7 +101,7 @@ class Import extends AbstractJob
         }
         $itemSet = $response->getContent();
 
-        $headers = array('Zotero-API-Version' => '3');
+        $headers = ['Zotero-API-Version' => '3'];
         if ($apiKey = $this->getArg('apiKey')) {
             $headers['Authorization'] = sprintf('Bearer %s', $apiKey);
         }
@@ -111,12 +111,12 @@ class Import extends AbstractJob
         // Sort by ascending date added so items are imported roughly in the
         // same order. This way, if there is an error during an import, users
         // can estimate when to set the "Added after" field.
-        $params = array(
+        $params = [
             'since'     => $this->getArg('version', 0),
             'format'    => 'versions',
             'sort'      => 'dateAdded',
             'direction' => 'asc',
-        );
+        ];
         $this->url = new Url($this->getArg('type'), $this->getArg('id'));
         if ($collectionKey = $this->getArg('collectionKey')) {
              $url = $this->url->collectionItems($collectionKey, $params);
@@ -128,10 +128,10 @@ class Import extends AbstractJob
         $zItemKeys = array_keys(json_decode($response->getBody(), true));
 
         // Cache all Zotero parent and child items.
-        $zParentItems = array();
-        $zChildItems = array();
+        $zParentItems = [];
+        $zChildItems = [];
         foreach (array_chunk($zItemKeys, 50, true) as $zItemKeysChunk) {
-            $params = array('itemKey' => implode(',', $zItemKeysChunk));
+            $params = ['itemKey' => implode(',', $zItemKeysChunk)];
             $url = $this->url->items($params);
 
             $response = $this->getResponse($url);
@@ -163,10 +163,10 @@ class Import extends AbstractJob
         $this->creatorTypeMap = require __DIR__ . '/creator_type_map.php';
 
         // Map Zotero items to Omeka items.
-        $oItems = array();
+        $oItems = [];
         foreach ($zParentItems as $zParentItemKey => $zParentItem) {
-            $oItem = array();
-            $oItem['o:item_set'] = array(array('o:id' => $itemSet->id()));
+            $oItem = [];
+            $oItem['o:item_set'] = [['o:id' => $itemSet->id()]];
             $oItem = $this->mapResourceClass($zParentItem, $oItem);
             $oItem = $this->mapNameValues($zParentItem, $oItem);
             $oItem = $this->mapSubjectValues($zParentItem, $oItem);
@@ -185,7 +185,7 @@ class Import extends AbstractJob
             if ($this->shouldStop()) {
                 return;
             }
-            $response = $api->batchCreate('items', $oItemsChunk, array(), true);
+            $response = $api->batchCreate('items', $oItemsChunk, [], true);
         }
     }
 
@@ -213,9 +213,9 @@ class Import extends AbstractJob
     {
         $api = $this->getServiceLocator()->get('Omeka\ApiManager');
         foreach ($this->vocabularies as $prefix => $namespaceUri) {
-            $classes = $api->search('resource_classes', array(
+            $classes = $api->search('resource_classes', [
                 'vocabulary_namespace_uri' => $namespaceUri,
-            ))->getContent();
+            ])->getContent();
             foreach ($classes as $class) {
                 $this->resourceClasses[$prefix][$class->localName()] = $class;
             }
@@ -229,9 +229,9 @@ class Import extends AbstractJob
     {
         $api = $this->getServiceLocator()->get('Omeka\ApiManager');
         foreach ($this->vocabularies as $prefix => $namespaceUri) {
-            $properties = $api->search('properties', array(
+            $properties = $api->search('properties', [
                 'vocabulary_namespace_uri' => $namespaceUri,
-            ))->getContent();
+            ])->getContent();
             foreach ($properties as $property) {
                 $this->properties[$prefix][$property->localName()] = $property;
             }
@@ -257,7 +257,7 @@ class Import extends AbstractJob
         foreach ($this->itemTypeMap[$type] as $prefix => $localName) {
             if (isset($this->resourceClasses[$prefix][$localName])) {
                 $class = $this->resourceClasses[$prefix][$localName];
-                $omekaItem['o:resource_class'] = array('o:id' => $class->id());
+                $omekaItem['o:resource_class'] = ['o:id' => $class->id()];
                 return $omekaItem;
             }
         }
@@ -286,7 +286,7 @@ class Import extends AbstractJob
             foreach ($this->itemFieldMap[$key] as $prefix => $localName) {
                 if (isset($this->properties[$prefix][$localName])) {
                     $property = $this->properties[$prefix][$localName];
-                    $valueObject = array();
+                    $valueObject = [];
                     $valueObject['property_id'] = $property->id();
                     if ('bibo' == $prefix && 'uri' == $localName) {
                         $valueObject['@id'] = $value;
@@ -321,7 +321,7 @@ class Import extends AbstractJob
             if (!isset($this->creatorTypeMap[$creatorType])) {
                 continue;
             }
-            $name = array();
+            $name = [];
             if (isset($creator['name'])) {
                 $name[] = $creator['name'];
             }
@@ -338,11 +338,11 @@ class Import extends AbstractJob
             foreach ($this->creatorTypeMap[$creatorType] as $prefix => $localName) {
                 if (isset($this->properties[$prefix][$localName])) {
                     $property = $this->properties[$prefix][$localName];
-                    $omekaItem[$property->term()][] = array(
+                    $omekaItem[$property->term()][] = [
                         '@value' => $name,
                         'property_id' => $property->id(),
                         'type' => 'literal',
-                    );
+                    ];
                     continue 2;
                 }
             }
@@ -365,11 +365,11 @@ class Import extends AbstractJob
         $tags = $zoteroItem['data']['tags'];
         foreach ($tags as $tag) {
             $property = $this->properties['dcterms']['subject'];
-            $omekaItem[$property->term()][] = array(
+            $omekaItem[$property->term()][] = [
                 '@value' => $tag['tag'],
                 'property_id' => $property->id(),
                 'type' => 'literal',
-            );
+            ];
         }
         return $omekaItem;
     }
@@ -394,21 +394,21 @@ class Import extends AbstractJob
                     break;
                 }
                 $property = $this->properties['dcterms']['title'];
-                $omekaItem['o:media'][] = array(
+                $omekaItem['o:media'][] = [
                     'o:ingester' => 'url',
                     'o:source'   => $this->url->itemFile($zoteroItem['key']),
                     'ingest_url' => $this->url->itemFile(
                         $zoteroItem['key'],
-                        array('key' => $this->getArg('apiKey'))
+                        ['key' => $this->getArg('apiKey')]
                     ),
-                    $property->term() => array(
-                        array(
+                    $property->term() => [
+                        [
                             '@value' => $zoteroItem['data']['title'],
                             'property_id' => $property->id(),
                             'type' => 'literal',
-                        ),
-                    ),
-                );
+                        ],
+                    ],
+                ];
                 break;
             case 'linked_url':
                 // @id url already mapped in mapValues()

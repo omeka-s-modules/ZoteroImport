@@ -26,7 +26,7 @@ class IndexController extends AbstractActionController
                         new DateTimeZone('UTC'));
                     $timestamp = (int) $addedAfter->format('U');
                 }
-                $args = array(
+                $args = [
                     'itemSet'       => $data['itemSet'],
                     'type'          => $data['type'],
                     'id'            => $data['id'],
@@ -35,7 +35,7 @@ class IndexController extends AbstractActionController
                     'importFiles'   => $data['importFiles'],
                     'version'       => 0,
                     'timestamp'     => $timestamp,
-                );
+                ];
 
                 if ($args['apiKey'] && !$this->apiKeyIsValid($args)) {
                     $this->messenger()->addError(
@@ -52,12 +52,12 @@ class IndexController extends AbstractActionController
                         $dispatcher = $this->getServiceLocator()->get('Omeka\JobDispatcher');
                         $job = $dispatcher->dispatch('ZoteroImport\Job\Import', $args);
 
-                        $this->api()->create('zotero_imports', array(
-                            'o:job' => array('o:id' => $job->getId()),
+                        $this->api()->create('zotero_imports', [
+                            'o:job' => ['o:id' => $job->getId()],
                             'version' => $response->getHeaders()->get('Last-Modified-Version')->getFieldValue(),
                             'name' => $body[0]['library']['name'],
                             'url' => $body[0]['library']['links']['alternate']['href'],
-                        ));
+                        ]);
 
                         $this->messenger()->addSuccess('Importing from Zotero');
                         return $this->redirect()->refresh();
@@ -124,14 +124,14 @@ class IndexController extends AbstractActionController
      */
     public function sendApiRequest(array $args)
     {
-        $params = array('limit' => 1, 'since' => '0');
+        $params = ['limit' => 1, 'since' => '0'];
         $url = new Url($args['type'], $args['id']);
         if ($collectionKey = $args['collectionKey']) {
             $url = $url->collectionItems($collectionKey, $params);
         } else {
             $url = $url->items($params);
         }
-        $headers = array('Zotero-API-Version' => '3');
+        $headers = ['Zotero-API-Version' => '3'];
         if ($args['apiKey']) {
             $headers['Authorization'] = sprintf('Bearer %s', $args['apiKey']);
         }
