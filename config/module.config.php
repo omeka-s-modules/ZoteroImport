@@ -11,8 +11,8 @@ return [
         ],
     ],
     'controllers' => [
-        'invokables' => [
-            'ZoteroImport\Controller\Index' => 'ZoteroImport\Controller\IndexController',
+        'factories' => [
+            'ZoteroImport\Controller\Index' => 'ZoteroImport\Service\IndexControllerFactory',
         ],
     ],
     'form_elements' => [
