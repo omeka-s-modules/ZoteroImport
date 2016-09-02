@@ -2,14 +2,14 @@
 namespace ZoteroImport\Service;
 
 use ZoteroImport\Form\ImportForm;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
+use Interop\Container\ContainerInterface;
 
 class ImportFormFactory implements FactoryInterface
 {
-    public function createService(ServiceLocatorInterface $elements)
+    public function __invoke(ContainerInterface $services, $requestedName, array $options = null)
     {
-        $auth = $elements->getServiceLocator()->get('Omeka\AuthenticationService');
+        $auth = $services->get('Omeka\AuthenticationService');
         $form = new ImportForm();
         $form->setAuth($auth);
         return $form;

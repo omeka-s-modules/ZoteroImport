@@ -89,7 +89,7 @@ class ImportForm extends Form
 
         $this->add([
             'name' => 'addedAfter',
-            'type' => 'datetime-local',
+            'type' => 'datetimelocal',
             'options' => [
                 'format' => 'Y-m-d\TH:i',
                 'label' => 'Added after', // @translate
