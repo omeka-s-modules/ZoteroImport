@@ -1,18 +1,12 @@
 <?php
 namespace ZoteroImport\Form;
 
-use Zend\Authentication\AuthenticationService;
 use Zend\Form\Form;
 use Omeka\Form\Element\ResourceSelect;
 use Zend\Validator\Callback;
 
 class ImportForm extends Form
 {
-    /**
-     * @var AuthenticationService
-     */
-    protected $auth;
-
     public function init()
     {
         $this->add([
@@ -24,7 +18,7 @@ class ImportForm extends Form
                 'empty_option' => 'Select Item Set...', // @translate
                 'resource_value_options' => [
                     'resource' => 'item_sets',
-                    'query' => ['owner_id' => $this->auth->getIdentity()],
+                    'query' => ['is_open' => true],
                     'option_text_callback' => function ($itemSet) {
                         return $itemSet->displayTitle();
                     },
@@ -184,10 +178,5 @@ class ImportForm extends Form
             'name' => 'addedAfter',
             'required' => false,
         ]);
-    }
-
-    public function setAuth(AuthenticationService $auth)
-    {
-        $this->auth = $auth;
     }
 }

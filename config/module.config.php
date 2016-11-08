@@ -15,11 +15,6 @@ return [
             'ZoteroImport\Controller\Index' => 'ZoteroImport\Service\IndexControllerFactory',
         ],
     ],
-    'form_elements' => [
-        'factories' => [
-            'ZoteroImport\Form\ImportForm' => 'ZoteroImport\Service\ImportFormFactory',
-        ],
-    ],
     'view_manager' => [
         'template_path_stack'      => [
             OMEKA_PATH . '/modules/ZoteroImport/view',
