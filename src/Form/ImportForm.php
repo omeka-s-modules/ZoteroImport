@@ -30,6 +30,9 @@ class ImportForm extends Form
                     },
                 ],
             ],
+            'attributes' => [
+                'required' => true,
+            ],
         ]);
 
         $this->add([
