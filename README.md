@@ -13,9 +13,9 @@ See general end user documentation for [Installing a module](https://github.com/
 
 From the main navigation on the left of the admin screen, click "Zotero Import"
 
-1. Choose an Item Set for imported items.
+1. Required. Choose an Item Set for imported items. 
 
-1. Choose collection type, "User" or "Group"
+1. Required. Choose collection type, "User" or "Group"
   
 1. Required. The user ID can be found on the "Feeds/API" section of the Zotero settings page. The group ID can be found on the Zotero group library page by looking at the URL of "Subscribe to this feed".
   
