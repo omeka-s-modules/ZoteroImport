@@ -7,6 +7,10 @@ Import items from Zotero to Omeka S
 
 See general end user documentation for [Installing a module](https://github.com/omeka/omeka-s-enduser/blob/master/modules/modules.md#installing-modules)
 
+Ensure that your Zotero library is published. Login to Zotero, go to settings, and then to privacy. Make sure that 'publish entire library' is checked. The 'publish notes' box can also be checked. 
+
+To find your API key, go to the feeds/API section of settings. Here you can view your userID and generate and view keys.
+
 ## Usage
 
 ### Importing
@@ -28,4 +32,8 @@ From the main navigation on the left of the admin screen, click "Zotero Import"
 1. Choose "Added After". Only import items that have been added to Zotero after this datetime.
 
 1. Hit Submit.
+
+Be aware that items you import from your Zotero library must be removed manually. There is no way to delete the entire import in one batch. 
+
+
 
