@@ -42,4 +42,13 @@ class ZoteroImportRepresentation extends AbstractEntityRepresentation
     {
         return $this->resource->getUrl();
     }
+
+    public function itemIds()
+    {
+        $itemIds = [];
+        foreach ($this->resource->getItems() as $item) {
+            $itemIds[] = $item->getItem()->getId();
+        }
+        return $itemIds;
+    }
 }

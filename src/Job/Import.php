@@ -76,6 +76,7 @@ class Import extends AbstractJob
      * Accepts the following arguments:
      *
      * - itemSet:       The Omeka item set ID (int)
+     * - import:        The Omeka Zotero import ID (int)
      * - type:          The Zotero library type (user, group)
      * - id:            The Zotero library ID (int)
      * - collectionKey: The Zotero collection key (string)
@@ -180,12 +181,25 @@ class Import extends AbstractJob
             $oItems[$zParentItemKey] = $oItem;
         }
 
+        $em = $this->getServiceLocator()->get('Omeka\EntityManager');
+
         // Batch create Omeka items.
         foreach (array_chunk($oItems, 50, true) as $oItemsChunk) {
             if ($this->shouldStop()) {
                 return;
             }
             $response = $api->batchCreate('items', $oItemsChunk, [], true);
+            $importId = $this->getArg('import');
+            foreach ($response->getContent() as $item) {
+                echo $item->id();
+                $importEntity = $em->find('ZoteroImport\Entiry\ZoteroImport', $importId);
+                $itemEntity = $em->find('ZoteroImport\Entiry\ZoteroImport', $item->id());
+                $importItem = new \ZoteroImport\Entity\ZoteroImportItem;
+                $importItem->setImport($importEntity);
+                $importItem->setItem($itemEntity);
+                $em->persist($importItem);
+            }
+            $em->flush();
         }
     }
 

@@ -67,13 +67,20 @@ class IndexController extends AbstractActionController
                             'Error when requesting Zotero library: %s', $response->getReasonPhrase()
                         ));
                     } else {
-                        $job = $this->dispatcher->dispatch('ZoteroImport\Job\Import', $args);
-
-                        $this->api()->create('zotero_imports', [
-                            'o:job' => ['o:id' => $job->getId()],
+                        // Must create the import first so we can pass the
+                        // import ID to the job.
+                        $import = $this->api()->create('zotero_imports', [
                             'version' => $response->getHeaders()->get('Last-Modified-Version')->getFieldValue(),
                             'name' => $body[0]['library']['name'],
                             'url' => $body[0]['library']['links']['alternate']['href'],
+                        ])->getContent();
+
+                        $args['import'] = $import->id();
+                        $job = $this->dispatcher->dispatch('ZoteroImport\Job\Import', $args);
+
+                        // Update the import to add the job ID.
+                        $this->api()->update('zotero_imports', $import->id(), [
+                            'o:job' => ['o:id' => $job->getId()],
                         ]);
 
                         $this->messenger()->addSuccess('Importing from Zotero');
