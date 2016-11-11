@@ -38,7 +38,7 @@ return [
             ],
             [
                 'label' => 'Browse Imports',
-                'route'    => 'admin/zotero-import',
+                'route'    => 'admin/zotero-import/default',
                 'action' => 'browse',
                 'resource' => 'ZoteroImport\Controller\Index',
             ],
@@ -49,16 +49,35 @@ return [
             'admin' => [
                 'child_routes' => [
                     'zotero-import' => [
-                        'type' => 'Segment',
+                        'type' => 'Literal',
                         'options' => [
-                            'route' => '/zotero-import[/:action]',
-                            'constraints' => [
-                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ],
+                            'route' => '/zotero-import',
                             'defaults' => [
                                 '__NAMESPACE__' => 'ZoteroImport\Controller',
                                 'controller' => 'index',
                                 'action' => 'import',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [
+                            'id' => [
+                                'type' => 'Segment',
+                                'options' => [
+                                    'route' => '/:import-id[/:action]',
+                                    'constraints' => [
+                                        'import-id' => '\d+',
+                                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                    ],
+                                ],
+                            ],
+                            'default' => [
+                                'type' => 'Segment',
+                                'options' => [
+                                    'route' => '/:action',
+                                    'constraints' => [
+                                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                    ],
+                                ],
                             ],
                         ],
                     ],
