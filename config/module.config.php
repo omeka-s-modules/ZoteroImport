@@ -3,6 +3,7 @@ return [
     'api_adapters' => [
         'invokables' => [
             'zotero_imports' => 'ZoteroImport\Api\Adapter\ZoteroImportAdapter',
+            'zotero_import_items' => 'ZoteroImport\Api\Adapter\ZoteroImportItemAdapter',
         ],
     ],
     'entity_manager' => [

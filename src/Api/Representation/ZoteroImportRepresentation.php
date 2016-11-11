@@ -7,18 +7,16 @@ class ZoteroImportRepresentation extends AbstractEntityRepresentation
 {
     public function getJsonLdType()
     {
-        return 'o:ZoteroImport';
+        return 'o-module-zotero_import:ZoteroImport';
     }
 
     public function getJsonLd()
     {
         return [
-            'version' => $this->resource->getVersion(),
-            'o:job' => $this->getReference(
-                null,
-                $this->resource->getJob(),
-                $this->getAdapter('jobs')
-            ),
+            'o:job' => $this->job()->getReference(),
+            'o-module-zotero_import:name' => $this->resource->getName(),
+            'o-module-zotero_import:url' => $this->resource->getUrl(),
+            'o-module-zotero_import:version' => $this->resource->getVersion(),
         ];
     }
 
@@ -41,14 +39,5 @@ class ZoteroImportRepresentation extends AbstractEntityRepresentation
     public function libraryUrl()
     {
         return $this->resource->getUrl();
-    }
-
-    public function itemIds()
-    {
-        $itemIds = [];
-        foreach ($this->resource->getItems() as $item) {
-            $itemIds[] = $item->getItem()->getId();
-        }
-        return $itemIds;
     }
 }

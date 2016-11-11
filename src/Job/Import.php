@@ -181,25 +181,22 @@ class Import extends AbstractJob
             $oItems[$zParentItemKey] = $oItem;
         }
 
-        $em = $this->getServiceLocator()->get('Omeka\EntityManager');
-
         // Batch create Omeka items.
         foreach (array_chunk($oItems, 50, true) as $oItemsChunk) {
             if ($this->shouldStop()) {
                 return;
             }
             $response = $api->batchCreate('items', $oItemsChunk, [], true);
-            $importId = $this->getArg('import');
+
+            // Batch create Zotero import items.
+            $importItems = [];
             foreach ($response->getContent() as $item) {
-                echo $item->id();
-                $importEntity = $em->find('ZoteroImport\Entiry\ZoteroImport', $importId);
-                $itemEntity = $em->find('ZoteroImport\Entiry\ZoteroImport', $item->id());
-                $importItem = new \ZoteroImport\Entity\ZoteroImportItem;
-                $importItem->setImport($importEntity);
-                $importItem->setItem($itemEntity);
-                $em->persist($importItem);
+                $importItems[] = [
+                    'o:job' => ['o:id' => $this->job->getId()],
+                    'o:item' => ['o:id' => $item->id()],
+                ];
             }
-            $em->flush();
+            $api->batchCreate('zotero_import_items', $importItems, [], true);
         }
     }
 
