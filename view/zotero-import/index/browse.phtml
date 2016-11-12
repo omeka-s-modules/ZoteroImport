@@ -26,7 +26,10 @@
         <td>
             <?php echo $this->hyperlink($import->name(), $import->libraryUrl()); ?>
             <ul class="actions">
-                <?php if (!$undoJob && in_array($job->status(), ['completed', 'stopped', 'error'])): ?>
+                <?php if (
+                    in_array($job->status(), ['completed', 'stopped', 'error'])
+                    && (!$undoJob || in_array($undoJob->status(), ['stopped', 'error']))
+                ): ?>
                 <li><a href="#"
                     data-sidebar-content-url="<?php echo $this->escapeHtml($import->url('undo-confirm')); ?>"
                     class="o-icon-delete sidebar-content"
@@ -40,7 +43,7 @@
             <?php echo $this->hyperlink(sprintf('Import %s', $job->statusLabel()), $job->url()); ?>
             <?php if ($undoJob): ?>
             <br>
-            <?php echo $this->hyperlink(sprintf('Undo %s', $undoJob->statusLabel()), $undoJob->url()); ?>
+            <?php echo $this->hyperlink(sprintf('Undo Import %s', $undoJob->statusLabel()), $undoJob->url()); ?>
             <?php endif; ?>
         </td>
     </tr>
