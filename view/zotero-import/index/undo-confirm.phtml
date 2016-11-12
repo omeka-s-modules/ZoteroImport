@@ -1,0 +1,11 @@
+<div id="sidebar-confirm">
+    <h3><?php echo $this->translate('Undo Import'); ?></h3>
+    <p><?php echo $this->translate('Are you sure you would like to undo this import? This will delete all imported items.'); ?></p>
+    <?php echo $this->form($this->form); ?>
+    <h4><?php echo $this->translate('Zotero Library'); ?></h4>
+    <div class="value"><?php echo $import->name(); ?></div>
+    <h4><?php echo $this->translate('Items Added Before'); ?></h4>
+    <div class="value"><?php echo $this->i18n()->dateFormat($import->job()->started(), 'medium', 'medium'); ?></div>
+    <h4><?php echo $this->translate('Job Status'); ?></h4>
+    <div class="value"><?php echo $import->job()->statusLabel(); ?></div>
+</div>

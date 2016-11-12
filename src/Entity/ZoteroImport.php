@@ -17,10 +17,26 @@ class ZoteroImport extends AbstractEntity
     protected $id;
 
     /**
-     * @OneToOne(targetEntity="Omeka\Entity\Job")
-     * @JoinColumn(onDelete="SET NULL")
+     * @OneToOne(
+     *     targetEntity="Omeka\Entity\Job"
+     * )
+     * @JoinColumn(
+     *     nullable=false,
+     *     onDelete="CASCADE"
+     * )
      */
+
     protected $job;
+    /**
+     * @OneToOne(
+     *     targetEntity="Omeka\Entity\Job"
+     * )
+     * @JoinColumn(
+     *     nullable=true,
+     *     onDelete="CASCADE"
+     * )
+     */
+    protected $undoJob;
 
     /**
      * @Column
@@ -50,6 +66,16 @@ class ZoteroImport extends AbstractEntity
     public function getJob()
     {
         return $this->job;
+    }
+
+    public function setUndoJob(Job $undoJob)
+    {
+        $this->undoJob = $undoJob;
+    }
+
+    public function getUndoJob()
+    {
+        return $this->undoJob;
     }
 
     public function setName($name)

@@ -76,6 +76,7 @@ class Import extends AbstractJob
      * Accepts the following arguments:
      *
      * - itemSet:       The Omeka item set ID (int)
+     * - import:        The Omeka Zotero import ID (int)
      * - type:          The Zotero library type (user, group)
      * - id:            The Zotero library ID (int)
      * - collectionKey: The Zotero collection key (string)
@@ -186,6 +187,16 @@ class Import extends AbstractJob
                 return;
             }
             $response = $api->batchCreate('items', $oItemsChunk, [], true);
+
+            // Batch create Zotero import items.
+            $importItems = [];
+            foreach ($response->getContent() as $item) {
+                $importItems[] = [
+                    'o:job' => ['o:id' => $this->job->getId()],
+                    'o:item' => ['o:id' => $item->id()],
+                ];
+            }
+            $api->batchCreate('zotero_import_items', $importItems, [], true);
         }
     }
 

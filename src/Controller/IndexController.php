@@ -3,6 +3,7 @@ namespace ZoteroImport\Controller;
 
 use DateTime;
 use DateTimeZone;
+use Omeka\Form\ConfirmForm;
 use Omeka\Job\Dispatcher;
 use Zend\Http\Client;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -57,31 +58,32 @@ class IndexController extends AbstractActionController
 
                 if ($args['apiKey'] && !$this->apiKeyIsValid($args)) {
                     $this->messenger()->addError(
-                        'Cannot import the Zotero library using the provided API key'
+                        'Cannot import the Zotero library using the provided API key' // @translate
                     );
                 } else {
                     $response = $this->sendApiRequest($args);
                     $body = json_decode($response->getBody(), true);
-                    if (!$response->isSuccess()) {
-                        $this->messenger()->addError(sprintf(
-                            'Error when requesting Zotero library: %s', $response->getReasonPhrase()
-                        ));
-                    } else {
+                    if ($response->isSuccess()) {
                         $job = $this->dispatcher->dispatch('ZoteroImport\Job\Import', $args);
 
                         $this->api()->create('zotero_imports', [
                             'o:job' => ['o:id' => $job->getId()],
-                            'version' => $response->getHeaders()->get('Last-Modified-Version')->getFieldValue(),
-                            'name' => $body[0]['library']['name'],
-                            'url' => $body[0]['library']['links']['alternate']['href'],
+                            'o-module-zotero_import:version' => $response->getHeaders()->get('Last-Modified-Version')->getFieldValue(),
+                            'o-module-zotero_import:name' => $body[0]['library']['name'],
+                            'o-module-zotero_import:url' => $body[0]['library']['links']['alternate']['href'],
                         ]);
 
                         $this->messenger()->addSuccess('Importing from Zotero');
-                        return $this->redirect()->refresh();
+                        return $this->redirect()->toRoute('admin/zotero-import/default', ['action' => 'browse']);
+                    } else {
+                        $this->messenger()->addError(sprintf(
+                            'Error when requesting Zotero library: %s', // @translate
+                            $response->getReasonPhrase()
+                        ));
                     }
                 }
             } else {
-                $this->messenger()->addError('There was an error during validation');
+                $this->messenger()->addFormErrors($form);
             }
         }
 
@@ -99,6 +101,44 @@ class IndexController extends AbstractActionController
         $view = new ViewModel;
         $view->setVariable('imports', $response->getContent());
         return $view;
+    }
+
+    public function undoConfirmAction()
+    {
+        $import = $this->api()
+            ->read('zotero_imports', $this->params('import-id'))->getContent();
+        $form = $this->getForm(ConfirmForm::class);
+        $form->setAttribute('action', $import->url('undo'));
+
+        $view = new ViewModel;
+        $view->setTerminal(true);
+        $view->setTemplate('zotero-import/index/undo-confirm');
+        $view->setVariable('import', $import);
+        $view->setVariable('form', $form);
+        return $view;
+    }
+
+    public function undoAction()
+    {
+        if ($this->getRequest()->isPost()) {
+            $import = $this->api()
+                ->read('zotero_imports', $this->params('import-id'))->getContent();
+            if (in_array($import->job()->status(), ['completed', 'stopped', 'error'])) {
+                $form = $this->getForm(ConfirmForm::class);
+                $form->setData($this->getRequest()->getPost());
+                if ($form->isValid()) {
+                    $args = ['job' => $import->job()->id()];
+                    $job = $this->dispatcher->dispatch('ZoteroImport\Job\UndoImport', $args);
+                    $this->api()->update('zotero_imports', $import->id(), [
+                        'o-module-zotero_import:undo_job' => ['o:id' => $job->getId()],
+                    ]);
+                    $this->messenger()->addSuccess('Undoing Zotero import'); // @translate
+                } else {
+                    $this->messenger()->addFormErrors($form);
+                }
+            }
+        }
+        return $this->redirect()->toRoute(null, ['action' => 'browse'], true);
     }
 
     /**

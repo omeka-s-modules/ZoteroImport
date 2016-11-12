@@ -32,15 +32,19 @@ class ZoteroImportAdapter extends AbstractEntityAdapter
             $job = $this->getAdapter('jobs')->findEntity($data['o:job']['o:id']);
             $entity->setJob($job);
         }
+        if (isset($data['o-module-zotero_import:undo_job']['o:id'])) {
+            $job = $this->getAdapter('jobs')->findEntity($data['o-module-zotero_import:undo_job']['o:id']);
+            $entity->setUndoJob($job);
+        }
 
-        if (isset($data['version'])) {
-            $entity->setVersion($data['version']);
+        if (isset($data['o-module-zotero_import:version'])) {
+            $entity->setVersion($data['o-module-zotero_import:version']);
         }
-        if (isset($data['name'])) {
-            $entity->setName($data['name']);
+        if (isset($data['o-module-zotero_import:name'])) {
+            $entity->setName($data['o-module-zotero_import:name']);
         }
-        if (isset($data['url'])) {
-            $entity->setUrl($data['url']);
+        if (isset($data['o-module-zotero_import:url'])) {
+            $entity->setUrl($data['o-module-zotero_import:url']);
         }
     }
 }
