@@ -9,23 +9,26 @@ class UndoImport extends AbstractJob
     public function perform()
     {
         $api = $this->getServiceLocator()->get('Omeka\ApiManager');
-        $importItems = $api->search('zotero_import_items', [
-            'import_id' => $this->getArg('import'),
-        ])->getContent();
+        $em = $this->getServiceLocator()->get('Omeka\EntityManager');
+
+        // Use DQL instead of API search to get the item IDs so Doctrine doesn't
+        // have to manage the import items, which speeds up item delete.
+        $query = $em->createQuery('
+        SELECT i.id
+        FROM ZoteroImport\Entity\ZoteroImportItem ii
+        JOIN ii.item i
+        WHERE ii.import = ?1');
+        $items = $query->setParameter(1, $this->getArg('import'))->getResult();
 
         $i = 0;
-        foreach ($importItems as $importItem) {
+        foreach ($items as $item) {
             if ($i++ % 50 == 0) {
                 if ($this->shouldStop()) {
                     return;
                 }
             }
-            // Must delete the import item first because, otherwise, Doctrine
-            // detects an unmanaged item entity at ZoteroImportItem#item on
-            // flush and doesn't know what to do with it.
             try {
-                $api->delete('zotero_import_items', $importItem->id());
-                $api->delete('items', $importItem->item()->id());
+                $api->delete('items', $item['id']);
             } catch (NotFoundException $e) {
                 // Ignore a "not found" exception if an item is deleted during
                 // this iteration.
