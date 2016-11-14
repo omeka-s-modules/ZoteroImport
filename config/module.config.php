@@ -37,7 +37,7 @@ return [
                 'resource' => 'ZoteroImport\Controller\Index',
             ],
             [
-                'label' => 'Browse Imports',
+                'label' => 'Past Imports',
                 'route'    => 'admin/zotero-import/default',
                 'action' => 'browse',
                 'resource' => 'ZoteroImport\Controller\Index',
