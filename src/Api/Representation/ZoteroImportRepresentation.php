@@ -19,7 +19,7 @@ class ZoteroImportRepresentation extends AbstractEntityRepresentation
     {
         return [
             'o:job' => $this->job()->getReference(),
-            'o:undo_job' => $this->undoJob()->getReference(),
+            'o-module-zotero_import:undo_job' => $this->undoJob()->getReference(),
             'o-module-zotero_import:name' => $this->resource->getName(),
             'o-module-zotero_import:url' => $this->resource->getUrl(),
             'o-module-zotero_import:version' => $this->resource->getVersion(),
@@ -51,5 +51,10 @@ class ZoteroImportRepresentation extends AbstractEntityRepresentation
     public function libraryUrl()
     {
         return $this->resource->getUrl();
+    }
+
+    public function importItemCount()
+    {
+        return $this->resource->getImportItems()->count();
     }
 }

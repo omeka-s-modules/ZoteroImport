@@ -29,19 +29,19 @@ class ZoteroImportItemAdapter extends AbstractEntityAdapter
     ) {
         $data = $request->getContent();
 
-        $job = $this->getAdapter('jobs')->findEntity($data['o:job']['o:id']);
+        $import = $this->getAdapter('zotero_imports')->findEntity($data['o-module-zotero_import:import']['o:id']);
         $item = $this->getAdapter('items')->findEntity($data['o:item']['o:id']);
 
-        $entity->setJob($job);
+        $entity->setImport($import);
         $entity->setItem($item);
     }
 
     public function buildQuery(QueryBuilder $qb, array $query)
     {
-        if (isset($query['job_id'])) {
+        if (isset($query['import_id'])) {
             $qb->andWhere($qb->expr()->eq(
-                sprintf('%s.job', $this->getEntityClass()),
-                $this->createNamedParameter($qb, $query['job_id']))
+                sprintf('%s.import', $this->getEntityClass()),
+                $this->createNamedParameter($qb, $query['import_id']))
             );
         }
     }

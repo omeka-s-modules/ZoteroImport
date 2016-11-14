@@ -1,6 +1,7 @@
 <?php
 namespace ZoteroImport\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Omeka\Entity\AbstractEntity;
 use Omeka\Entity\Job;
 
@@ -21,7 +22,7 @@ class ZoteroImport extends AbstractEntity
      *     targetEntity="Omeka\Entity\Job"
      * )
      * @JoinColumn(
-     *     nullable=false,
+     *     nullable=true,
      *     onDelete="CASCADE"
      * )
      */
@@ -52,6 +53,20 @@ class ZoteroImport extends AbstractEntity
      * @Column(type="integer")
      */
     protected $version;
+
+    /**
+     * @OneToMany(
+     *     targetEntity="ZoteroImportItem",
+     *     mappedBy="import",
+     *     fetch="EXTRA_LAZY"
+     * )
+     */
+    protected $importItems;
+
+    public function __construct()
+    {
+        $this->importItems = new ArrayCollection;
+    }
 
     public function getId()
     {
@@ -106,5 +121,10 @@ class ZoteroImport extends AbstractEntity
     public function getVersion()
     {
         return $this->version;
+    }
+
+    public function getImportItems()
+    {
+        return $this->importItems;
     }
 }

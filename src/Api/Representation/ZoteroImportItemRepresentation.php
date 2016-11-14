@@ -13,15 +13,15 @@ class ZoteroImportItemRepresentation extends AbstractEntityRepresentation
     public function getJsonLd()
     {
         return [
-            'o:job' => $this->job()->getReference(),
+            'o-module-zotero_import:import' => $this->import()->getReference(),
             'o:item' => $this->job()->getReference(),
         ];
     }
 
-    public function job()
+    public function import()
     {
-        return $this->getAdapter('jobs')
-            ->getRepresentation($this->resource->getJob());
+        return $this->getAdapter('zotero_imports')
+            ->getRepresentation($this->resource->getImport());
     }
 
     public function item()

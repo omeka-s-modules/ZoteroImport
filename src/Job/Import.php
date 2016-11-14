@@ -182,6 +182,7 @@ class Import extends AbstractJob
         }
 
         // Batch create Omeka items.
+        $importId = $this->getArg('import');
         foreach (array_chunk($oItems, 50, true) as $oItemsChunk) {
             if ($this->shouldStop()) {
                 return;
@@ -192,7 +193,7 @@ class Import extends AbstractJob
             $importItems = [];
             foreach ($response->getContent() as $item) {
                 $importItems[] = [
-                    'o:job' => ['o:id' => $this->job->getId()],
+                    'o-module-zotero_import:import' => ['o:id' => $importId],
                     'o:item' => ['o:id' => $item->id()],
                 ];
             }

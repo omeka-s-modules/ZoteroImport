@@ -10,6 +10,9 @@ return [
         'mapping_classes_paths' => [
             OMEKA_PATH . '/modules/ZoteroImport/src/Entity',
         ],
+        'proxy_paths' => [
+            OMEKA_PATH . '/modules/ZoteroImport/data/doctrine-proxies',
+        ],
     ],
     'controllers' => [
         'factories' => [

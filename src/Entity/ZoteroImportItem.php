@@ -3,7 +3,6 @@ namespace ZoteroImport\Entity;
 
 use Omeka\Entity\AbstractEntity;
 use Omeka\Entity\Item;
-use Omeka\Entity\Job;
 
 /**
  * @Entity
@@ -19,14 +18,14 @@ class ZoteroImportItem extends AbstractEntity
 
     /**
      * @ManyToOne(
-     *     targetEntity="Omeka\Entity\Job",
+     *     targetEntity="ZoteroImport",
      * )
      * @JoinColumn(
      *     nullable=false,
      *     onDelete="CASCADE"
      * )
      */
-    protected $job;
+    protected $import;
 
     /**
      * @ManyToOne(
@@ -44,14 +43,14 @@ class ZoteroImportItem extends AbstractEntity
         return $this->id;
     }
 
-    public function setJob(Job $job)
+    public function setImport(ZoteroImport $import)
     {
-        $this->job = $job;
+        $this->import = $import;
     }
 
-    public function getJob()
+    public function getImport()
     {
-        return $this->job;
+        return $this->import;
     }
 
     public function setItem(Item $item)
