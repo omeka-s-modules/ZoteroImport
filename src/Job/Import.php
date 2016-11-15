@@ -106,8 +106,12 @@ class Import extends AbstractJob
         if ($apiKey = $this->getArg('apiKey')) {
             $headers['Authorization'] = sprintf('Bearer %s', $apiKey);
         }
-        $this->client = $this->getServiceLocator()->get('Omeka\HttpClient');
-        $this->client->setHeaders($headers);
+        $this->client = $this->getServiceLocator()->get('Omeka\HttpClient')
+            ->setHeaders($headers)
+            // Decrease the chance of timeout by increasing to 20 seconds,
+            // which splits the time between Omeka's default (10) and Zotero's
+            // upper limit (30).
+            ->setOptions(['timeout' => 20]);
 
         // Sort by ascending date added so items are imported roughly in the
         // same order. This way, if there is an error during an import, users
