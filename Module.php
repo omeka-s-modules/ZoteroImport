@@ -2,6 +2,8 @@
 namespace ZoteroImport;
 
 use Omeka\Module\AbstractModule;
+use Zend\EventManager\Event;
+use Zend\EventManager\SharedEventManagerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class Module extends AbstractModule
@@ -35,5 +37,30 @@ DROP TABLE zotero_import;
 DROP TABLE zotero_import_item;
 SET FOREIGN_KEY_CHECKS=1;
 ');
+    }
+
+    public function attachListeners(SharedEventManagerInterface $sharedEventManager)
+    {
+        $sharedEventManager->attach(
+            'Omeka\Api\Adapter\ItemAdapter',
+            'api.search.query',
+            function (Event $event) {
+                $query = $event->getParam('request')->getContent();
+                if (isset($query['zotero_import_id'])) {
+                    $qb = $event->getParam('queryBuilder');
+                    $adapter = $event->getTarget();
+                    $importItemAlias = $adapter->createAlias();
+                    $itemAlias = $adapter->getEntityClass();
+                    $qb->innerJoin(
+                        'ZoteroImport\Entity\ZoteroImportItem', $importItemAlias,
+                        'WITH', "$importItemAlias.item = $itemAlias.id"
+                    )->andWhere($qb->expr()->eq(
+                        "$importItemAlias.import",
+                        $adapter->createNamedParameter($qb, $query['zotero_import_id'])
+                    ));
+                }
+            }
+        );
+
     }
 }

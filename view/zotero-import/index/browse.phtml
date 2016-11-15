@@ -8,7 +8,7 @@
 <div class="browse-controls">
     <?php echo $this->pagination(); ?>
 </div>
-<table class="tablesaw tablesaw-stack">
+<table class="tablesaw" data-tablesaw-mode="stack">
     <thead>
     <tr>
         <th><?php echo $this->translate('Zotero Library'); ?></th>
@@ -47,7 +47,10 @@
             <?php echo $this->hyperlink(sprintf('Undo Import %s', $undoJob->statusLabel()), $undoJob->url()); ?>
             <?php endif; ?>
         </td>
-        <td><?php echo $import->importItemCount(); ?></td>
+        <td><?php echo $this->hyperlink(
+            $import->importItemCount(),
+            $this->url('admin/default', ['controller' => 'item', 'action' => 'browse'], ['query' => ['zotero_import_id' => $import->id()]])
+        ); ?></td>
     </tr>
 <?php endforeach; ?>
     </tbody>
