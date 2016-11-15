@@ -32,8 +32,3 @@ From the main navigation on the left of the admin screen, click "Zotero Import"
 1. Choose "Added After". Only import items that have been added to Zotero after this datetime.
 
 1. Hit Submit.
-
-Be aware that items you import from your Zotero library must be removed manually. There is no way to delete the entire import in one batch. 
-
-
-
