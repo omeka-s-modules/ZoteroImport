@@ -94,6 +94,9 @@ class Import extends AbstractJob
      */
     public function perform()
     {
+        // Raise the memory limit to accommodate very large imports.
+        ini_set('memory_limit','500M');
+
         $api = $this->getServiceLocator()->get('Omeka\ApiManager');
 
         $response = $api->read('item_sets', $this->getArg('itemSet'));
