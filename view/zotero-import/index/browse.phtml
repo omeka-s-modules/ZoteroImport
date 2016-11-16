@@ -25,7 +25,8 @@
             <?php echo $this->hyperlink($import->name(), $import->libraryUrl()); ?>
             <ul class="actions">
                 <?php if (
-                    in_array($job->status(), ['completed', 'stopped', 'error'])
+                    $job
+                    && in_array($job->status(), ['completed', 'stopped', 'error'])
                     && (!$undoJob || in_array($undoJob->status(), ['stopped', 'error']))
                 ): ?>
                 <li><a href="#"
@@ -36,12 +37,22 @@
                 <?php endif; ?> 
             </ul>
         </td>
-        <td><?php echo $this->i18n()->dateFormat($job->started(), 'medium', 'medium'); ?></td>
         <td>
-            <?php echo $this->hyperlink(sprintf('Import %s', $job->statusLabel()), $job->url()); ?>
-            <?php if ($undoJob): ?>
-            <br>
-            <?php echo $this->hyperlink(sprintf('Undo Import %s', $undoJob->statusLabel()), $undoJob->url()); ?>
+            <?php if ($job): ?>
+                <?php echo $this->i18n()->dateFormat($job->started(), 'medium', 'medium'); ?>
+            <?php else: ?>
+                <?php echo $this->translate('Unknown'); ?>
+            <?php endif; ?>
+        </td>
+        <td>
+            <?php if ($job): ?>
+                <?php echo $this->hyperlink(sprintf('Import %s', $job->statusLabel()), $job->url()); ?>
+                <?php if ($undoJob): ?>
+                <br>
+                <?php echo $this->hyperlink(sprintf('Undo Import %s', $undoJob->statusLabel()), $undoJob->url()); ?>
+                <?php endif; ?>
+            <?php else: ?>
+                <?php echo $this->translate('Unknown'); ?>
             <?php endif; ?>
         </td>
         <td><?php echo $this->hyperlink(
