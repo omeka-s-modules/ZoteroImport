@@ -1,7 +1,4 @@
-<?php echo $this->pageTitle($this->translate('Zotero Import')); ?>
-<nav class="section-nav">
-    <?php echo $this->navigation('Zend\Navigation\ZoteroImport')->menu(); ?>
-</nav>
+<?php echo $this->pageTitle($this->translate('Past Zotero Imports')); ?>
 <?php if (!$imports): ?>
 <p><?php echo $this->translate('There are no Zotero imports.'); ?></p>
 <?php else: ?>

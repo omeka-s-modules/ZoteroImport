@@ -27,23 +27,23 @@ return [
     'navigation' => [
         'AdminModule' => [
             [
-                'label'    => 'Zotero Import',
-                'route'    => 'admin/zotero-import',
-                'resource' => 'ZoteroImport\Controller\Index',
-            ],
-        ],
-        'zoteroimport' => [
-            [
-                'label' => 'Import',
-                'route'    => 'admin/zotero-import',
-                'action' => 'import',
-                'resource' => 'ZoteroImport\Controller\Index',
-            ],
-            [
-                'label' => 'Past Imports',
-                'route'    => 'admin/zotero-import/default',
-                'action' => 'browse',
-                'resource' => 'ZoteroImport\Controller\Index',
+                'label'      => 'Zotero Import', // @translate
+                'route'      => 'admin/zotero-import',
+                'resource'   => 'ZoteroImport\Controller\Index',
+                'pages'      => [
+                    [
+                        'label' => 'Import', // @translate
+                        'route'    => 'admin/zotero-import',
+                        'action' => 'import',
+                        'resource' => 'ZoteroImport\Controller\Index',
+                    ],
+                    [
+                        'label' => 'Past Imports', // @translate
+                        'route'    => 'admin/zotero-import/default',
+                        'action' => 'browse',
+                        'resource' => 'ZoteroImport\Controller\Index',
+                    ],
+                ],
             ],
         ],
     ],
