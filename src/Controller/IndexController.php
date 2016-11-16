@@ -5,6 +5,7 @@ use DateTime;
 use DateTimeZone;
 use Omeka\Form\ConfirmForm;
 use Omeka\Job\Dispatcher;
+use Omeka\Stdlib\Message;
 use Zend\Http\Client;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -74,7 +75,15 @@ class IndexController extends AbstractActionController
                         $this->api()->update('zotero_imports', $import->id(), [
                             'o:job' => ['o:id' => $job->getId()],
                         ]);
-                        $this->messenger()->addSuccess('Importing from Zotero');
+                        $message = new Message(
+                            'Importing from Zotero. %s', // @translate
+                            sprintf(
+                                '<a href="%s">%s</a>',
+                                htmlspecialchars($this->url()->fromRoute(null, [], true)),
+                                $this->translate('Import another?')
+                            ));
+                        $message->setEscapeHtml(false);
+                        $this->messenger()->addSuccess($message);
                         return $this->redirect()->toRoute('admin/zotero-import/default', ['action' => 'browse']);
                     } else {
                         $this->messenger()->addError(sprintf(
