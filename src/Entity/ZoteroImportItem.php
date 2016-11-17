@@ -30,6 +30,7 @@ class ZoteroImportItem extends AbstractEntity
     /**
      * @ManyToOne(
      *     targetEntity="Omeka\Entity\Item",
+     *     cascade={"detach"}
      * )
      * @JoinColumn(
      *     nullable=false,

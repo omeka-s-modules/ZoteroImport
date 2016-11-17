@@ -144,6 +144,11 @@ class Import extends AbstractJob
                     // that the timezone must be UTC.
                     continue;
                 }
+
+                // Unset unneeded data to save memory.
+                unset($zItem['library']);
+                unset($zItem['links']);
+
                 if (isset($zItem['data']['parentItem'])) {
                     $zChildItems[$zItem['data']['parentItem']][] = $zItem;
                 } else {
@@ -186,6 +191,8 @@ class Import extends AbstractJob
                     'o:item' => ['o:id' => $item->id()],
                 ];
             }
+            // The ZoteroImportItem entity cascade detaches items, which saves
+            // memory during batch create.
             $api->batchCreate('zotero_import_items', $importItems, [], true);
         }
     }
