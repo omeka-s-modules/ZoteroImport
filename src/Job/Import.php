@@ -99,51 +99,40 @@ class Import extends AbstractJob
 
         $api = $this->getServiceLocator()->get('Omeka\ApiManager');
 
-        $response = $api->read('item_sets', $this->getArg('itemSet'));
-        if ($response->isError()) {
-            throw new Exception\RuntimeException('There was an error during item set read.');
-        }
-        $itemSet = $response->getContent();
+        $itemSet = $api->read('item_sets', $this->getArg('itemSet'))->getContent();
 
-        $headers = ['Zotero-API-Version' => '3'];
-        if ($apiKey = $this->getArg('apiKey')) {
-            $headers['Authorization'] = sprintf('Bearer %s', $apiKey);
-        }
-        $this->client = $this->getServiceLocator()->get('Omeka\HttpClient')
-            ->setHeaders($headers)
-            // Decrease the chance of timeout by increasing to 20 seconds,
-            // which splits the time between Omeka's default (10) and Zotero's
-            // upper limit (30).
-            ->setOptions(['timeout' => 20]);
+        $this->cacheResourceClasses();
+        $this->cacheProperties();
 
-        // Sort by ascending date added so items are imported roughly in the
-        // same order. This way, if there is an error during an import, users
-        // can estimate when to set the "Added after" field.
+        $this->itemTypeMap = require __DIR__ . '/item_type_map.php';
+        $this->itemFieldMap = require __DIR__ . '/item_field_map.php';
+        $this->creatorTypeMap = require __DIR__ . '/creator_type_map.php';
+
+        $this->setImportClient();
+        $this->setImportUrl();
+
         $params = [
-            'since'     => $this->getArg('version', 0),
-            'format'    => 'versions',
-            'sort'      => 'dateAdded',
+            'since' => $this->getArg('version', 0),
+            'format' => 'versions',
+            // Sort by ascending date added so items are imported roughly in the
+            // same order. This way, if there is an error during an import,
+            // users can estimate when to set the "Added after" field.
+            'sort' => 'dateAdded',
             'direction' => 'asc',
         ];
-        $this->url = new Url($this->getArg('type'), $this->getArg('id'));
         if ($collectionKey = $this->getArg('collectionKey')) {
              $url = $this->url->collectionItems($collectionKey, $params);
         } else {
             $url = $this->url->items($params);
         }
-
-        $response = $this->getResponse($url);
-        $zItemKeys = array_keys(json_decode($response->getBody(), true));
+        $zItemKeys = array_keys(json_decode($this->getResponse($url)->getBody(), true));
 
         // Cache all Zotero parent and child items.
         $zParentItems = [];
         $zChildItems = [];
         foreach (array_chunk($zItemKeys, 50, true) as $zItemKeysChunk) {
-            $params = ['itemKey' => implode(',', $zItemKeysChunk)];
-            $url = $this->url->items($params);
-
-            $response = $this->getResponse($url);
-            $zItems = json_decode($response->getBody(), true);
+            $url = $this->url->items(['itemKey' => implode(',', $zItemKeysChunk)]);
+            $zItems = json_decode($this->getResponse($url)->getBody(), true);
 
             foreach ($zItems as $zItem) {
                 if ('note' == $zItem['data']['itemType']) {
@@ -162,13 +151,6 @@ class Import extends AbstractJob
                 }
             }
         }
-
-        $this->cacheResourceClasses();
-        $this->cacheProperties();
-
-        $this->itemTypeMap = require __DIR__ . '/item_type_map.php';
-        $this->itemFieldMap = require __DIR__ . '/item_field_map.php';
-        $this->creatorTypeMap = require __DIR__ . '/creator_type_map.php';
 
         // Map Zotero items to Omeka items.
         $oItems = [];
@@ -206,6 +188,31 @@ class Import extends AbstractJob
             }
             $api->batchCreate('zotero_import_items', $importItems, [], true);
         }
+    }
+
+    /**
+     * Set the HTTP client to use during this import.
+     */
+    public function setImportClient()
+    {
+        $headers = ['Zotero-API-Version' => '3'];
+        if ($apiKey = $this->getArg('apiKey')) {
+            $headers['Authorization'] = sprintf('Bearer %s', $apiKey);
+        }
+        $this->client = $this->getServiceLocator()->get('Omeka\HttpClient')
+            ->setHeaders($headers)
+            // Decrease the chance of timeout by increasing to 20 seconds,
+            // which splits the time between Omeka's default (10) and Zotero's
+            // upper limit (30).
+            ->setOptions(['timeout' => 20]);
+    }
+
+    /**
+     * Set the Zotero URL object to use during this import.
+     */
+    public function setImportUrl()
+    {
+        $this->url = new Url($this->getArg('type'), $this->getArg('id'));
     }
 
     /**
