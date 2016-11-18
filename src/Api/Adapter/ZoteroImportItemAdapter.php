@@ -28,12 +28,17 @@ class ZoteroImportItemAdapter extends AbstractEntityAdapter
         ErrorStore $errorStore
     ) {
         $data = $request->getContent();
-
-        $import = $this->getAdapter('zotero_imports')->findEntity($data['o-module-zotero_import:import']['o:id']);
-        $item = $this->getAdapter('items')->findEntity($data['o:item']['o:id']);
-
-        $entity->setImport($import);
-        $entity->setItem($item);
+        if ($data['o:item']['o:id']) {
+            $item = $this->getAdapter('items')->findEntity($data['o:item']['o:id']);
+            $entity->setItem($item);
+        }
+        if (isset($data['o-module-zotero_import:import']['o:id'])) {
+            $import = $this->getAdapter('zotero_imports')->findEntity($data['o-module-zotero_import:import']['o:id']);
+            $entity->setImport($import);
+        }
+        if ($data['o-module-zotero_import:zotero_key']) {
+            $entity->setZoteroKey($data['o-module-zotero_import:zotero_key']);
+        }
     }
 
     public function buildQuery(QueryBuilder $qb, array $query)

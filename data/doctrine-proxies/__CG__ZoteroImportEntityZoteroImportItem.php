@@ -64,10 +64,10 @@ class ZoteroImportItem extends \ZoteroImport\Entity\ZoteroImportItem implements 
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'import', 'item'];
+            return ['__isInitialized__', 'id', 'import', 'item', 'zoteroKey'];
         }
 
-        return ['__isInitialized__', 'id', 'import', 'item'];
+        return ['__isInitialized__', 'id', 'import', 'item', 'zoteroKey'];
     }
 
     /**
@@ -230,6 +230,28 @@ class ZoteroImportItem extends \ZoteroImport\Entity\ZoteroImportItem implements 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getItem', []);
 
         return parent::getItem();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setZoteroKey($zoteroKey)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setZoteroKey', [$zoteroKey]);
+
+        return parent::setZoteroKey($zoteroKey);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getZoteroKey()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getZoteroKey', []);
+
+        return parent::getZoteroKey();
     }
 
     /**

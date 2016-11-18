@@ -188,10 +188,11 @@ class Import extends AbstractJob
 
             // Batch create Zotero import items.
             $importItems = [];
-            foreach ($response->getContent() as $item) {
+            foreach ($response->getContent() as $zKey => $item) {
                 $importItems[] = [
-                    'o-module-zotero_import:import' => ['o:id' => $importId],
                     'o:item' => ['o:id' => $item->id()],
+                    'o-module-zotero_import:import' => ['o:id' => $importId],
+                    'o-module-zotero_import:zotero_key' => $zKey,
                 ];
             }
             // The ZoteroImportItem entity cascade detaches items, which saves

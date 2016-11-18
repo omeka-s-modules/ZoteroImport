@@ -39,6 +39,11 @@ class ZoteroImportItem extends AbstractEntity
      */
     protected $item;
 
+    /**
+     * @Column
+     */
+    protected $zoteroKey;
+
     public function getId()
     {
         return $this->id;
@@ -62,5 +67,15 @@ class ZoteroImportItem extends AbstractEntity
     public function getItem()
     {
         return $this->item;
+    }
+
+    public function setZoteroKey($zoteroKey)
+    {
+        $this->zoteroKey = $zoteroKey;
+    }
+
+    public function getZoteroKey()
+    {
+        return $this->zoteroKey;
     }
 }
