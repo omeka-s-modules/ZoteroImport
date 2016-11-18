@@ -131,6 +131,9 @@ class Import extends AbstractJob
         $zParentItems = [];
         $zChildItems = [];
         foreach (array_chunk($zItemKeys, 50, true) as $zItemKeysChunk) {
+            if ($this->shouldStop()) {
+                return;
+            }
             $url = $this->url->items(['itemKey' => implode(',', $zItemKeysChunk)]);
             $zItems = json_decode($this->getResponse($url)->getBody(), true);
 
