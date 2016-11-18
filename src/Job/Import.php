@@ -134,7 +134,13 @@ class Import extends AbstractJob
             if ($this->shouldStop()) {
                 return;
             }
-            $url = $this->url->items(['itemKey' => implode(',', $zItemKeysChunk)]);
+            $url = $this->url->items([
+                'itemKey' => implode(',', $zItemKeysChunk),
+                // Include the Zotero key so Zotero adds enclosure links to the
+                // response. An attachment can only be downloaded if an
+                // enclosure link is included.
+                'key' => $this->getArg('apiKey'),
+            ]);
             $zItems = json_decode($this->getResponse($url)->getBody(), true);
 
             foreach ($zItems as $zItem) {
@@ -150,7 +156,6 @@ class Import extends AbstractJob
 
                 // Unset unneeded data to save memory.
                 unset($zItem['library']);
-                unset($zItem['links']);
 
                 if (isset($zItem['data']['parentItem'])) {
                     $zChildItems[$zItem['data']['parentItem']][] = $zItem;
@@ -414,47 +419,40 @@ class Import extends AbstractJob
     /**
      * Map an attachment.
      *
+     * There are four kinds of Zotero attachments: imported_url, imported_file,
+     * linked_url, and linked_file. Only imported_url and imported_file have
+     * files, and only when the response includes an enclosure link. For
+     * linked_url, the @id URL was already mapped in mapValues(). For
+     * linked_file, there is nothing to save.
+     *
      * @param array $zoteroItem The Zotero item data
      * @param array $omekaItem The Omeka item data
      * @return string
       */
     public function mapAttachment($zoteroItem, $omekaItem)
     {
-        if ('attachment' != $zoteroItem['data']['itemType']) {
-            return $omekaItem;
-        }
-
-        switch ($zoteroItem['data']['linkMode']) {
-            case 'imported_url':
-            case 'imported_file':
-                if (!$this->getArg('importFiles') || !$this->getArg('apiKey')) {
-                    break;
-                }
-                $property = $this->properties['dcterms']['title'];
-                $omekaItem['o:media'][] = [
-                    'o:ingester' => 'url',
-                    'o:source'   => $this->url->itemFile($zoteroItem['key']),
-                    'ingest_url' => $this->url->itemFile(
-                        $zoteroItem['key'],
-                        ['key' => $this->getArg('apiKey')]
-                    ),
-                    $property->term() => [
-                        [
-                            '@value' => $zoteroItem['data']['title'],
-                            'property_id' => $property->id(),
-                            'type' => 'literal',
-                        ],
+        if ('attachment' === $zoteroItem['data']['itemType']
+            && isset($zoteroItem['links']['enclosure'])
+            && $this->getArg('importFiles')
+            && $this->getArg('apiKey')
+        ) {
+            $property = $this->properties['dcterms']['title'];
+            $omekaItem['o:media'][] = [
+                'o:ingester' => 'url',
+                'o:source'   => $this->url->itemFile($zoteroItem['key']),
+                'ingest_url' => $this->url->itemFile(
+                    $zoteroItem['key'],
+                    ['key' => $this->getArg('apiKey')]
+                ),
+                $property->term() => [
+                    [
+                        '@value' => $zoteroItem['data']['title'],
+                        'property_id' => $property->id(),
+                        'type' => 'literal',
                     ],
-                ];
-                break;
-            case 'linked_url':
-                // @id url already mapped in mapValues()
-            case 'linked_file':
-                // nothing to save for a linked file
-            default:
-                break;
+                ],
+            ];
         }
-
         return $omekaItem;
     }
 
