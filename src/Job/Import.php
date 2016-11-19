@@ -156,6 +156,10 @@ class Import extends AbstractJob
 
                 // Unset unneeded data to save memory.
                 unset($zItem['library']);
+                unset($zItem['version']);
+                unset($zItem['meta']);
+                unset($zItem['links']['self']);
+                unset($zItem['links']['alternate']);
 
                 if (isset($zItem['data']['parentItem'])) {
                     $zChildItems[$zItem['data']['parentItem']][] = $zItem;
@@ -165,9 +169,10 @@ class Import extends AbstractJob
             }
         }
 
-        // Map Zotero items to Omeka items.
+        // Map Zotero items to Omeka items. Iterate using while instead of
+        // foreach so unset() actually frees memory.
         $oItems = [];
-        foreach ($zParentItems as $zParentItemKey => $zParentItem) {
+        while (list($zParentItemKey, $zParentItem) = each($zParentItems)) {
             $oItem = [];
             $oItem['o:item_set'] = [['o:id' => $itemSet->id()]];
             $oItem = $this->mapResourceClass($zParentItem, $oItem);
@@ -181,6 +186,8 @@ class Import extends AbstractJob
                 }
             }
             $oItems[$zParentItemKey] = $oItem;
+            // Unset unneeded data to save memory.
+            unset($zParentItems[$zParentItemKey]);
         }
 
         // Batch create Omeka items.
