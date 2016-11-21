@@ -169,10 +169,10 @@ class Import extends AbstractJob
             }
         }
 
-        // Map Zotero items to Omeka items. Iterate using while instead of
-        // foreach so unset() actually frees memory.
+        // Map Zotero items to Omeka items. Pass by reference so PHP doesn't
+        // create a copy of the array, saving memory.
         $oItems = [];
-        while (list($zParentItemKey, $zParentItem) = each($zParentItems)) {
+        foreach ($zParentItems as $zParentItemKey => &$zParentItem) {
             $oItem = [];
             $oItem['o:item_set'] = [['o:id' => $itemSet->id()]];
             $oItem = $this->mapResourceClass($zParentItem, $oItem);
