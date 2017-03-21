@@ -196,7 +196,7 @@ class Import extends AbstractJob
             if ($this->shouldStop()) {
                 return;
             }
-            $response = $api->batchCreate('items', $oItemsChunk, [], true);
+            $response = $api->batchCreate('items', $oItemsChunk, [], ['continueOnError' => true]);
 
             // Batch create Zotero import items.
             $importItems = [];
@@ -209,7 +209,7 @@ class Import extends AbstractJob
             }
             // The ZoteroImportItem entity cascade detaches items, which saves
             // memory during batch create.
-            $api->batchCreate('zotero_import_items', $importItems, [], true);
+            $api->batchCreate('zotero_import_items', $importItems, [], ['continueOnError' => true]);
         }
     }
 
