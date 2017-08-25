@@ -7,5 +7,5 @@
     <h4><?php echo $this->translate('Items Added Before'); ?></h4>
     <div class="value"><?php echo $this->i18n()->dateFormat($import->job()->started(), 'medium', 'medium'); ?></div>
     <h4><?php echo $this->translate('Job Status'); ?></h4>
-    <div class="value"><?php echo $import->job()->statusLabel(); ?></div>
+    <div class="value"><?php echo $this->translate($import->job()->statusLabel()); ?></div>
 </div>
