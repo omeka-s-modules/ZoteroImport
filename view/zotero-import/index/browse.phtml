@@ -46,10 +46,10 @@
         </td>
         <td>
             <?php if ($job): ?>
-                <?php echo $this->hyperlink(sprintf('Import %s', $job->statusLabel()), $job->url()); ?>
+                <?php echo $this->hyperlink(sprintf($this->translate('Import %s'), $this->translate($job->statusLabel())), $job->url()); ?>
                 <?php if ($undoJob): ?>
                 <br>
-                <?php echo $this->hyperlink(sprintf('Undo Import %s', $undoJob->statusLabel()), $undoJob->url()); ?>
+                <?php echo $this->hyperlink(sprintf($this->translate('Undo Import %s'), $this->translate($undoJob->statusLabel())), $undoJob->url()); ?>
                 <?php endif; ?>
             <?php else: ?>
                 <?php echo $this->translate('Unknown'); ?>

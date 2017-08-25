@@ -6,6 +6,16 @@ return [
             'zotero_import_items' => 'ZoteroImport\Api\Adapter\ZoteroImportItemAdapter',
         ],
     ],
+    'translator' => [
+        'translation_file_patterns' => [
+            [
+                'type' => 'gettext',
+                'base_dir' => OMEKA_PATH . '/modules/ZoteroImport/language',
+                'pattern' => '%s.mo',
+                'text_domain' => null,
+            ],
+        ],
+    ],
     'entity_manager' => [
         'mapping_classes_paths' => [
             OMEKA_PATH . '/modules/ZoteroImport/src/Entity',
