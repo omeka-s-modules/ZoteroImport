@@ -1,0 +1,4 @@
+.browse.past-imports td:first-child, 
+.browse.past-imports th:first-child {
+    width: auto;
+}

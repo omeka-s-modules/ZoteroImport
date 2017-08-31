@@ -1,4 +1,9 @@
-<?php echo $this->pageTitle($this->translate('Past Zotero Imports')); ?>
+<?php echo $this->pageTitle($this->translate('Past Zotero Imports')); 
+$this->htmlElement('body')->appendAttribute('class', 'browse');
+$this->htmlElement('body')->appendAttribute('class', 'past-imports');
+$this->headLink()->appendStylesheet($this->assetUrl('css/zoteroimporter.css', 'ZoteroImporter'));
+?>
+
 <?php if (!$imports): ?>
 <p><?php echo $this->translate('There are no Zotero imports.'); ?></p>
 <?php else: ?>
