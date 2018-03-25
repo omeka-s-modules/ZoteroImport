@@ -104,9 +104,9 @@ class Import extends AbstractJob
         $this->cacheResourceClasses();
         $this->cacheProperties();
 
-        $this->itemTypeMap = require dirname(dirname(__DIR__)) . '/data/mapping/item_type_map.php';
-        $this->itemFieldMap = require dirname(dirname(__DIR__)) . '/data/mapping/item_field_map.php';
-        $this->creatorTypeMap = require dirname(dirname(__DIR__)) . '/data/mapping/creator_type_map.php';
+        $this->itemTypeMap = $this->prepareMapping('item_type_map');
+        $this->itemFieldMap = $this->prepareMapping('item_field_map');
+        $this->creatorTypeMap = $this->prepareMapping('creator_type_map');
 
         $this->setImportClient();
         $this->setImportUrl();
@@ -292,6 +292,26 @@ class Import extends AbstractJob
                 $this->properties[$prefix][$property->localName()] = $property;
             }
         }
+    }
+
+    /**
+     * Convert a mapping with terms into a mapping with prefix and local name.
+     *
+     * @param string $mapping
+     * @return array
+     */
+    protected function prepareMapping($mapping)
+    {
+        $map = require dirname(dirname(__DIR__)) . '/data/mapping/' . $mapping . '.php';
+        foreach ($map as &$term) {
+            if ($term) {
+                $value = explode(':', $term);
+                $term = [$value[0] => $value[1]];
+            } else {
+                $term = [];
+            }
+        }
+        return $map;
     }
 
     /**
