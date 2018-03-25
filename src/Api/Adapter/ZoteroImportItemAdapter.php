@@ -16,12 +16,12 @@ class ZoteroImportItemAdapter extends AbstractEntityAdapter
 
     public function getRepresentationClass()
     {
-        return 'ZoteroImport\Api\Representation\ZoteroImportItemRepresentation';
+        return \ZoteroImport\Api\Representation\ZoteroImportItemRepresentation::class;
     }
 
     public function getEntityClass()
     {
-        return 'ZoteroImport\Entity\ZoteroImportItem';
+        return \ZoteroImport\Entity\ZoteroImportItem::class;
     }
 
     public function hydrate(Request $request, EntityInterface $entity,

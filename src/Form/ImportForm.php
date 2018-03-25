@@ -1,8 +1,9 @@
 <?php
 namespace ZoteroImport\Form;
 
-use Zend\Form\Form;
 use Omeka\Form\Element\ItemSetSelect;
+use Zend\Form\Element;
+use Zend\Form\Form;
 use Zend\Validator\Callback;
 
 class ImportForm extends Form
@@ -26,7 +27,7 @@ class ImportForm extends Form
 
         $this->add([
             'name' => 'type',
-            'type' => 'radio',
+            'type' => Element\Radio::class,
             'options' => [
                 'label' =>  'Library Type',  // @translate
                 'info' => 'Required. Is this a user or group library?', // @translate
@@ -42,7 +43,7 @@ class ImportForm extends Form
 
         $this->add([
             'name' => 'id',
-            'type' => 'text',
+            'type' => Element\Text::class,
             'options' => [
                 'label' => 'Library ID', // @translate
                 'info' => 'Required. The user ID can be found on the "Feeds/API" section of the Zotero settings page. The group ID can be found on the Zotero group library page by looking at the URL of "Subscribe to this feed".', // @translate
@@ -54,7 +55,7 @@ class ImportForm extends Form
 
         $this->add([
             'name' => 'collectionKey',
-            'type' => 'text',
+            'type' => Element\Text::class,
             'options' => [
                 'label' => 'Collection Key', // @translate
                 'info' => 'Not required. The collection key can be found on the Zotero library page by looking at the URL when looking at the collection.', // @translate
@@ -63,7 +64,7 @@ class ImportForm extends Form
 
         $this->add([
             'name' => 'apiKey',
-            'type' => 'text',
+            'type' => Element\Text::class,
             'options' => [
                 'label' => 'API Key', // @translate
                 'info' => 'Required for non-public libraries and file import.', // @translate
@@ -72,7 +73,7 @@ class ImportForm extends Form
 
         $this->add([
             'name' => 'importFiles',
-            'type' => 'checkbox',
+            'type' => Element\Checkbox::class,
             'options' => [
                 'label' => 'Import Files', // @translate
                 'info' => 'The API key is required to import files.', // @translate
@@ -81,7 +82,7 @@ class ImportForm extends Form
 
         $this->add([
             'name' => 'addedAfter',
-            'type' => 'datetimelocal',
+            'type' => Element\DateTimeLocal::class,
             'options' => [
                 'format' => 'Y-m-d\TH:i',
                 'label' => 'Added after', // @translate

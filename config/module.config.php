@@ -1,37 +1,29 @@
 <?php
+namespace ZoteroImport;
+
 return [
     'api_adapters' => [
         'invokables' => [
-            'zotero_imports' => 'ZoteroImport\Api\Adapter\ZoteroImportAdapter',
-            'zotero_import_items' => 'ZoteroImport\Api\Adapter\ZoteroImportItemAdapter',
-        ],
-    ],
-    'translator' => [
-        'translation_file_patterns' => [
-            [
-                'type' => 'gettext',
-                'base_dir' => OMEKA_PATH . '/modules/ZoteroImport/language',
-                'pattern' => '%s.mo',
-                'text_domain' => null,
-            ],
+            'zotero_imports' => Api\Adapter\ZoteroImportAdapter::class,
+            'zotero_import_items' => Api\Adapter\ZoteroImportItemAdapter::class,
         ],
     ],
     'entity_manager' => [
         'mapping_classes_paths' => [
-            OMEKA_PATH . '/modules/ZoteroImport/src/Entity',
+            dirname(__DIR__) . '/src/Entity',
         ],
         'proxy_paths' => [
-            OMEKA_PATH . '/modules/ZoteroImport/data/doctrine-proxies',
+            dirname(__DIR__) . '/data/doctrine-proxies',
         ],
     ],
     'controllers' => [
         'factories' => [
-            'ZoteroImport\Controller\Index' => 'ZoteroImport\Service\IndexControllerFactory',
+            'ZoteroImport\Controller\Index' => Service\IndexControllerFactory::class,
         ],
     ],
     'view_manager' => [
         'template_path_stack'      => [
-            OMEKA_PATH . '/modules/ZoteroImport/view',
+            dirname(__DIR__) . '/view',
         ],
     ],
     'navigation' => [
@@ -95,6 +87,16 @@ return [
                         ],
                     ],
                 ],
+            ],
+        ],
+    ],
+    'translator' => [
+        'translation_file_patterns' => [
+            [
+                'type' => 'gettext',
+                'base_dir' => dirname(__DIR__) . '/language',
+                'pattern' => '%s.mo',
+                'text_domain' => null,
             ],
         ],
     ],
