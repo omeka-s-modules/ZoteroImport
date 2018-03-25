@@ -95,7 +95,7 @@ class Import extends AbstractJob
     public function perform()
     {
         // Raise the memory limit to accommodate very large imports.
-        ini_set('memory_limit','500M');
+        ini_set('memory_limit', '500M');
 
         $api = $this->getServiceLocator()->get('Omeka\ApiManager');
 
@@ -111,21 +111,31 @@ class Import extends AbstractJob
         $this->setImportClient();
         $this->setImportUrl();
 
+        $apiVersion = $this->getArg('version', 0);
+        $apiKey = $this->getArg('apiKey');
+        $collectionKey = $this->getArg('collectionKey');
+
         $params = [
-            'since' => $this->getArg('version', 0),
+            'since' => $apiVersion,
             'format' => 'versions',
             // Sort by ascending date added so items are imported roughly in the
             // same order. This way, if there is an error during an import,
             // users can estimate when to set the "Added after" field.
             'sort' => 'dateAdded',
             'direction' => 'asc',
+            // Do not import notes.
+            'itemType' => '-note',
         ];
-        if ($collectionKey = $this->getArg('collectionKey')) {
+        if ($collectionKey) {
              $url = $this->url->collectionItems($collectionKey, $params);
         } else {
             $url = $this->url->items($params);
         }
         $zItemKeys = array_keys(json_decode($this->getResponse($url)->getBody(), true));
+
+        if (empty($zItemKeys)) {
+            return;
+        }
 
         // Cache all Zotero parent and child items.
         $zParentItems = [];
@@ -139,14 +149,11 @@ class Import extends AbstractJob
                 // Include the Zotero key so Zotero adds enclosure links to the
                 // response. An attachment can only be downloaded if an
                 // enclosure link is included.
-                'key' => $this->getArg('apiKey'),
+                'key' => $apiKey,
             ]);
             $zItems = json_decode($this->getResponse($url)->getBody(), true);
 
             foreach ($zItems as $zItem) {
-                if ('note' == $zItem['data']['itemType']) {
-                    continue; // do not import notes
-                }
                 $dateAdded = new DateTime($zItem['data']['dateAdded']);
                 if ($dateAdded->getTimestamp() < $this->getArg('timestamp', 0)) {
                     // Only import items added since the passed timestamp. Note
