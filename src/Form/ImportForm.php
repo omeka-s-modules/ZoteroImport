@@ -2,7 +2,7 @@
 namespace ZoteroImport\Form;
 
 use Zend\Form\Form;
-use Omeka\Form\Element\ResourceSelect;
+use Omeka\Form\Element\ItemSetSelect;
 use Zend\Validator\Callback;
 
 class ImportForm extends Form
@@ -11,21 +11,16 @@ class ImportForm extends Form
     {
         $this->add([
             'name' => 'itemSet',
-            'type' => ResourceSelect::class,
+            'type' => ItemSetSelect::class,
             'options' => [
                 'label' => 'Import into', // @translate
                 'info' => 'Required. Import items into this item set.', // @translate
-                'empty_option' => 'Select Item Set…', // @translate
-                'resource_value_options' => [
-                    'resource' => 'item_sets',
-                    'query' => ['is_open' => true],
-                    'option_text_callback' => function ($itemSet) {
-                        return $itemSet->displayTitle();
-                    },
-                ],
+                'empty_option' => 'Select item set…', // @translate
+                'query' => ['is_open' => true],
             ],
             'attributes' => [
                 'required' => true,
+                'class' => 'chosen-select',
             ],
         ]);
 
