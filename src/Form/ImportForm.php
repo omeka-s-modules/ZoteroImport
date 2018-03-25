@@ -5,6 +5,7 @@ use Omeka\Form\Element\ItemSetSelect;
 use Zend\Form\Element;
 use Zend\Form\Form;
 use Zend\Validator\Callback;
+use ZoteroImport\Job\Import;
 
 class ImportForm extends Form
 {
@@ -88,6 +89,26 @@ class ImportForm extends Form
             ],
             'attributes' => [
                 'id' => 'import-files',
+            ],
+        ]);
+
+        $actionOptions = [
+            Import::ACTION_CREATE => 'Create a new item', // @translate
+            Import::ACTION_REPLACE => 'Replace all metadata and files of the item', // @translate
+        ];
+        $this->add([
+            'name' => 'action',
+            'type' => Element\Select::class,
+            'options' => [
+                'label' => 'Action for already imported items', // @translate
+                'info' => 'The default "Create" duplicates the items that were already imported, so local changes may be kept separately.
+"Replace" removes all properties of the existing items, and fill them with the Zotero data and files.
+In case of multiple duplicates, only the first one is updated.', // @translate
+                'value_options' => $actionOptions,
+            ],
+            'attributes' => [
+                'id' => 'action',
+                'class' => 'chosen-select',
             ],
         ]);
 
@@ -179,6 +200,23 @@ class ImportForm extends Form
                         'callback' => function ($importFiles, $context) {
                             return $importFiles ? (bool) $context['apiKey'] : true;
                         },
+                    ],
+                ],
+            ],
+        ]);
+
+        $inputFilter->add([
+            'name' => 'action',
+            'required' => true,
+            'filters' => [
+                ['name' => 'StringTrim'],
+                ['name' => 'StringToLower'],
+            ],
+            'validators' => [
+                [
+                    'name' => 'InArray',
+                    'options' => [
+                        'haystack' => array_keys($actionOptions),
                     ],
                 ],
             ],
