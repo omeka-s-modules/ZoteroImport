@@ -6,6 +6,7 @@ use DateTimeZone;
 use Omeka\Form\ConfirmForm;
 use Omeka\Stdlib\Message;
 use Zend\Http\Client;
+use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use ZoteroImport\Form\ImportForm;
@@ -151,7 +152,7 @@ class IndexController extends AbstractActionController
      * @param array $args
      * @return bool
      */
-    public function apiKeyIsValid(array $args)
+    protected function apiKeyIsValid(array $args)
     {
         $url = Url::key($args['apiKey']);
         $response = $this->client->resetParameters()->setUri($url)->send();
@@ -180,9 +181,9 @@ class IndexController extends AbstractActionController
      * Send a Zotero API request.
      *
      * @param array $args
-     * @retuen Response
+     * @return Response
      */
-    public function sendApiRequest(array $args)
+    protected function sendApiRequest(array $args)
     {
         $params = ['limit' => 1, 'since' => '0'];
         $url = new Url($args['type'], $args['id']);
