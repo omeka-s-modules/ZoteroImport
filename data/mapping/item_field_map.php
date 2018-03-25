@@ -91,7 +91,7 @@ return [
     'session'              => 'bibo:presentedAt',
     'shortTitle'           => 'bibo:shortTitle',
     'studio'               => '',
-    'subject'              => 'dcterms:subject',
+    'subject'              => 'dcterms:title', // Subject of an email.
     'system'               => '',
     'title'                => 'dcterms:title',
     'thesisType'           => 'dcterms:type',
