@@ -6,10 +6,26 @@ use Omeka\Job\AbstractJob;
 use Omeka\Job\Exception;
 use Zend\Http\Client;
 use Zend\Http\Response;
+use Zend\Log\Logger;
 use ZoteroImport\Zotero\Url;
 
 class Import extends AbstractJob
 {
+    const ACTION_CREATE = 'create'; // @translate
+    const ACTION_REPLACE = 'replace'; // @translate
+
+    /**
+     * Number of resources to process by batch (Zotero default limit is 50).
+     *
+     * @var int
+     */
+    protected $sizeChunk = 50;
+
+    /**
+     * @var Logger
+     */
+    protected $logger;
+
     /**
      * Zotero API client
      *
@@ -82,13 +98,15 @@ class Import extends AbstractJob
      * - collectionKey: The Zotero collection key (string)
      * - apiKey:        The Zotero API key (string)
      * - importFiles:   Whether to import file attachments (bool)
+     * - action:        What to do with existing items (string)
      * - version:       The Zotero Last-Modified-Version of the last import (int)
      * - timestamp:     The Zotero dateAdded timestamp (UTC) to begin importing (int)
      *
      * Roughly follows Zotero's recommended steps for synchronizing a Zotero Web
      * API client with the Zotero server. But for the purposes of this job, a
      * "sync" only imports parent items (and their children) that have been
-     * added to Zotero since the passed timestamp.
+     * added to Zotero since the passed timestamp. Nevertheless, the user can
+     * choose to update previous imported items.
      *
      * @see https://www.zotero.org/support/dev/web_api/v3/syncing#full-library_syncing
      */
@@ -97,7 +115,9 @@ class Import extends AbstractJob
         // Raise the memory limit to accommodate very large imports.
         ini_set('memory_limit', '500M');
 
-        $api = $this->getServiceLocator()->get('Omeka\ApiManager');
+        $services = $this->getServiceLocator();
+        $this->logger = $services->get('Omeka\Logger');
+        $api = $services->get('Omeka\ApiManager');
 
         $itemSet = $api->read('item_sets', $this->getArg('itemSet'))->getContent();
 
@@ -114,6 +134,7 @@ class Import extends AbstractJob
         $apiVersion = $this->getArg('version', 0);
         $apiKey = $this->getArg('apiKey');
         $collectionKey = $this->getArg('collectionKey');
+        $action = $this->getArg('action');
 
         $params = [
             'since' => $apiVersion,
@@ -140,7 +161,7 @@ class Import extends AbstractJob
         // Cache all Zotero parent and child items.
         $zParentItems = [];
         $zChildItems = [];
-        foreach (array_chunk($zItemKeys, 50, true) as $zItemKeysChunk) {
+        foreach (array_chunk($zItemKeys, $this->sizeChunk, true) as $zItemKeysChunk) {
             if ($this->shouldStop()) {
                 return;
             }
@@ -176,9 +197,48 @@ class Import extends AbstractJob
             }
         }
 
+        switch ($action) {
+            // Get the Omeka item ids of Zotero items that are already imported.
+            case self::ACTION_REPLACE:
+                /** @var \Doctrine\DBAL\Connection $connection */
+                $connection = $services->get('Omeka\Connection');
+                $qb = $connection->createQueryBuilder();
+                // TODO How to do a "WHERE IN" with doctrine and strings?
+                $quotedZParentItemKeys = array_map([$connection, 'quote'], array_keys($zParentItems));
+                $qb
+                    ->select([
+                        // Should be the first column.
+                        'zotero_key' => 'zotero_import_item.zotero_key',
+                        'item_id' => 'zotero_import_item.item_id',
+                    ])
+                    ->from('zotero_import_item', 'zotero_import_item')
+                    // ->where($qb->expr()->in('zotero_import_item.zotero_key', ':zotero_keys'))
+                    // ->setParameter('zotero_keys', array_keys($zParentItems))
+                    ->where($qb->expr()->in('zotero_import_item.zotero_key', $quotedZParentItemKeys))
+                    // Only one identifier by resource, and the first one.
+                    ->groupBy(['zotero_import_item.zotero_key'])
+                    ->orderBy('zotero_import_item.id', 'ASC');
+                $stmt = $connection->executeQuery($qb, $qb->getParameters());
+                $existingItems = $stmt->fetchAll(\PDO::FETCH_KEY_PAIR);
+                // Keep order of the keys provided by Zotero.
+                // TODO Order by "date modified" in Zotero?
+                $existingItems = array_intersect_key(
+
+                    array_replace($zParentItems, $existingItems),
+                    $existingItems
+                );
+                break;
+
+            case self::ACTION_CREATE:
+            default:
+                $existingItems = [];
+                break;
+        }
+
         // Map Zotero items to Omeka items. Pass by reference so PHP doesn't
         // create a copy of the array, saving memory.
         $oItems = [];
+        $oItemsToUpdate = [];
         foreach ($zParentItems as $zParentItemKey => &$zParentItem) {
             $oItem = [];
             $oItem['o:item_set'] = [['o:id' => $itemSet->id()]];
@@ -192,14 +252,19 @@ class Import extends AbstractJob
                     $oItem = $this->mapAttachment($zChildItem, $oItem);
                 }
             }
-            $oItems[$zParentItemKey] = $oItem;
+            if (isset($existingItems[$zParentItemKey])) {
+                $oItem['id'] = $existingItems[$zParentItemKey];
+                $oItemsToUpdate[$zParentItemKey] = $oItem;
+            } else {
+                $oItems[$zParentItemKey] = $oItem;
+            }
             // Unset unneeded data to save memory.
             unset($zParentItems[$zParentItemKey]);
         }
 
         // Batch create Omeka items.
         $importId = $this->getArg('import');
-        foreach (array_chunk($oItems, 50, true) as $oItemsChunk) {
+        foreach (array_chunk($oItems, $this->sizeChunk, true) as $oItemsChunk) {
             if ($this->shouldStop()) {
                 return;
             }
@@ -216,6 +281,35 @@ class Import extends AbstractJob
             }
             // The ZoteroImportItem entity cascade detaches items, which saves
             // memory during batch create.
+            $api->batchCreate('zotero_import_items', $importItems, [], ['continueOnError' => true]);
+        }
+
+        // In the api manager, batchUpdate() allows to update a set of resources
+        // with the same data. Here, data are specific to each row, so each
+        // resource is updated separately.
+        $options['isPartial'] = false;
+        foreach (array_chunk($oItemsToUpdate, $this->sizeChunk, true) as $oItemsChunk) {
+            $importItems = [];
+            foreach ($oItemsChunk as $zItemKey => $oItem) {
+                if ($this->shouldStop()) {
+                    return;
+                }
+                $fileData = isset($oItem['o:media']) ? $oItem['o:media'] : [];
+                try {
+                    $response = $api->update('items', $oItem['id'], $oItem, $fileData, $options);
+                } catch (\Exception $e) {
+                    $this->logger->err((string) $e);
+                    continue;
+                }
+
+                $item = $response->getContent();
+                $importItems[] = [
+                    'o:item' => ['o:id' => $item->id()],
+                    'o-module-zotero_import:import' => ['o:id' => $importId],
+                    'o-module-zotero_import:zotero_key' => $zItemKey,
+                ];
+            }
+
             $api->batchCreate('zotero_import_items', $importItems, [], ['continueOnError' => true]);
         }
     }

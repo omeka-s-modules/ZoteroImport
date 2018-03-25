@@ -48,6 +48,7 @@ class IndexController extends AbstractActionController
                     'collectionKey' => $data['collectionKey'],
                     'apiKey'        => $data['apiKey'],
                     'importFiles'   => $data['importFiles'],
+                    'action'        => $data['action'],
                     'version'       => 0,
                     'timestamp'     => $timestamp,
                 ];
