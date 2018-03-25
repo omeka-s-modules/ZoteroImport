@@ -1,4 +1,8 @@
 <?php
+// Warning: the mapping is not one-to-one, so some data may be lost when the
+// mapping is reverted. You may adapt it to your needs.
+
+// https://www.zotero.org/support/kb/item_types_and_fields#item_fields
 return [
     'numPages'             => 'bibo:numPages',
     'numberOfVolumes'      => 'bibo:numberOfVolumes',
