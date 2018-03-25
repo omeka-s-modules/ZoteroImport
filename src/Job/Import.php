@@ -104,9 +104,9 @@ class Import extends AbstractJob
         $this->cacheResourceClasses();
         $this->cacheProperties();
 
-        $this->itemTypeMap = require __DIR__ . '/item_type_map.php';
-        $this->itemFieldMap = require __DIR__ . '/item_field_map.php';
-        $this->creatorTypeMap = require __DIR__ . '/creator_type_map.php';
+        $this->itemTypeMap = require dirname(dirname(__DIR__)) . '/data/mapping/item_type_map.php';
+        $this->itemFieldMap = require dirname(dirname(__DIR__)) . '/data/mapping/item_field_map.php';
+        $this->creatorTypeMap = require dirname(dirname(__DIR__)) . '/data/mapping/creator_type_map.php';
 
         $this->setImportClient();
         $this->setImportUrl();
