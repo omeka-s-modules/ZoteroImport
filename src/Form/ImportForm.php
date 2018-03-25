@@ -15,7 +15,7 @@ class ImportForm extends Form
             'options' => [
                 'label' => 'Import into', // @translate
                 'info' => 'Required. Import items into this item set.', // @translate
-                'empty_option' => 'Select Item Set...', // @translate
+                'empty_option' => 'Select Item Set…', // @translate
                 'resource_value_options' => [
                     'resource' => 'item_sets',
                     'query' => ['is_open' => true],
