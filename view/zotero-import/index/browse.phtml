@@ -1,11 +1,11 @@
-<?php echo $this->pageTitle($this->translate('Past Zotero Imports')); 
+<?php echo $this->pageTitle($this->translate('Past Zotero imports and exports'));
 $this->htmlElement('body')->appendAttribute('class', 'browse');
 $this->htmlElement('body')->appendAttribute('class', 'past-imports');
 $this->headLink()->appendStylesheet($this->assetUrl('css/zoteroimport.css', 'ZoteroImport'));
 ?>
 
 <?php if (!$imports): ?>
-<p><?php echo $this->translate('There are no Zotero imports.'); ?></p>
+<p><?php echo $this->translate('There are no Zotero imports or exports.'); ?></p>
 <?php else: ?>
 <div class="browse-controls">
     <?php echo $this->pagination(); ?>
@@ -24,6 +24,7 @@ $this->headLink()->appendStylesheet($this->assetUrl('css/zoteroimport.css', 'Zot
     <?php
     $job = $import->job();
     $undoJob = $import->undoJob();
+    $jobType = $job ? ($job->jobClass() === \ZoteroImport\Job\Export::class ? 'export' : 'import') : null;
     ?>
     <tr>
         <td>
@@ -31,6 +32,7 @@ $this->headLink()->appendStylesheet($this->assetUrl('css/zoteroimport.css', 'Zot
             <ul class="actions">
                 <?php if (
                     $job
+                    && $jobType === 'import'
                     && in_array($job->status(), ['completed', 'stopped', 'error'])
                     && (!$undoJob || in_array($undoJob->status(), ['stopped', 'error']))
                 ): ?>
@@ -39,7 +41,7 @@ $this->headLink()->appendStylesheet($this->assetUrl('css/zoteroimport.css', 'Zot
                     class="o-icon-undo sidebar-content"
                     aria-label="<?php echo $this->translate('Undo import'); ?>"
                     title="<?php echo $this->translate('Undo import'); ?>"></a></li>
-                <?php endif; ?> 
+                <?php endif; ?>
             </ul>
         </td>
         <td>
@@ -51,11 +53,18 @@ $this->headLink()->appendStylesheet($this->assetUrl('css/zoteroimport.css', 'Zot
         </td>
         <td>
             <?php if ($job): ?>
-                <?php echo $this->hyperlink(sprintf($this->translate('Import %s'), $this->translate($job->statusLabel())), $job->url()); ?>
-                <?php if ($undoJob): ?>
-                <br>
-                <?php echo $this->hyperlink(sprintf($this->translate('Undo Import %s'), $this->translate($undoJob->statusLabel())), $undoJob->url()); ?>
-                <?php endif; ?>
+                <?php switch ($jobType):
+                case 'import': ?>
+                    <?php echo $this->hyperlink(sprintf($this->translate('Import %s'), $this->translate($job->statusLabel())), $job->url()); ?>
+                    <?php if ($undoJob): ?>
+                    <br>
+                    <?php echo $this->hyperlink(sprintf($this->translate('Undo Import %s'), $this->translate($undoJob->statusLabel())), $undoJob->url()); ?>
+                    <?php endif; ?>
+                    <?php break;
+                case 'export': ?>
+                    <?php echo $this->hyperlink(sprintf($this->translate('Export %s'), $this->translate($job->statusLabel())), $job->url()); ?>
+                    <?php break;
+                endswitch; ?>
             <?php else: ?>
                 <?php echo $this->translate('Unknown'); ?>
             <?php endif; ?>

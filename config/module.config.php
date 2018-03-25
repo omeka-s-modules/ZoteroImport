@@ -16,14 +16,20 @@ return [
             dirname(__DIR__) . '/data/doctrine-proxies',
         ],
     ],
-    'controllers' => [
-        'factories' => [
-            'ZoteroImport\Controller\Index' => Service\IndexControllerFactory::class,
-        ],
-    ],
     'view_manager' => [
         'template_path_stack'      => [
             dirname(__DIR__) . '/view',
+        ],
+    ],
+    'form_elements' => [
+        'invokables' => [
+            Form\ExportForm::class => Form\ExportForm::class,
+            Form\ImportForm::class => Form\ImportForm::class,
+        ],
+    ],
+    'controllers' => [
+        'factories' => [
+            'ZoteroImport\Controller\Index' => Service\IndexControllerFactory::class,
         ],
     ],
     'navigation' => [
@@ -35,13 +41,13 @@ return [
                 'pages'      => [
                     [
                         'label' => 'Import', // @translate
-                        'route'    => 'admin/zotero/default',
+                        'route' => 'admin/zotero/default',
                         'action' => 'import',
                         'resource' => 'ZoteroImport\Controller\Index',
                     ],
                     [
-                        'label' => 'Past Imports', // @translate
-                        'route'    => 'admin/zotero/default',
+                        'label' => 'Past imports/exports', // @translate
+                        'route' => 'admin/zotero/default',
                         'action' => 'browse',
                         'resource' => 'ZoteroImport\Controller\Index',
                     ],
@@ -115,5 +121,10 @@ return [
                 'text_domain' => null,
             ],
         ],
+    ],
+    'js_translate_strings' => [
+        'Go', // @translate
+        'Export selected to Zotero', // @translate
+        'Export all to Zotero', // @translate
     ],
 ];

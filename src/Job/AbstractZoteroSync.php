@@ -288,6 +288,61 @@ abstract class AbstractZoteroSync extends AbstractJob
     }
 
     /**
+     * Fetch all attachments of one Zotero item.
+     *
+     * @todo Manage pagination (but very rare for an item in Zotero).
+     *
+     * @param string $zoteroKey
+     * @return array
+     */
+    protected function fetchItemAttachments($zoteroItemKey)
+    {
+        $this->setImportClient();
+        $url = $this->url->itemChildren($zoteroItemKey, ['itemType' => 'attachment']);
+        return json_decode($this->getResponse($url)->getBody(), true);
+    }
+
+    /**
+     * Delete a Zotero item without check.
+     *
+     * @param array|string $zoteroItem
+     */
+    protected function deleteZoteroItem($zoteroItem)
+    {
+        if (is_array($zoteroItem)) {
+            $zoteroItem = $zoteroItem['key'];
+        }
+
+        $url = $this->url->item($zoteroItem);
+        $this->setImportClient();
+        $client = $this->client;
+        $client->setMethod(Request::METHOD_DELETE);
+        $request = $client->getRequest();
+        $headers = $request->getHeaders();
+        $headers->addHeaderLine('If-Unmodified-Since-Version', 999999999);
+        $response = $this->getResponse($url);
+    }
+
+    /**
+     * Delete a list of Zotero items without check.
+     *
+     * @param array $zoteroItemKeys
+     */
+    protected function deleteZoteroItems($zoteroItems)
+    {
+        foreach (array_chunk($zoteroItems, $this->sizeChunk, true) as $chunk) {
+            $url = $this->url->items(['itemKey' => implode(',', $chunk)]);
+            $this->setImportClient();
+            $client = $this->client;
+            $client->setMethod(Request::METHOD_DELETE);
+            $request = $client->getRequest();
+            $headers = $request->getHeaders();
+            $headers->addHeaderLine('If-Unmodified-Since-Version', 999999999);
+            $response = $this->getResponse($url);
+        }
+    }
+
+    /**
      * Get the Omeka item ids of Zotero items that are already managed.
      *
      * Note: Only the first Omeka item id is returned when an item as been
@@ -320,5 +375,38 @@ abstract class AbstractZoteroSync extends AbstractJob
         $stmt = $connection->executeQuery($qb, $qb->getParameters());
         $existingItems = $stmt->fetchAll(\PDO::FETCH_KEY_PAIR);
         return $existingItems;
+    }
+
+    /**
+     * Get the Zotero item keys of Omeka items that are already managed.
+     *
+     * Note: Only the first Zotero item key is returned when an item as been
+     * created multiple times.
+     *
+     * @param array $itemIds
+     * @return array Associative array of Omeka items id and Zotero item keys.
+     */
+    protected function existingZoteroItems(array $itemIds)
+    {
+        /** @var \Doctrine\DBAL\Connection $connection */
+        $services = $this->getServiceLocator();
+        $connection = $services->get('Omeka\Connection');
+        $qb = $connection->createQueryBuilder();
+        $itemIds = array_filter(array_map('intval', $itemIds));
+        $qb
+            ->select([
+                // Should be the first column.
+                'item_id' => 'zotero_import_item.item_id',
+                'zotero_key' => 'zotero_import_item.zotero_key',
+            ])
+            ->from('zotero_import_item', 'zotero_import_item')
+            ->where($qb->expr()->in('zotero_import_item.item_id', ':item_ids'))
+            ->setParameter('item_ids', implode(',', $itemIds))
+            // Only one identifier by resource, and the first one.
+            ->groupBy(['zotero_import_item.item_id'])
+            ->orderBy('zotero_import_item.id', 'ASC');
+        $stmt = $connection->executeQuery($qb, $qb->getParameters());
+        $existingZoteroItems = $stmt->fetchAll(\PDO::FETCH_KEY_PAIR);
+        return $existingZoteroItems;
     }
 }

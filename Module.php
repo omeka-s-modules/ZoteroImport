@@ -57,5 +57,50 @@ class Module extends AbstractModule
             }
         );
 
+        $sharedEventManager->attach(
+            'Omeka\Controller\Admin\ItemSet',
+            'view.layout',
+            [$this, 'adminViewLayout']
+        );
+        $sharedEventManager->attach(
+            'Omeka\Controller\Admin\Item',
+            'view.layout',
+            [$this, 'adminViewLayout']
+        );
+        $sharedEventManager->attach(
+            'Omeka\Controller\Admin\ItemSet',
+            'view.show.sidebar',
+            [$this, 'adminViewShowSidebar']
+        );
+        $sharedEventManager->attach(
+            'Omeka\Controller\Admin\Item',
+            'view.show.sidebar',
+            [$this, 'adminViewShowSidebar']
+        );
+    }
+
+    public function adminViewLayout(Event $event)
+    {
+        $view = $event->getTarget();
+        $view->headScript()->appendFile($view->assetUrl('js/zotero-import.js', 'ZoteroImport'));
+    }
+
+    public function adminViewShowSidebar(Event $event)
+    {
+        $view = $event->getTarget();
+        $resource = $view->resource;
+        $services = $this->getServiceLocator();
+        $translator = $services->get('MvcTranslator');
+        $query = [];
+        $query['resource_type'] = $resource->resourceName();
+        $query['resource_ids'] = [$resource->id()];
+        $link = $view->hyperlink(
+            $translator->translate('Export to Zotero'), // @translate
+            $view->url('admin/zotero/default', ['action' => 'export'], ['query' => $query])
+        );
+        echo '<div class="meta-group">'
+            . '<h4>Zotero</h4>'
+            . '<div class="value">' . $link . '</div>'
+            . '</div>';
     }
 }

@@ -46,6 +46,18 @@ class Url
     }
 
     /**
+     * Url of an item.
+     *
+     * @param string $zoteroItemKey
+     * @return string
+     */
+    public function item($zoteroItemKey)
+    {
+        return sprintf('%s/%s/%s/items/%s', self::BASE, $this->type,
+            $this->id, $zoteroItemKey);
+    }
+
+    /**
      * The set of all items in the library
      *
      * @param array $params
@@ -71,6 +83,34 @@ class Url
     }
 
     /**
+     * The set of all children of an item.
+     *
+     * The param "itemType" = "attachment" may be useful to get only files.
+     *
+     * @param string $itemKey
+     * @param array $params
+     * @return string
+     */
+    public function itemChildren($itemKey, array $params = [])
+    {
+        return sprintf('%s/%s/%s/items/%s/children%s', self::BASE, $this->type,
+            $this->id, $itemKey, $this->getParams($params));
+    }
+
+    /**
+     * The collection in the library (mainly to post items).
+     *
+     * @param string $collectionKey
+     * @param array $params
+     * @return string
+     */
+    public function collections(array $params = [])
+    {
+        return sprintf('%s/%s/%s/collections%s', self::BASE, $this->type,
+            $this->id, $this->getParams($params));
+    }
+
+    /**
      * The set of items within a specific collection in the library
      *
      * @param string $collectionKey
@@ -81,6 +121,26 @@ class Url
     {
         return sprintf('%s/%s/%s/collections/%s/items%s', self::BASE,
             $this->type, $this->id, $collectionKey, $this->getParams($params));
+    }
+
+    /**
+     * The empty template for a Zotero item type.
+     *
+     * @param string $zoteroItemType
+     * @param string $linkMode Needed for template "attachment."
+     * @return array
+     */
+    public function template($itemType, $linkMode = null)
+    {
+        if ($itemType === 'attachment') {
+            if (!in_array($linkMode, ['imported_file', 'imported_url', 'linked_file', 'linked_url'], true)) {
+                $linkMode = 'imported_file';
+            }
+            $linkMode = '&linkMode=' . $linkMode;
+        } else {
+            $linkMode = '';
+        }
+        return sprintf('%s/items/new?itemType=%s%s', self::BASE, $itemType, $linkMode);
     }
 
     /**
