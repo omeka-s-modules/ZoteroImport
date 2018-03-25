@@ -81,7 +81,7 @@ class ImportForm extends Form
         ]);
 
         $this->add([
-            'name' => 'importFiles',
+            'name' => 'syncFiles',
             'type' => Element\Checkbox::class,
             'options' => [
                 'label' => 'Import Files', // @translate
@@ -185,7 +185,7 @@ In case of multiple duplicates, only the first one is updated.', // @translate
         ]);
 
         $inputFilter->add([
-            'name' => 'importFiles',
+            'name' => 'syncFiles',
             'required' => false,
             'filters' => [
                 ['name' => 'ToInt'],
@@ -197,8 +197,8 @@ In case of multiple duplicates, only the first one is updated.', // @translate
                         'messages' => [
                             Callback::INVALID_VALUE => 'An API key is required to import files.', // @translate
                         ],
-                        'callback' => function ($importFiles, $context) {
-                            return $importFiles ? (bool) $context['apiKey'] : true;
+                        'callback' => function ($syncFiles, $context) {
+                            return $syncFiles ? (bool) $context['apiKey'] : true;
                         },
                     ],
                 ],

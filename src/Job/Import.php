@@ -97,7 +97,7 @@ class Import extends AbstractJob
      * - id:            The Zotero library ID (int)
      * - collectionKey: The Zotero collection key (string)
      * - apiKey:        The Zotero API key (string)
-     * - importFiles:   Whether to import file attachments (bool)
+     * - syncFiles:     Whether to import file attachments (bool)
      * - action:        What to do with existing items (string)
      * - version:       The Zotero Last-Modified-Version of the last import (int)
      * - timestamp:     The Zotero dateAdded timestamp (UTC) to begin importing (int)
@@ -561,7 +561,7 @@ class Import extends AbstractJob
     {
         if ('attachment' === $zoteroItem['data']['itemType']
             && isset($zoteroItem['links']['enclosure'])
-            && $this->getArg('importFiles')
+            && $this->getArg('syncFiles')
             && $this->getArg('apiKey')
         ) {
             $property = $this->properties['dcterms']['title'];

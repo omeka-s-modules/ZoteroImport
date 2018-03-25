@@ -47,7 +47,7 @@ class IndexController extends AbstractActionController
                     'id'            => $data['id'],
                     'collectionKey' => $data['collectionKey'],
                     'apiKey'        => $data['apiKey'],
-                    'importFiles'   => $data['importFiles'],
+                    'syncFiles'     => (bool) $data['syncFiles'],
                     'action'        => $data['action'],
                     'version'       => 0,
                     'timestamp'     => $timestamp,
