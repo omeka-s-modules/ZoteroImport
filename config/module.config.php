@@ -30,18 +30,18 @@ return [
         'AdminModule' => [
             [
                 'label'      => 'Zotero Import', // @translate
-                'route'      => 'admin/zotero-import',
+                'route'      => 'admin/zotero',
                 'resource'   => 'ZoteroImport\Controller\Index',
                 'pages'      => [
                     [
                         'label' => 'Import', // @translate
-                        'route'    => 'admin/zotero-import',
+                        'route'    => 'admin/zotero/default',
                         'action' => 'import',
                         'resource' => 'ZoteroImport\Controller\Index',
                     ],
                     [
                         'label' => 'Past Imports', // @translate
-                        'route'    => 'admin/zotero-import/default',
+                        'route'    => 'admin/zotero/default',
                         'action' => 'browse',
                         'resource' => 'ZoteroImport\Controller\Index',
                     ],
@@ -53,10 +53,10 @@ return [
         'routes' => [
             'admin' => [
                 'child_routes' => [
-                    'zotero-import' => [
+                    'zotero' => [
                         'type' => 'Literal',
                         'options' => [
-                            'route' => '/zotero-import',
+                            'route' => '/zotero',
                             'defaults' => [
                                 '__NAMESPACE__' => 'ZoteroImport\Controller',
                                 'controller' => 'index',
@@ -68,9 +68,9 @@ return [
                             'id' => [
                                 'type' => 'Segment',
                                 'options' => [
-                                    'route' => '/:import-id[/:action]',
+                                    'route' => '/:id[/:action]',
                                     'constraints' => [
-                                        'import-id' => '\d+',
+                                        'id' => '\d+',
                                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                                     ],
                                 ],
@@ -83,6 +83,22 @@ return [
                                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                                     ],
                                 ],
+                            ],
+                        ],
+                    ],
+                    // Temporary kept for undo.
+                    'zotero-import-id' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => '/zotero-import/:id[/:action]',
+                            'constraints' => [
+                                'id' => '\d+',
+                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ],
+                            'defaults' => [
+                                '__NAMESPACE__' => 'ZoteroImport\Controller',
+                                'controller' => 'index',
+                                'action' => 'import',
                             ],
                         ],
                     ],

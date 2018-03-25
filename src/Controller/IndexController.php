@@ -80,7 +80,7 @@ class IndexController extends AbstractActionController
                             ));
                         $message->setEscapeHtml(false);
                         $this->messenger()->addSuccess($message);
-                        return $this->redirect()->toRoute('admin/zotero-import/default', ['action' => 'browse']);
+                        return $this->redirect()->toRoute('admin/zotero/default', ['action' => 'browse']);
                     } else {
                         $this->messenger()->addError(sprintf(
                             'Error when requesting Zotero library: %s', // @translate
@@ -112,7 +112,7 @@ class IndexController extends AbstractActionController
     public function undoConfirmAction()
     {
         $import = $this->api()
-            ->read('zotero_imports', $this->params('import-id'))->getContent();
+            ->read('zotero_imports', $this->params('id'))->getContent();
         $form = $this->getForm(ConfirmForm::class);
         $form->setAttribute('action', $import->url('undo'));
 
@@ -128,7 +128,7 @@ class IndexController extends AbstractActionController
     {
         if ($this->getRequest()->isPost()) {
             $import = $this->api()
-                ->read('zotero_imports', $this->params('import-id'))->getContent();
+                ->read('zotero_imports', $this->params('id'))->getContent();
             if (in_array($import->job()->status(), ['completed', 'stopped', 'error'])) {
                 $form = $this->getForm(ConfirmForm::class);
                 $form->setData($this->getRequest()->getPost());
