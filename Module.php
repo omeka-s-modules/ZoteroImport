@@ -42,7 +42,7 @@ SET FOREIGN_KEY_CHECKS=1;
     public function attachListeners(SharedEventManagerInterface $sharedEventManager)
     {
         $sharedEventManager->attach(
-            'Omeka\Api\Adapter\ItemAdapter',
+            \Omeka\Api\Adapter\ItemAdapter::class,
             'api.search.query',
             function (Event $event) {
                 $query = $event->getParam('request')->getContent();
@@ -52,7 +52,7 @@ SET FOREIGN_KEY_CHECKS=1;
                     $importItemAlias = $adapter->createAlias();
                     $itemAlias = $adapter->getEntityClass();
                     $qb->innerJoin(
-                        'ZoteroImport\Entity\ZoteroImportItem', $importItemAlias,
+                        \ZoteroImport\Entity\ZoteroImportItem::class, $importItemAlias,
                         'WITH', "$importItemAlias.item = $itemAlias.id"
                     )->andWhere($qb->expr()->eq(
                         "$importItemAlias.import",

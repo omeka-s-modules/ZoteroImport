@@ -4,29 +4,24 @@ namespace ZoteroImport\Controller;
 use DateTime;
 use DateTimeZone;
 use Omeka\Form\ConfirmForm;
-use Omeka\Job\Dispatcher;
 use Omeka\Stdlib\Message;
 use Zend\Http\Client;
+use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use ZoteroImport\Form\ImportForm;
+use ZoteroImport\Job;
 use ZoteroImport\Zotero\Url;
 
 class IndexController extends AbstractActionController
 {
     /**
-     * @var Dispatcher
-     */
-    protected $dispatcher;
-
-    /**
      * @var Client
      */
     protected $client;
 
-    public function __construct(Dispatcher $dispatcher, Client $client)
+    public function __construct(Client $client)
     {
-        $this->dispatcher = $dispatcher;
         $this->client = $client;
     }
 
@@ -71,7 +66,7 @@ class IndexController extends AbstractActionController
                             'o-module-zotero_import:url' => $body[0]['library']['links']['alternate']['href'],
                         ])->getContent();
                         $args['import'] = $import->id();
-                        $job = $this->dispatcher->dispatch('ZoteroImport\Job\Import', $args);
+                        $job = $this->jobDispatcher()->dispatch(Job\Import::class, $args);
                         $this->api()->update('zotero_imports', $import->id(), [
                             'o:job' => ['o:id' => $job->getId()],
                         ]);
@@ -138,7 +133,7 @@ class IndexController extends AbstractActionController
                 $form->setData($this->getRequest()->getPost());
                 if ($form->isValid()) {
                     $args = ['import' => $import->id()];
-                    $job = $this->dispatcher->dispatch('ZoteroImport\Job\UndoImport', $args);
+                    $job = $this->jobDispatcher()->dispatch(Job\UndoImport::class, $args);
                     $this->api()->update('zotero_imports', $import->id(), [
                         'o-module-zotero_import:undo_job' => ['o:id' => $job->getId()],
                     ]);
@@ -157,7 +152,7 @@ class IndexController extends AbstractActionController
      * @param array $args
      * @return bool
      */
-    public function apiKeyIsValid(array $args)
+    protected function apiKeyIsValid(array $args)
     {
         $url = Url::key($args['apiKey']);
         $response = $this->client->resetParameters()->setUri($url)->send();
@@ -186,9 +181,9 @@ class IndexController extends AbstractActionController
      * Send a Zotero API request.
      *
      * @param array $args
-     * @retuen Response
+     * @return Response
      */
-    public function sendApiRequest(array $args)
+    protected function sendApiRequest(array $args)
     {
         $params = ['limit' => 1, 'since' => '0'];
         $url = new Url($args['type'], $args['id']);

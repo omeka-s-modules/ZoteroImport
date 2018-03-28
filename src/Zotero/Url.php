@@ -97,18 +97,14 @@ class Url
     /**
      * Build and return a URL query string
      *
-     * @param srray $params
+     * @param array $params
      * @return string
      */
     public function getParams(array $params)
     {
-        if (!$params) {
+        if (empty($params)) {
             return '';
         }
-        $paramArr = [];
-        foreach ($params as $key => $value) {
-            $paramArr[] = sprintf('%s=%s', $key, $value);
-        }
-        return '?' . implode('&', $paramArr);
+        return '?' . http_build_query($params, '', '&', PHP_QUERY_RFC3986);
     }
 }
