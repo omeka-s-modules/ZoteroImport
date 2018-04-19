@@ -22,6 +22,7 @@ class ImportForm extends Form
             'attributes' => [
                 'required' => true,
                 'class' => 'chosen-select',
+                'id' => 'library-item-set',
             ],
         ]);
 
@@ -50,6 +51,7 @@ class ImportForm extends Form
             ],
             'attributes' => [
                 'required' => true,
+                'id' => 'library-id',
             ],
         ]);
 
@@ -60,6 +62,9 @@ class ImportForm extends Form
                 'label' => 'Collection Key', // @translate
                 'info' => 'Not required. The collection key can be found on the Zotero library page by looking at the URL when looking at the collection.', // @translate
             ],
+            'attributes' => [
+                'id' => 'collection-key',
+            ],
         ]);
 
         $this->add([
@@ -68,6 +73,9 @@ class ImportForm extends Form
             'options' => [
                 'label' => 'API Key', // @translate
                 'info' => 'Required for non-public libraries and file import.', // @translate
+            ],
+            'attributes' => [
+                'id' => 'api-key',
             ],
         ]);
 
@@ -78,6 +86,9 @@ class ImportForm extends Form
                 'label' => 'Import Files', // @translate
                 'info' => 'The API key is required to import files.', // @translate
             ],
+            'attributes' => [
+                'id' => 'import-files',
+            ],
         ]);
 
         $this->add([
@@ -87,6 +98,9 @@ class ImportForm extends Form
                 'format' => 'Y-m-d\TH:i',
                 'label' => 'Added after', // @translate
                 'info' => 'Only import items that have been added to Zotero after this datetime.', // @translate
+            ],
+            'attributes' => [
+                'id' => 'added-after',
             ],
         ]);
 
