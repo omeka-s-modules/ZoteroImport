@@ -1,9 +1,10 @@
 <?php
+$translate = $this->plugin('translate');
+$escape = $this->plugin('escapeHtml');
 $form->prepare();
 $this->htmlElement('body')->appendAttribute('class', 'zotero export items');
-$escape = $this->plugin('escapeHtml');
 ?>
-<?php echo $this->pageTitle($this->translate('Export to Zotero')); ?>
+<?php echo $this->pageTitle($translate('Export to Zotero')); ?>
 
 <?php $this->trigger('view.batch_edit.before'); ?>
 
@@ -17,16 +18,16 @@ $escape = $this->plugin('escapeHtml');
 <input type="hidden" name="query" value="<?php echo $this->escapeHtml(json_encode($query)); ?>">
 
 <div id="page-actions">
-    <input type="submit" name="batch_export" value="<?php echo $this->escapeHtml($this->translate('Export')); ?>">
+    <input type="submit" name="batch_export" value="<?php echo $this->escapeHtml($translate('Export')); ?>">
 </div>
 
 <?php echo $this->formCollection($form, false); ?>
 <?php echo $this->form()->closeTag(); ?>
 
 <div class="sidebar always-open">
-    <h3><?php echo $this->translate('Affected items'); ?></h3>
+    <h3><?php echo $translate('Affected items'); ?></h3>
     <?php if ($resources): ?>
-    <p><?php echo sprintf($this->translate('You are exporting the following %d items:'), count($resources)); ?></p>
+    <p><?php echo sprintf($translate('You are exporting the following %d items:'), count($resources)); ?></p>
     <ul class="batch-selected">
         <?php foreach ($resources as $resource): ?>
         <li><?php echo $resource->linkPretty('square', null, null, ['target' => '_blank']); ?></li>
@@ -34,7 +35,7 @@ $escape = $this->plugin('escapeHtml');
     </ul>
     <?php elseif ($itemSetCount): ?>
     <?php if ($itemSets): ?>
-    <p><?php echo sprintf($this->translate('You are exporting %1$s items that belong to the following %2$d item sets:'),
+    <p><?php echo sprintf($translate('You are exporting %1$s items that belong to the following %2$d item sets:'),
         $this->hyperlink(number_format($count), $this->url('admin/default', ['controller' => 'item', 'action' => 'browse'], ['query' => $itemQuery], true), ['target' => '_blank']),
         count($itemSets));
     ?></p>
@@ -44,27 +45,26 @@ $escape = $this->plugin('escapeHtml');
         <?php endforeach; ?>
     </ul>
     <?php else: ?>
-    <p><?php echo sprintf($this->translate('You are exporting %1$s items that belong to %2$s item sets.'),
+    <p><?php echo sprintf($translate('You are exporting %1$s items that belong to %2$s item sets.'),
         $this->hyperlink(number_format($count), $this->url('admin/default', ['controller' => 'item', 'action' => 'browse'], ['query' => $itemQuery], true), ['target' => '_blank']),
         $this->hyperlink(number_format($itemSetCount), $this->url('admin/default', ['controller' => 'item-set', 'action' => 'browse'], ['query' => $itemSetQuery], true), ['target' => '_blank']));
     ?></p>
     <?php endif; ?>
     <?php else: ?>
-    <p><?php echo sprintf($this->translate('You are exporting %s items.'),
+    <p><?php echo sprintf($translate('You are exporting %s items.'),
         $this->hyperlink(number_format($count), $this->url(null, ['action' => 'browse'], ['query' => $query], true), ['target' => '_blank']));
     ?></p>
     <?php endif; ?>
 
-    <p>
-    <strong><?php echo $this->translate('Warning:'); ?></strong>
+    <br />
+    <strong><?php echo $translate('Warning:'); ?></strong>
     <ul>
-    <li><?php echo $this->translate('Zotero allows only one value for each field, except for creators and other people-realated fields. The next values of Omeka properties are not exported.'); ?></li>
-    <li><?php echo $this->translate('Furthermore, Zotero allows only some specific fields for each item type. Properties that doesn’t belong to a Zotero item type are not exported.'); ?></li>
-    <li><?php echo $this->translate('Besides, the mapping is not one-to-one, so some data may be missing or genericized when the mapping is reverted. You may adapt it to your needs (see files inside data/mapping).'); ?></li>
-    <li><?php echo $this->translate('Finally, for update, in case of duplicate items on Zotero, only the first one is updated.'); ?></li>
+    <li><?php echo $translate('Zotero allows only one value for each field, except for creators and other people-realated fields. The next values of Omeka properties are not exported.'); ?></li>
+    <li><?php echo $translate('Furthermore, Zotero allows only some specific fields for each item type. Properties that doesn’t belong to a Zotero item type are not exported.'); ?></li>
+    <li><?php echo $translate('Besides, the mapping is not one-to-one, so some data may be missing or genericized when the mapping is reverted. You may adapt it to your needs (see files inside data/mapping).'); ?></li>
+    <li><?php echo $translate('Finally, for update, in case of duplicate items on Zotero, only the first one is updated.'); ?></li>
     </ul>
-    </p>
-    <p><?php echo sprintf($this->translate('Get more information about %1$sZotero item types and fields%2$s.'), '<a href="https://www.zotero.org/support/kb/item_types_and_fields" target="_blank">', '</a>'); ?></p>
+    <p><?php echo sprintf($translate('Get more information about %1$sZotero item types and fields%2$s.'), '<a href="https://www.zotero.org/support/kb/item_types_and_fields" target="_blank">', '</a>'); ?></p>
 </div>
 
 <?php $this->trigger('view.batch_edit.after'); ?>
