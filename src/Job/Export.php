@@ -492,7 +492,7 @@ class Export extends AbstractZoteroSync
         $headers->addHeaderLine('Zotero-Write-Token', $this->randomString(32));
         $headers->addHeaderLine('Content-type', 'application/json');
 
-        $client->setRawBody(json_encode(array_values($zoteroItems)));
+        $client->setRawBody(json_encode(array_values($zoteroItems), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 
         // The client may throw an error.
         $response = $this->getResponse($url);

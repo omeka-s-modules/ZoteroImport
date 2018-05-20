@@ -114,7 +114,7 @@ class IndexController extends AbstractActionController
         }
 
         // Set default values to simplify checks.
-        $params += array_fill_keys(['resource_type', 'resource_ids', 'query', 'zotero_all'],null);
+        $params += array_fill_keys(['resource_type', 'resource_ids', 'query', 'batch_action', 'zotero_all'],null);
 
         $resourceType = $params['resource_type'];
         $resourceTypeMap = [
@@ -130,12 +130,12 @@ class IndexController extends AbstractActionController
 
         $resource = $resourceTypeMap[$resourceType];
         $resourceIds = $params['resource_ids'] ?: [];
-        $exportAll = (bool) $params['zotero_all'];
+        $selectAll = $params['batch_action'] ? $params['batch_action'] === 'zotero-all' : (bool) $params['zotero_all'];
 
         $query = null;
         $resources = [];
 
-        if ($exportAll) {
+        if ($selectAll) {
             // Derive the query, removing limiting and sorting params.
             $query = json_decode($params['query'] ?: [], true);
             unset($query['submit'], $query['page'], $query['per_page'], $query['limit'],
@@ -148,9 +148,9 @@ class IndexController extends AbstractActionController
         $itemSetQuery= null;
         $itemQuery = $query;
 
-        if ($exportAll || $resource === 'item_sets') {
+        if ($selectAll || $resource === 'item_sets') {
             if ($resource === 'item_sets') {
-                if ($exportAll) {
+                if ($selectAll) {
                     $itemSetQuery = $query;
                     $itemSetIds = $this->api()->search('item_sets', $itemSetQuery, ['returnScalar' => 'id'])->getContent();
                 } else {
@@ -188,7 +188,7 @@ class IndexController extends AbstractActionController
 
         $form = $this->getForm(ExportForm::class);
         $form->setAttribute('id', 'zotero-export');
-        if ($this->params()->fromPost('batch_export')) {
+        if ($this->params()->fromPost('batch_process')) {
             $data = $this->params()->fromPost();
             $form->setData($data);
 
@@ -279,7 +279,7 @@ class IndexController extends AbstractActionController
         $view = new ViewModel;
         $view->setVariable('form', $form);
         // Keep current request.
-        $view->setVariable('zoteroAll', $exportAll);
+        $view->setVariable('selectAll', $selectAll);
         $view->setVariable('resourceType', $resourceType);
         $view->setVariable('resourceIds', $resourceIds);
         $view->setVariable('query', $query);
