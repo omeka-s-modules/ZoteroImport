@@ -54,7 +54,7 @@ class IndexController extends AbstractActionController
                     'timestamp'     => $timestamp,
                 ];
 
-                if ($args['apiKey'] && !$this->apiKeyIsValid($args)) {
+                if ($args['apiKey'] && !($username = $this->apiKeyIsValid($args))) {
                     $this->messenger()->addError(
                         'Cannot import the Zotero library using the provided API key' // @translate
                     );
@@ -62,11 +62,22 @@ class IndexController extends AbstractActionController
                     $response = $this->sendApiRequest($args);
                     $body = json_decode($response->getBody(), true);
                     if ($response->isSuccess()) {
-                        $import = $this->api()->create('zotero_imports', [
-                            'o-module-zotero_import:version' => $response->getHeaders()->get('Last-Modified-Version')->getFieldValue(),
-                            'o-module-zotero_import:name' => $body[0]['library']['name'],
-                            'o-module-zotero_import:url' => $body[0]['library']['links']['alternate']['href'],
-                        ])->getContent();
+                        // The body is empty if the collection is empty.
+                        if (empty($body)) {
+                            // TODO Manage private group number (we don't know if the group is private here).
+                            $usernameClean = str_replace(' ', '_', preg_replace("/[^A-Za-z0-9 ]/", '', strtolower($username)));
+                            $import = $this->api()->create('zotero_imports', [
+                                'o-module-zotero_import:version' => 0,
+                                'o-module-zotero_import:name' => $username,
+                                'o-module-zotero_import:url' => 'https://www.zotero.org/' . $usernameClean,
+                            ])->getContent();
+                        } else {
+                            $import = $this->api()->create('zotero_imports', [
+                                'o-module-zotero_import:version' => $response->getHeaders()->get('Last-Modified-Version')->getFieldValue(),
+                                'o-module-zotero_import:name' => $body[0]['library']['name'],
+                                'o-module-zotero_import:url' => $body[0]['library']['links']['alternate']['href'],
+                            ])->getContent();
+                        }
                         $args['import'] = $import->id();
                         $job = $this->jobDispatcher()->dispatch(Job\Import::class, $args);
                         $this->api()->update('zotero_imports', $import->id(), [
@@ -223,22 +234,35 @@ class IndexController extends AbstractActionController
                     'timestamp' => $timestamp,
                 ];
 
-                if (!$this->apiKeyIsValid($args)) {
+                $username = $this->apiKeyIsValid($args);
+                if (!$username) {
                     $this->messenger()->addError(
                         'Cannot export the Zotero library using the provided API key' // @translate
                     );
                 } else {
                     $response = $this->sendApiRequest($args);
                     $body = json_decode($response->getBody(), true);
+
                     if ($response->isSuccess()) {
                         // TODO Manage Zotero import and export in the tables.
                         // "import" is used currently to avoid to upgrade the
                         // database tables.
-                        $import = $this->api()->create('zotero_imports', [
-                            'o-module-zotero_import:version' => $response->getHeaders()->get('Last-Modified-Version')->getFieldValue(),
-                            'o-module-zotero_import:name' => $body[0]['library']['name'],
-                            'o-module-zotero_import:url' => $body[0]['library']['links']['alternate']['href'],
-                        ])->getContent();
+                        // The body is empty if the collection is empty.
+                        if (empty($body)) {
+                            // TODO Manage private group number (we don't know if the group is private here).
+                            $usernameClean = str_replace(' ', '_', preg_replace("/[^A-Za-z0-9 ]/", '', strtolower($username)));
+                            $import = $this->api()->create('zotero_imports', [
+                                'o-module-zotero_import:version' => 0,
+                                'o-module-zotero_import:name' => $username,
+                                'o-module-zotero_import:url' => 'https://www.zotero.org/' . $usernameClean,
+                            ])->getContent();
+                        } else {
+                            $import = $this->api()->create('zotero_imports', [
+                                'o-module-zotero_import:version' => $response->getHeaders()->get('Last-Modified-Version')->getFieldValue(),
+                                'o-module-zotero_import:name' => $body[0]['library']['name'],
+                                'o-module-zotero_import:url' => $body[0]['library']['links']['alternate']['href'],
+                            ])->getContent();
+                        }
                         $args['import'] = $import->id();
 
                         $byIds = $resource === 'items' && $resourceIds;
@@ -346,7 +370,7 @@ class IndexController extends AbstractActionController
      * Validate a Zotero API key.
      *
      * @param array $args
-     * @return bool
+     * @return string|bool Return the username of the api key, or false.
      */
     protected function apiKeyIsValid(array $args)
     {
@@ -361,14 +385,14 @@ class IndexController extends AbstractActionController
             && isset($key['access']['user']['library'])
         ) {
             // The user IDs match and the key has user library access.
-            return true;
+            return $key['username'];
         }
         if ('group' == $args['type']
             && (isset($key['access']['groups']['all']['library'])
                 || isset($key['access']['groups'][$args['id']]['library']))
         ) {
             // It appears that the key has group library access.
-            return true;
+            return $key['username'];
         }
         return false;
     }
