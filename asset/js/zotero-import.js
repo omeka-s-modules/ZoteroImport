@@ -1,5 +1,6 @@
+// Kept for compatibility with Omeka < 1.2.
 Omeka.zoteroImportManageSelectedActions = function() {
-    var selectedOptions = $('[value="update-selected"], [value="delete-selected"], #batch-form .batch-inputs [data-select=selected]');
+    var selectedOptions = $('[value="update-selected"], [value="delete-selected"], #batch-form .batch-inputs .batch-selected');
     if ($('.batch-edit td input[type="checkbox"]:checked').length > 0) {
         selectedOptions.removeAttr('disabled');
     } else {
@@ -15,23 +16,24 @@ Omeka.zoteroImportManageSelectedActions = function() {
 
         var batchSelect = $('#batch-form .batch-actions-select');
         batchSelect.append(
-            $('<option data-select="selected" disabled="disabled"></option>').val('zotero-selected').html(Omeka.jsTranslate('Export selected to Zotero'))
+            $('<option class="batch-selected" disabled></option>').val('zotero-selected').html(Omeka.jsTranslate('Export selected to Zotero'))
         );
         batchSelect.append(
-            $('<option data-select="all"></option>').val('zotero-all').html(Omeka.jsTranslate('Export all to Zotero'))
+            $('<option></option>').val('zotero-all').html(Omeka.jsTranslate('Export all to Zotero'))
         );
         var batchActions = $('#batch-form .batch-actions');
         batchActions.append(
-            $('<input type="submit" class="zotero-selected" name="zotero_selected" formaction="zotero/export">').val(Omeka.jsTranslate('Go'))
+            $('<input type="submit" class="zotero-selected" formaction="zotero/export">').val(Omeka.jsTranslate('Go'))
         );
         batchActions.append(
-            $('<input type="submit" class="zotero-all" name="zotero_all" formaction="zotero/export">').val(Omeka.jsTranslate('Go'))
+            $('<input type="submit" class="zotero-all" formaction="zotero/export">').val(Omeka.jsTranslate('Go'))
         );
         var resourceType = window.location.pathname.split("/").pop();
         batchActions.append(
             $('<input type="hidden" name="resource_type">').val(resourceType)
         );
 
+        // Kept for compatibility with Omeka < 1.2.
         $('.select-all').change(function() {
             Omeka.zoteroImportManageSelectedActions();
         });

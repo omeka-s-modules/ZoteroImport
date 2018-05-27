@@ -117,8 +117,7 @@ class IndexController extends AbstractActionController
     {
         if ($this->getRequest()->isGet()) {
             $params = $this->params()->fromQuery();
-        }
-        elseif ($this->getRequest()->isPost()) {
+        } elseif ($this->getRequest()->isPost()) {
             $params = $this->params()->fromPost();
         } else {
             return $this->redirect()->toRoute('admin');
@@ -140,8 +139,12 @@ class IndexController extends AbstractActionController
         }
 
         $resource = $resourceTypeMap[$resourceType];
-        $resourceIds = $params['resource_ids'] ?: [];
+        $resourceIds = $params['resource_ids']
+            ? (is_array($params['resource_ids']) ? $params['resource_ids'] : explode(',', $params['resource_ids']))
+            : [];
+        $params['resource_ids'] = $resourceIds;
         $selectAll = $params['batch_action'] ? $params['batch_action'] === 'zotero-all' : (bool) $params['zotero_all'];
+        $params['batch_action'] = $selectAll ? 'zotero-all' : 'zotero-selected';
 
         $query = null;
         $resources = [];
@@ -298,6 +301,10 @@ class IndexController extends AbstractActionController
             }
 
             $this->messenger()->addFormErrors($form);
+        } else {
+            // Keep hidden the values from the browse page.
+            $params['resource_ids'] = implode(',', $params['resource_ids']);
+            $form->setData($params);
         }
 
         $view = new ViewModel;

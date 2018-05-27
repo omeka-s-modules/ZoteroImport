@@ -10,6 +10,23 @@ class ExportForm extends Form
     public function init()
     {
         $this->add([
+            'name' => 'batch_action',
+            'type' => Element\Hidden::class,
+        ]);
+        $this->add([
+            'name' => 'resource_type',
+            'type' => Element\Hidden::class,
+        ]);
+        $this->add([
+            'name' => 'resource_ids',
+            'type' => Element\Hidden::class,
+        ]);
+        $this->add([
+            'name' => 'query',
+            'type' => Element\Hidden::class,
+        ]);
+
+        $this->add([
             'name' => 'type',
             'type' => Element\Radio::class,
             'options' => [
