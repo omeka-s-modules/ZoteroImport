@@ -174,6 +174,7 @@ class Import extends AbstractJob
                     $zParentItems[$zItem['key']] = $zItem;
                 }
             }
+break;
         }
 
         // Map Zotero items to Omeka items. Pass by reference so PHP doesn't
@@ -185,6 +186,7 @@ class Import extends AbstractJob
             $oItem = $this->mapResourceClass($zParentItem, $oItem);
             $oItem = $this->mapNameValues($zParentItem, $oItem);
             $oItem = $this->mapSubjectValues($zParentItem, $oItem);
+            $oItem = $this->mapPublicationItem($zParentItem, $oItem);
             $oItem = $this->mapValues($zParentItem, $oItem);
             $oItem = $this->mapAttachment($zParentItem, $oItem);
             if (isset($zChildItems[$zParentItemKey])) {
@@ -337,6 +339,54 @@ class Import extends AbstractJob
                 return $omekaItem;
             }
         }
+        return $omekaItem;
+    }
+
+    /**
+     * Map Zotero publication data to an Omeka item.
+     *
+     * Zotero's journalArticle, magazineArticle, and newspaperArticle items may
+     * be part of publications that are uniquely identified by their ISSNs. This
+     * creates a corresponding publication item in Omeka and sets it as a linked
+     * resource of the Omeka article item.
+     *
+     * @param array $zoteroItem The Zotero item data
+     * @param array $omekaItem The Omeka item data
+     * @return array
+     */
+    public function mapPublicationItem(array $zoteroItem, array $omekaItem)
+    {
+        if (!isset($zoteroItem['data']['ISSN'])) {
+            return $omekaItem; // must have an ISSN
+        }
+        $issn = $zoteroItem['data']['ISSN'];
+        $itemType = $zoteroItem['data']['itemType'];
+        if (!in_array($itemType, ['journalArticle', 'magazineArticle', 'newspaperArticle'])) {
+            return $omekaItem; // must be an article
+        }
+        $api = $this->getServiceLocator()->get('Omeka\ApiManager');
+        if (!isset($this->publicationItems[$issn])) {
+            // Create the publication item if not already created.
+            $itemsData = [
+                'o:item_set' => [['o:id' => $omekaItem['o:item_set'][0]['o:id']]],
+                // @todo: add resource class applicable to the publication type
+                // @todo: add values applicable to the publication type
+            ]
+            $response = $api->create('items', $itemsData);
+            $publicationsData = [
+                'o:item' => ['o:id' => $response->getContent()->id()],
+                'o-module-zotero_import:import' => ['o:id' => $importId],
+                'o-module-zotero_import:issn' => $issn,
+            ];
+            $api->create('zotero_import_publications', $publicationsData);
+        }
+        // Set the publication item as a linked resource of this item.
+        $property = $this->properties['dcterms']['isPartOf']
+        $omekaItem[$property->term()][] = [
+            'property_id' => $property->id(),
+            'value_resource_id' => $this->publicationItems[$issn]->item()->id(),
+            'type' => 'resource:item',
+        ];
         return $omekaItem;
     }
 
