@@ -124,7 +124,7 @@ class IndexController extends AbstractActionController
         }
 
         // Set default values to simplify checks.
-        $params += array_fill_keys(['resource_type', 'resource_ids', 'query', 'batch_action', 'zotero_all'],null);
+        $params += array_fill_keys(['resource_type', 'resource_ids', 'query', 'batch_action'], null);
 
         $resourceType = $params['resource_type'];
         $resourceTypeMap = [
@@ -143,7 +143,9 @@ class IndexController extends AbstractActionController
             ? (is_array($params['resource_ids']) ? $params['resource_ids'] : explode(',', $params['resource_ids']))
             : [];
         $params['resource_ids'] = $resourceIds;
-        $selectAll = $params['batch_action'] ? $params['batch_action'] === 'zotero-all' : (bool) $params['zotero_all'];
+        // Manage Omeka with or without pull request #1260 (with or without
+        // param batch_action), so check $resourceIds.
+        $selectAll = $params['batch_action'] ? $params['batch_action'] === 'zotero-all' : empty($resourceIds);
         $params['batch_action'] = $selectAll ? 'zotero-all' : 'zotero-selected';
 
         $query = null;
