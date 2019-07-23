@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-25 12:11-0400\n"
+"POT-Creation-Date: 2019-07-23 16:35-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/Controller/IndexController.php:83
+#: src/Controller/IndexController.php:78
 msgid "Import another?"
 msgstr ""
 
@@ -25,40 +25,40 @@ msgstr ""
 msgid "Past Zotero Imports"
 msgstr ""
 
-#: view/zotero-import/index/browse.phtml:3
+#: view/zotero-import/index/browse.phtml:8
 msgid "There are no Zotero imports."
 msgstr ""
 
-#: view/zotero-import/index/browse.phtml:11
+#: view/zotero-import/index/browse.phtml:16
 #: view/zotero-import/index/undo-confirm.phtml:5
 msgid "Zotero Library"
 msgstr ""
 
-#: view/zotero-import/index/browse.phtml:12
+#: view/zotero-import/index/browse.phtml:17
 #: view/zotero-import/index/undo-confirm.phtml:7
 msgid "Items Added Before"
 msgstr ""
 
-#: view/zotero-import/index/browse.phtml:13
+#: view/zotero-import/index/browse.phtml:18
 #: view/zotero-import/index/undo-confirm.phtml:9
 msgid "Job Status"
 msgstr ""
 
-#: view/zotero-import/index/browse.phtml:14
+#: view/zotero-import/index/browse.phtml:19
 msgid "Item Count"
 msgstr ""
 
-#: view/zotero-import/index/browse.phtml:35
-#: view/zotero-import/index/browse.phtml:36
+#: view/zotero-import/index/browse.phtml:40
+#: view/zotero-import/index/browse.phtml:41
 msgid "Undo import"
 msgstr ""
 
-#: view/zotero-import/index/browse.phtml:49
+#: view/zotero-import/index/browse.phtml:54
 #, php-format
 msgid "Import %s"
 msgstr ""
 
-#: view/zotero-import/index/browse.phtml:52
+#: view/zotero-import/index/browse.phtml:57
 #, php-format
 msgid "Undo Import %s"
 msgstr ""
@@ -77,97 +77,93 @@ msgid ""
 "imported items."
 msgstr ""
 
-#: src/Controller/IndexController.php:62
+#: src/Controller/IndexController.php:57
 msgid "Cannot import the Zotero library using the provided API key"
 msgstr ""
 
-#: src/Controller/IndexController.php:79
+#: src/Controller/IndexController.php:74
 #, php-format
 msgid "Importing from Zotero. %s"
 msgstr ""
 
-#: src/Controller/IndexController.php:90
+#: src/Controller/IndexController.php:85
 #, php-format
 msgid "Error when requesting Zotero library: %s"
 msgstr ""
 
-#: src/Controller/IndexController.php:145
+#: src/Controller/IndexController.php:140
 msgid "Undoing Zotero import"
 msgstr ""
 
-#: src/Form/ImportForm.php:16
+#: src/Form/ImportForm.php:17
 msgid "Import into"
 msgstr ""
 
-#: src/Form/ImportForm.php:17
+#: src/Form/ImportForm.php:18
 msgid "Required. Import items into this item set."
 msgstr ""
 
-#: src/Form/ImportForm.php:18
-msgid "Select Item Set..."
-msgstr ""
-
-#: src/Form/ImportForm.php:36
+#: src/Form/ImportForm.php:33
 msgid "Library Type"
 msgstr ""
 
-#: src/Form/ImportForm.php:37
+#: src/Form/ImportForm.php:34
 msgid "Required. Is this a user or group library?"
 msgstr ""
 
-#: src/Form/ImportForm.php:52
+#: src/Form/ImportForm.php:49
 msgid "Library ID"
 msgstr ""
 
-#: src/Form/ImportForm.php:53
+#: src/Form/ImportForm.php:50
 msgid ""
 "Required. The user ID can be found on the \"Feeds/API\" section of the "
 "Zotero settings page. The group ID can be found on the Zotero group library "
 "page by looking at the URL of \"Subscribe to this feed\"."
 msgstr ""
 
-#: src/Form/ImportForm.php:64
+#: src/Form/ImportForm.php:62
 msgid "Collection Key"
 msgstr ""
 
-#: src/Form/ImportForm.php:65
+#: src/Form/ImportForm.php:63
 msgid ""
 "Not required. The collection key can be found on the Zotero library page by "
 "looking at the URL when looking at the collection."
 msgstr ""
 
-#: src/Form/ImportForm.php:73
+#: src/Form/ImportForm.php:74
 msgid "API Key"
 msgstr ""
 
-#: src/Form/ImportForm.php:74
+#: src/Form/ImportForm.php:75
 msgid "Required for non-public libraries and file import."
 msgstr ""
 
-#: src/Form/ImportForm.php:82
+#: src/Form/ImportForm.php:86
 msgid "Import Files"
 msgstr ""
 
-#: src/Form/ImportForm.php:83
+#: src/Form/ImportForm.php:87
 msgid "The API key is required to import files."
 msgstr ""
 
-#: src/Form/ImportForm.php:92
+#: src/Form/ImportForm.php:99
 msgid "Added after"
 msgstr ""
 
-#: src/Form/ImportForm.php:93
+#: src/Form/ImportForm.php:100
 msgid "Only import items that have been added to Zotero after this datetime."
 msgstr ""
 
-#: src/Form/ImportForm.php:167
+#: src/Form/ImportForm.php:177
 msgid "An API key is required to import files."
 msgstr ""
 
-#: config/module.config.php:40
+#: config/module.config.php:32
 msgid "Zotero Import"
 msgstr ""
 
-#: config/module.config.php:51
+#: config/module.config.php:43
 msgid "Past Imports"
 msgstr ""
