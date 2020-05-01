@@ -2,118 +2,122 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
+# Translators:
+# Hong Zhang <zhangh@unlv.nevada.edu>, 2018
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-05-01 16:43-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2017-09-14 20:17+0000\n"
+"Last-Translator: Hong Zhang <zhangh@unlv.nevada.edu>, 2018\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/omeka/teams/14184/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: src/Controller/IndexController.php:78
 msgid "Import another?"
-msgstr ""
+msgstr "导入下一项？"
 
 #: view/zotero-import/index/browse.phtml:1
 msgid "Past Zotero Imports"
-msgstr ""
+msgstr "以往的Zotero导入"
 
 #: view/zotero-import/index/browse.phtml:8
 msgid "There are no Zotero imports."
-msgstr ""
+msgstr "没有Zotero导入"
 
 #: view/zotero-import/index/browse.phtml:16
 #: view/zotero-import/index/undo-confirm.phtml:5
 msgid "Zotero Library"
-msgstr ""
+msgstr "Zotero库"
 
 #: view/zotero-import/index/browse.phtml:17
 #: view/zotero-import/index/undo-confirm.phtml:7
 msgid "Items Added Before"
-msgstr ""
+msgstr "在这之前添加的条目"
 
 #: view/zotero-import/index/browse.phtml:18
 #: view/zotero-import/index/undo-confirm.phtml:9
 msgid "Job Status"
-msgstr ""
+msgstr "任务状态"
 
 #: view/zotero-import/index/browse.phtml:19
 msgid "Item Count"
-msgstr ""
+msgstr "条目数"
 
 #: view/zotero-import/index/browse.phtml:40
 #: view/zotero-import/index/browse.phtml:41
 msgid "Undo import"
-msgstr ""
+msgstr "撤销导入"
 
 #: view/zotero-import/index/browse.phtml:54
 #, php-format
 msgid "Import %s"
-msgstr ""
+msgstr "导入%s"
 
 #: view/zotero-import/index/browse.phtml:57
 #, php-format
 msgid "Undo Import %s"
-msgstr ""
+msgstr "撤销导入%s"
 
 #: view/zotero-import/index/import.phtml:2
 msgid "Import from Zotero"
-msgstr ""
+msgstr "从Zotero中导入"
 
 #: view/zotero-import/index/undo-confirm.phtml:2
 msgid "Undo Import"
-msgstr ""
+msgstr "撤销导入"
 
 #: view/zotero-import/index/undo-confirm.phtml:3
 msgid ""
 "Are you sure you would like to undo this import? This will delete all "
 "imported items."
-msgstr ""
+msgstr "您确定要撤销该导入？这将删除所有导入的条目。"
 
 #: src/Controller/IndexController.php:57
 msgid "Cannot import the Zotero library using the provided API key"
-msgstr ""
+msgstr "无法使用提供的API密钥导入Zotero库"
 
 #: src/Controller/IndexController.php:74
 #, php-format
 msgid "Importing from Zotero. %s"
-msgstr ""
+msgstr "从Zotero中导入。%s"
 
 #: src/Controller/IndexController.php:85
 #, php-format
 msgid "Error when requesting Zotero library: %s"
-msgstr ""
+msgstr "请求Zotero库时出错：%s"
 
 #: src/Controller/IndexController.php:140
 msgid "Undoing Zotero import"
-msgstr ""
+msgstr "正在撤销Zotero导入"
 
 #: src/Form/ImportForm.php:17
 msgid "Import into"
-msgstr ""
+msgstr "导入至"
 
 #: src/Form/ImportForm.php:18
 msgid "Required. Import items into this item set."
-msgstr ""
+msgstr "必需的。导入条目至该条目集。"
 
 #: src/Form/ImportForm.php:33
 msgid "Library Type"
-msgstr ""
+msgstr "库类型"
 
 #: src/Form/ImportForm.php:34
 msgid "Required. Is this a user or group library?"
-msgstr ""
+msgstr "必需的。这是用户或群组库吗？"
 
 #: src/Form/ImportForm.php:49
 msgid "Library ID"
-msgstr ""
+msgstr "库ID"
 
 #: src/Form/ImportForm.php:50
 msgid ""
@@ -121,49 +125,50 @@ msgid ""
 "Zotero settings page. The group ID can be found on the Zotero group library "
 "page by looking at the URL of \"Subscribe to this feed\"."
 msgstr ""
+"必需的。用户ID可以在Zotero设置页面上的“信息流/程序接口”段落中找到。群ID可以在Zotero群库网页上找到，查看“订阅本信息流”的URL即可。"
 
 #: src/Form/ImportForm.php:62
 msgid "Collection Key"
-msgstr ""
+msgstr "馆藏密钥"
 
 #: src/Form/ImportForm.php:63
 msgid ""
 "Not required. The collection key can be found on the Zotero library page by "
 "looking at the URL when looking at the collection."
-msgstr ""
+msgstr "不是必需的。馆藏密钥可以在Zotero库的网页上找到，在查看馆藏时注意URL。"
 
 #: src/Form/ImportForm.php:74
 msgid "API Key"
-msgstr ""
+msgstr "API 密钥"
 
 #: src/Form/ImportForm.php:75
 msgid "Required for non-public libraries and file import."
-msgstr ""
+msgstr "为非公共库和文件导入所必需。"
 
 #: src/Form/ImportForm.php:86
 msgid "Import Files"
-msgstr ""
+msgstr "导入文件"
 
 #: src/Form/ImportForm.php:87
 msgid "The API key is required to import files."
-msgstr ""
+msgstr "要导入文件，API 密钥是必需的。"
 
 #: src/Form/ImportForm.php:99
 msgid "Added after"
-msgstr ""
+msgstr "在这之后添加"
 
 #: src/Form/ImportForm.php:100
 msgid "Only import items that have been added to Zotero after this datetime."
-msgstr ""
+msgstr "只导入在该日期时间之后添加入Zotero的条目。"
 
 #: src/Form/ImportForm.php:177
 msgid "An API key is required to import files."
-msgstr ""
+msgstr "要导入文件，一个API 密钥是必需的。"
 
 #: config/module.config.php:32
 msgid "Zotero Import"
-msgstr ""
+msgstr "Zotero导入"
 
 #: config/module.config.php:43
 msgid "Past Imports"
-msgstr ""
+msgstr "以往的导入"

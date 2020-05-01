@@ -2,118 +2,126 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
+# Translators:
+# Adriana Hernández <adriana@fitbak.com>, 2019
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-05-01 16:43-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2017-09-14 20:17+0000\n"
+"Last-Translator: Adriana Hernández <adriana@fitbak.com>, 2019\n"
+"Language-Team: Spanish (https://www.transifex.com/omeka/teams/14184/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: src/Controller/IndexController.php:78
 msgid "Import another?"
-msgstr ""
+msgstr "¿Importar otro?"
 
 #: view/zotero-import/index/browse.phtml:1
 msgid "Past Zotero Imports"
-msgstr ""
+msgstr "Previas importaciones de Zotero"
 
 #: view/zotero-import/index/browse.phtml:8
 msgid "There are no Zotero imports."
-msgstr ""
+msgstr "No hay importaciones de Zotero"
 
 #: view/zotero-import/index/browse.phtml:16
 #: view/zotero-import/index/undo-confirm.phtml:5
 msgid "Zotero Library"
-msgstr ""
+msgstr "Librería de Zotero"
 
 #: view/zotero-import/index/browse.phtml:17
 #: view/zotero-import/index/undo-confirm.phtml:7
 msgid "Items Added Before"
-msgstr ""
+msgstr "Elementos añadidos anteriormente"
 
 #: view/zotero-import/index/browse.phtml:18
 #: view/zotero-import/index/undo-confirm.phtml:9
 msgid "Job Status"
-msgstr ""
+msgstr "Estado del trabajo"
 
 #: view/zotero-import/index/browse.phtml:19
 msgid "Item Count"
-msgstr ""
+msgstr "Recuento de elementos"
 
 #: view/zotero-import/index/browse.phtml:40
 #: view/zotero-import/index/browse.phtml:41
 msgid "Undo import"
-msgstr ""
+msgstr "Deshacer la importación"
 
 #: view/zotero-import/index/browse.phtml:54
 #, php-format
 msgid "Import %s"
-msgstr ""
+msgstr "Importación al %s"
 
 #: view/zotero-import/index/browse.phtml:57
 #, php-format
 msgid "Undo Import %s"
-msgstr ""
+msgstr "Deshacer importación %s"
 
 #: view/zotero-import/index/import.phtml:2
 msgid "Import from Zotero"
-msgstr ""
+msgstr "Importar desde Zotero"
 
 #: view/zotero-import/index/undo-confirm.phtml:2
 msgid "Undo Import"
-msgstr ""
+msgstr "Deshacer importación"
 
 #: view/zotero-import/index/undo-confirm.phtml:3
 msgid ""
 "Are you sure you would like to undo this import? This will delete all "
 "imported items."
 msgstr ""
+"¿Está seguro que desea deshacer esta importación? Esta acción borrará todos "
+"los elementos importados."
 
 #: src/Controller/IndexController.php:57
 msgid "Cannot import the Zotero library using the provided API key"
 msgstr ""
+"No se puede importar la librería de Zotero utilizando la clave API "
+"suministrada"
 
 #: src/Controller/IndexController.php:74
 #, php-format
 msgid "Importing from Zotero. %s"
-msgstr ""
+msgstr "Importando desde Zotero. %s"
 
 #: src/Controller/IndexController.php:85
 #, php-format
 msgid "Error when requesting Zotero library: %s"
-msgstr ""
+msgstr "Error al solicitar la librería de Zotero: %s"
 
 #: src/Controller/IndexController.php:140
 msgid "Undoing Zotero import"
-msgstr ""
+msgstr "Deshacer la importación de Zotero"
 
 #: src/Form/ImportForm.php:17
 msgid "Import into"
-msgstr ""
+msgstr "Importar en"
 
 #: src/Form/ImportForm.php:18
 msgid "Required. Import items into this item set."
-msgstr ""
+msgstr "Requerido. Importar elementos dentro de éste conjunto de elementos."
 
 #: src/Form/ImportForm.php:33
 msgid "Library Type"
-msgstr ""
+msgstr "Tipo de librería"
 
 #: src/Form/ImportForm.php:34
 msgid "Required. Is this a user or group library?"
-msgstr ""
+msgstr "Requerido. ¿Esto es una librería o un grupo de usuarios?"
 
 #: src/Form/ImportForm.php:49
 msgid "Library ID"
-msgstr ""
+msgstr "ID de la librería"
 
 #: src/Form/ImportForm.php:50
 msgid ""
@@ -121,49 +129,56 @@ msgid ""
 "Zotero settings page. The group ID can be found on the Zotero group library "
 "page by looking at the URL of \"Subscribe to this feed\"."
 msgstr ""
+"Requerido. Puede encontrar el ID del usuario en la sección \"Feeds/API\" de "
+"la página de opciones de Zotero. El ID de grupo se encuentra en la página de"
+" la librería de grupo de Zotero, en la URL de \"Suscribirse a este feed\" "
 
 #: src/Form/ImportForm.php:62
 msgid "Collection Key"
-msgstr ""
+msgstr "Clave de la colección"
 
 #: src/Form/ImportForm.php:63
 msgid ""
 "Not required. The collection key can be found on the Zotero library page by "
 "looking at the URL when looking at the collection."
 msgstr ""
+"No requerido. La clave de la colección puede ser ubicada en la URL de la "
+"colección, dentro de la página de la librería de Zotero."
 
 #: src/Form/ImportForm.php:74
 msgid "API Key"
-msgstr ""
+msgstr "Clave API"
 
 #: src/Form/ImportForm.php:75
 msgid "Required for non-public libraries and file import."
-msgstr ""
+msgstr "Requerido para librerías no-públicas y la importación de archivos."
 
 #: src/Form/ImportForm.php:86
 msgid "Import Files"
-msgstr ""
+msgstr "Importar archivos"
 
 #: src/Form/ImportForm.php:87
 msgid "The API key is required to import files."
-msgstr ""
+msgstr "Se requiere la clave API  para importar los archivos."
 
 #: src/Form/ImportForm.php:99
 msgid "Added after"
-msgstr ""
+msgstr "Añadido después"
 
 #: src/Form/ImportForm.php:100
 msgid "Only import items that have been added to Zotero after this datetime."
 msgstr ""
+"Importar solamente los elementos que se hayan añadido a Zotero después de "
+"ésta fecha y hora."
 
 #: src/Form/ImportForm.php:177
 msgid "An API key is required to import files."
-msgstr ""
+msgstr "Se requiere una clave API para importar archivos."
 
 #: config/module.config.php:32
 msgid "Zotero Import"
-msgstr ""
+msgstr "Importación de Zotero"
 
 #: config/module.config.php:43
 msgid "Past Imports"
-msgstr ""
+msgstr "Importaciones anteriores"
