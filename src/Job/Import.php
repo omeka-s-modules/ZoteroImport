@@ -4,8 +4,8 @@ namespace ZoteroImport\Job;
 use DateTime;
 use Omeka\Job\AbstractJob;
 use Omeka\Job\Exception;
-use Zend\Http\Client;
-use Zend\Http\Response;
+use Laminas\Http\Client;
+use Laminas\Http\Response;
 use ZoteroImport\Zotero\Url;
 
 class Import extends AbstractJob

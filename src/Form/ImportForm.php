@@ -2,9 +2,9 @@
 namespace ZoteroImport\Form;
 
 use Omeka\Form\Element\ItemSetSelect;
-use Zend\Form\Element;
-use Zend\Form\Form;
-use Zend\Validator\Callback;
+use Laminas\Form\Element;
+use Laminas\Form\Form;
+use Laminas\Validator\Callback;
 
 class ImportForm extends Form
 {

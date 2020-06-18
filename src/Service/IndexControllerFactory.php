@@ -3,7 +3,7 @@ namespace ZoteroImport\Service;
 
 use Interop\Container\ContainerInterface;
 use ZoteroImport\Controller\IndexController;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class IndexControllerFactory implements FactoryInterface
 {
