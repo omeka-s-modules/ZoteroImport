@@ -30,7 +30,7 @@ class ImportForm extends Form
             'name' => 'type',
             'type' => Element\Radio::class,
             'options' => [
-                'label' =>  'Library Type',  // @translate
+                'label' => 'Library Type',  // @translate
                 'info' => 'Required. Is this a user or group library?', // @translate
                 'value_options' => [
                     'user' => 'User', // @translate

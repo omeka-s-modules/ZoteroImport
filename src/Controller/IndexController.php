@@ -42,14 +42,14 @@ class IndexController extends AbstractActionController
                     $timestamp = (int) $addedAfter->format('U');
                 }
                 $args = [
-                    'itemSet'       => $data['itemSet'],
-                    'type'          => $data['type'],
-                    'id'            => $data['id'],
+                    'itemSet' => $data['itemSet'],
+                    'type' => $data['type'],
+                    'id' => $data['id'],
                     'collectionKey' => $data['collectionKey'],
-                    'apiKey'        => $data['apiKey'],
-                    'importFiles'   => $data['importFiles'],
-                    'version'       => 0,
-                    'timestamp'     => $timestamp,
+                    'apiKey' => $data['apiKey'],
+                    'importFiles' => $data['importFiles'],
+                    'version' => 0,
+                    'timestamp' => $timestamp,
                 ];
 
                 if ($args['apiKey'] && !$this->apiKeyIsValid($args)) {

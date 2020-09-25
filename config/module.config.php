@@ -22,26 +22,26 @@ return [
         ],
     ],
     'view_manager' => [
-        'template_path_stack'      => [
+        'template_path_stack' => [
             dirname(__DIR__) . '/view',
         ],
     ],
     'navigation' => [
         'AdminModule' => [
             [
-                'label'      => 'Zotero Import', // @translate
-                'route'      => 'admin/zotero-import',
-                'resource'   => 'ZoteroImport\Controller\Index',
-                'pages'      => [
+                'label' => 'Zotero Import', // @translate
+                'route' => 'admin/zotero-import',
+                'resource' => 'ZoteroImport\Controller\Index',
+                'pages' => [
                     [
                         'label' => 'Import', // @translate
-                        'route'    => 'admin/zotero-import',
+                        'route' => 'admin/zotero-import',
                         'action' => 'import',
                         'resource' => 'ZoteroImport\Controller\Index',
                     ],
                     [
                         'label' => 'Past Imports', // @translate
-                        'route'    => 'admin/zotero-import/default',
+                        'route' => 'admin/zotero-import/default',
                         'action' => 'browse',
                         'resource' => 'ZoteroImport\Controller\Index',
                     ],

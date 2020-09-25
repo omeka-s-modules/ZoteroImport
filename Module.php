@@ -56,6 +56,5 @@ class Module extends AbstractModule
                 }
             }
         );
-
     }
 }

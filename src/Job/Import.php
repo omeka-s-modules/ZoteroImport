@@ -31,8 +31,8 @@ class Import extends AbstractJob
      */
     protected $vocabularies = [
         'dcterms' => 'http://purl.org/dc/terms/',
-        'dctype'  => 'http://purl.org/dc/dcmitype/',
-        'bibo'    => 'http://purl.org/ontology/bibo/',
+        'dctype' => 'http://purl.org/dc/dcmitype/',
+        'bibo' => 'http://purl.org/ontology/bibo/',
     ];
 
     /**
@@ -127,7 +127,7 @@ class Import extends AbstractJob
             'itemType' => '-note',
         ];
         if ($collectionKey) {
-             $url = $this->url->collectionItems($collectionKey, $params);
+            $url = $this->url->collectionItems($collectionKey, $params);
         } else {
             $url = $this->url->items($params);
         }
@@ -462,7 +462,7 @@ class Import extends AbstractJob
      * @param array $zoteroItem The Zotero item data
      * @param array $omekaItem The Omeka item data
      * @return string
-      */
+     */
     public function mapAttachment($zoteroItem, $omekaItem)
     {
         if ('attachment' === $zoteroItem['data']['itemType']
@@ -473,7 +473,7 @@ class Import extends AbstractJob
             $property = $this->properties['dcterms']['title'];
             $omekaItem['o:media'][] = [
                 'o:ingester' => 'url',
-                'o:source'   => $this->url->itemFile($zoteroItem['key']),
+                'o:source' => $this->url->itemFile($zoteroItem['key']),
                 'ingest_url' => $this->url->itemFile(
                     $zoteroItem['key'],
                     ['key' => $this->getArg('apiKey')]
