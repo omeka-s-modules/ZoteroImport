@@ -1,0 +1,183 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# Bruna Santiago <bruna.santiago@campus.fcsh.unl.pt>, 2020
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-05-01 16:43-0400\n"
+"PO-Revision-Date: 2017-09-14 20:17+0000\n"
+"Last-Translator: Bruna Santiago <bruna.santiago@campus.fcsh.unl.pt>, 2020\n"
+"Language-Team: Portuguese (Portugal) (https://www.transifex.com/omeka/teams/14184/pt_PT/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: pt_PT\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/Controller/IndexController.php:78
+msgid "Import another?"
+msgstr "Importar outro?"
+
+#: view/zotero-import/index/browse.phtml:1
+msgid "Past Zotero Imports"
+msgstr "Importações anteriores do Zotero"
+
+#: view/zotero-import/index/browse.phtml:8
+msgid "There are no Zotero imports."
+msgstr "Não há importações do Zotero."
+
+#: view/zotero-import/index/browse.phtml:16
+#: view/zotero-import/index/undo-confirm.phtml:5
+msgid "Zotero Library"
+msgstr "Biblioteca Zotero"
+
+#: view/zotero-import/index/browse.phtml:17
+#: view/zotero-import/index/undo-confirm.phtml:7
+msgid "Items Added Before"
+msgstr "Itens Adicionados Antes"
+
+#: view/zotero-import/index/browse.phtml:18
+#: view/zotero-import/index/undo-confirm.phtml:9
+msgid "Job Status"
+msgstr "Estado do Trabalho"
+
+#: view/zotero-import/index/browse.phtml:19
+msgid "Item Count"
+msgstr "Contagem de Itens"
+
+#: view/zotero-import/index/browse.phtml:40
+#: view/zotero-import/index/browse.phtml:41
+msgid "Undo import"
+msgstr "Desfazer importação"
+
+#: view/zotero-import/index/browse.phtml:54
+#, php-format
+msgid "Import %s"
+msgstr "Importar %s"
+
+#: view/zotero-import/index/browse.phtml:57
+#, php-format
+msgid "Undo Import %s"
+msgstr "Desfazer Importação %s"
+
+#: view/zotero-import/index/import.phtml:2
+msgid "Import from Zotero"
+msgstr "Importar a partir do Zotero"
+
+#: view/zotero-import/index/undo-confirm.phtml:2
+msgid "Undo Import"
+msgstr "Desfazer Importação"
+
+#: view/zotero-import/index/undo-confirm.phtml:3
+msgid ""
+"Are you sure you would like to undo this import? This will delete all "
+"imported items."
+msgstr ""
+"Tem a certeza de que gostaria de desfazer esta importação? Isto eliminará "
+"todos os itens importados."
+
+#: src/Controller/IndexController.php:57
+msgid "Cannot import the Zotero library using the provided API key"
+msgstr ""
+"Não é possível importar a biblioteca Zotero utilizando a chave API fornecida"
+
+#: src/Controller/IndexController.php:74
+#, php-format
+msgid "Importing from Zotero. %s"
+msgstr "Importação a partir do Zotero. %s"
+
+#: src/Controller/IndexController.php:85
+#, php-format
+msgid "Error when requesting Zotero library: %s"
+msgstr "Erro ao solicitar a biblioteca Zotero: %s"
+
+#: src/Controller/IndexController.php:140
+msgid "Undoing Zotero import"
+msgstr "Desfazer importação Zotero"
+
+#: src/Form/ImportForm.php:17
+msgid "Import into"
+msgstr "Importar para"
+
+#: src/Form/ImportForm.php:18
+msgid "Required. Import items into this item set."
+msgstr "Necessário. Importar itens para este conjunto de itens."
+
+#: src/Form/ImportForm.php:33
+msgid "Library Type"
+msgstr "Tipo de Biblioteca"
+
+#: src/Form/ImportForm.php:34
+msgid "Required. Is this a user or group library?"
+msgstr "Necessário. Trata-se de uma biblioteca de utilizador ou de grupo?"
+
+#: src/Form/ImportForm.php:49
+msgid "Library ID"
+msgstr "ID da Biblioteca"
+
+#: src/Form/ImportForm.php:50
+msgid ""
+"Required. The user ID can be found on the \"Feeds/API\" section of the "
+"Zotero settings page. The group ID can be found on the Zotero group library "
+"page by looking at the URL of \"Subscribe to this feed\"."
+msgstr ""
+"Necessário. O ID do utilizador pode ser encontrado na secção \"Feeds/API\" "
+"da página de definições do Zotero. O ID do grupo pode ser encontrado na "
+"página da biblioteca de grupo do Zotero, consultando o URL de \"Subscrever "
+"este feed\"."
+
+#: src/Form/ImportForm.php:62
+msgid "Collection Key"
+msgstr "Chave da Colecção"
+
+#: src/Form/ImportForm.php:63
+msgid ""
+"Not required. The collection key can be found on the Zotero library page by "
+"looking at the URL when looking at the collection."
+msgstr ""
+"Não é necessário. A chave da colecção pode ser encontrada na página da "
+"biblioteca do Zotero, consultando o URL ao consultar a colecção."
+
+#: src/Form/ImportForm.php:74
+msgid "API Key"
+msgstr "Chave API"
+
+#: src/Form/ImportForm.php:75
+msgid "Required for non-public libraries and file import."
+msgstr "Necessário para bibliotecas não públicas e importação de ficheiros."
+
+#: src/Form/ImportForm.php:86
+msgid "Import Files"
+msgstr "Importar Ficheiros"
+
+#: src/Form/ImportForm.php:87
+msgid "The API key is required to import files."
+msgstr "A chave API é necessária para importar ficheiros."
+
+#: src/Form/ImportForm.php:99
+msgid "Added after"
+msgstr "Adicionado depois"
+
+#: src/Form/ImportForm.php:100
+msgid "Only import items that have been added to Zotero after this datetime."
+msgstr ""
+"Importar apenas itens que tenham sido adicionados ao Zotero após esta data."
+
+#: src/Form/ImportForm.php:177
+msgid "An API key is required to import files."
+msgstr "Uma chave API é necessária para importar ficheiros."
+
+#: config/module.config.php:32
+msgid "Zotero Import"
+msgstr "Importação Zotero"
+
+#: config/module.config.php:43
+msgid "Past Imports"
+msgstr "Importações Anteriores"
