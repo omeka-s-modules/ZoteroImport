@@ -101,6 +101,7 @@ class ImportForm extends Form
             ],
             'attributes' => [
                 'id' => 'added-after',
+                'placeholder' => 'YYYY-MM-DDTHH:MM',
             ],
         ]);
 
