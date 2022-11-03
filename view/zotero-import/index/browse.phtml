@@ -1,4 +1,4 @@
-<?php echo $this->pageTitle($this->translate('Past Zotero Imports')); 
+<?php echo $this->pageTitle($this->translate('Past Zotero Imports'));
 $this->htmlElement('body')->appendAttribute('class', 'browse');
 $this->htmlElement('body')->appendAttribute('class', 'past-imports');
 $this->headLink()->appendStylesheet($this->assetUrl('css/zoteroimport.css', 'ZoteroImport'));
@@ -36,10 +36,10 @@ $this->headLink()->appendStylesheet($this->assetUrl('css/zoteroimport.css', 'Zot
                 ): ?>
                 <li><a href="#"
                     data-sidebar-content-url="<?php echo $this->escapeHtml($import->url('undo-confirm')); ?>"
-                    class="o-icon-undo sidebar-content"
+                    class="o-icon-delete sidebar-content"
                     aria-label="<?php echo $this->translate('Undo import'); ?>"
                     title="<?php echo $this->translate('Undo import'); ?>"></a></li>
-                <?php endif; ?> 
+                <?php endif; ?>
             </ul>
         </td>
         <td>
