@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-01 16:43-0400\n"
+"POT-Creation-Date: 2022-11-29 12:53-0500\n"
 "PO-Revision-Date: 2017-09-14 20:17+0000\n"
 "Last-Translator: Matti Lassila <matti.lassila@gmail.com>, 2018\n"
 "Language-Team: Finnish (Finland) (https://www.transifex.com/omeka/teams/14184/fi_FI/)\n"
@@ -81,23 +81,13 @@ msgid ""
 "imported items."
 msgstr "Haluatko varmasti perua tuonnin? Kaikki tuodut aineistot tuhotaan."
 
-#: src/Controller/IndexController.php:57
-msgid "Cannot import the Zotero library using the provided API key"
-msgstr "Annettu API-avain ei kelpaa"
+#: config/module.config.php:32
+msgid "Zotero Import"
+msgstr "Zotero-tuonti"
 
-#: src/Controller/IndexController.php:74
-#, php-format
-msgid "Importing from Zotero. %s"
-msgstr "Tuodaan aineistoja Zoterosta. %s"
-
-#: src/Controller/IndexController.php:85
-#, php-format
-msgid "Error when requesting Zotero library: %s"
-msgstr "Virhe muodostettaessa yhteyttä Zotero-kirjastoon: %s"
-
-#: src/Controller/IndexController.php:140
-msgid "Undoing Zotero import"
-msgstr "Perutaan Zotero-tuontia"
+#: config/module.config.php:43
+msgid "Past Imports"
+msgstr "Aikaisemmat tuonnit"
 
 #: src/Form/ImportForm.php:17
 msgid "Import into"
@@ -164,14 +154,24 @@ msgid "Only import items that have been added to Zotero after this datetime."
 msgstr ""
 "Tuo vain aineistot jotka on lisätty Zoteroon annetun päivämäärän jälkeen."
 
-#: src/Form/ImportForm.php:177
+#: src/Form/ImportForm.php:178
 msgid "An API key is required to import files."
 msgstr "API-avain tarvitaan tiedostojen tuontiin."
 
-#: config/module.config.php:32
-msgid "Zotero Import"
-msgstr "Zotero-tuonti"
+#: src/Controller/IndexController.php:57
+msgid "Cannot import the Zotero library using the provided API key"
+msgstr "Annettu API-avain ei kelpaa"
 
-#: config/module.config.php:43
-msgid "Past Imports"
-msgstr "Aikaisemmat tuonnit"
+#: src/Controller/IndexController.php:74
+#, php-format
+msgid "Importing from Zotero. %s"
+msgstr "Tuodaan aineistoja Zoterosta. %s"
+
+#: src/Controller/IndexController.php:85
+#, php-format
+msgid "Error when requesting Zotero library: %s"
+msgstr "Virhe muodostettaessa yhteyttä Zotero-kirjastoon: %s"
+
+#: src/Controller/IndexController.php:140
+msgid "Undoing Zotero import"
+msgstr "Perutaan Zotero-tuontia"

@@ -2,108 +2,114 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
+# Translators:
+# Tzvetan Tzvetanski <ceibg.org@gmail.com>, 2021
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-11-29 12:53-0500\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2017-09-14 20:17+0000\n"
+"Last-Translator: Tzvetan Tzvetanski <ceibg.org@gmail.com>, 2021\n"
+"Language-Team: Bulgarian (Bulgaria) (https://www.transifex.com/omeka/teams/14184/bg_BG/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: bg_BG\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: src/Controller/IndexController.php:78
 msgid "Import another?"
-msgstr ""
+msgstr "Импортиране на друг?"
 
 #: view/zotero-import/index/browse.phtml:1
 msgid "Past Zotero Imports"
-msgstr ""
+msgstr "Предишен импорт Zotero "
 
 #: view/zotero-import/index/browse.phtml:8
 msgid "There are no Zotero imports."
-msgstr ""
+msgstr "Няма Zotero импорти"
 
 #: view/zotero-import/index/browse.phtml:16
 #: view/zotero-import/index/undo-confirm.phtml:5
 msgid "Zotero Library"
-msgstr ""
+msgstr "Zotero библиотека"
 
 #: view/zotero-import/index/browse.phtml:17
 #: view/zotero-import/index/undo-confirm.phtml:7
 msgid "Items Added Before"
-msgstr ""
+msgstr "Елементи добавени преди"
 
 #: view/zotero-import/index/browse.phtml:18
 #: view/zotero-import/index/undo-confirm.phtml:9
 msgid "Job Status"
-msgstr ""
+msgstr "Състояние на работата"
 
 #: view/zotero-import/index/browse.phtml:19
 msgid "Item Count"
-msgstr ""
+msgstr "Брой елементи"
 
 #: view/zotero-import/index/browse.phtml:40
 #: view/zotero-import/index/browse.phtml:41
 msgid "Undo import"
-msgstr ""
+msgstr "обратно връщане на импорта"
 
 #: view/zotero-import/index/browse.phtml:54
 #, php-format
 msgid "Import %s"
-msgstr ""
+msgstr "Импорт %s"
 
 #: view/zotero-import/index/browse.phtml:57
 #, php-format
 msgid "Undo Import %s"
-msgstr ""
+msgstr "Обратно връщане на импорта %s"
 
 #: view/zotero-import/index/import.phtml:2
 msgid "Import from Zotero"
-msgstr ""
+msgstr "Импорт от Zotero"
 
 #: view/zotero-import/index/undo-confirm.phtml:2
 msgid "Undo Import"
-msgstr ""
+msgstr "Обратно връщане на импорта"
 
 #: view/zotero-import/index/undo-confirm.phtml:3
 msgid ""
 "Are you sure you would like to undo this import? This will delete all "
 "imported items."
 msgstr ""
+"Наистина ли искате да отмените този импорт? Това ще изтрие всички "
+"импортирани елементи."
 
 #: config/module.config.php:32
 msgid "Zotero Import"
-msgstr ""
+msgstr "Zotero импорт"
 
 #: config/module.config.php:43
 msgid "Past Imports"
-msgstr ""
+msgstr "Предишни импорти"
 
 #: src/Form/ImportForm.php:17
 msgid "Import into"
-msgstr ""
+msgstr "Информация за импорта"
 
 #: src/Form/ImportForm.php:18
 msgid "Required. Import items into this item set."
-msgstr ""
+msgstr "Задължително. Импортирайте елементи в този набор от елементи."
 
 #: src/Form/ImportForm.php:33
 msgid "Library Type"
-msgstr ""
+msgstr "Тип библиотека"
 
 #: src/Form/ImportForm.php:34
 msgid "Required. Is this a user or group library?"
-msgstr ""
+msgstr "Задължително. Това библиотека на потребител или група е?"
 
 #: src/Form/ImportForm.php:49
 msgid "Library ID"
-msgstr ""
+msgstr "ID на библиотека"
 
 #: src/Form/ImportForm.php:50
 msgid ""
@@ -111,59 +117,69 @@ msgid ""
 "Zotero settings page. The group ID can be found on the Zotero group library "
 "page by looking at the URL of \"Subscribe to this feed\"."
 msgstr ""
+"Задължително. Потребителският идентификатор може да бъде намерен в раздела "
+"\"Feeds/API\"  на страницата с настройки на Zotero. Идентификаторът на "
+"групата може да бъде намерен на страницата на библиотеката на Zotero, като "
+"погледнете URL адреса на „Абонирайте се за тази емисия“."
 
 #: src/Form/ImportForm.php:62
 msgid "Collection Key"
-msgstr ""
+msgstr "Ключ за колекцията"
 
 #: src/Form/ImportForm.php:63
 msgid ""
 "Not required. The collection key can be found on the Zotero library page by "
 "looking at the URL when looking at the collection."
 msgstr ""
+"Не е задължително. Ключът за колекция може да бъде намерен на страницата на "
+"библиотеката на Zotero, като погледнете URL адреса, когато разглеждате "
+"колекцията."
 
 #: src/Form/ImportForm.php:74
 msgid "API Key"
-msgstr ""
+msgstr "API ключ"
 
 #: src/Form/ImportForm.php:75
 msgid "Required for non-public libraries and file import."
-msgstr ""
+msgstr "Изисква се за непублични библиотеки и импортиране на файлове."
 
 #: src/Form/ImportForm.php:86
 msgid "Import Files"
-msgstr ""
+msgstr "Импортирани файлове"
 
 #: src/Form/ImportForm.php:87
 msgid "The API key is required to import files."
-msgstr ""
+msgstr "API ключът се изисква за импортиране на файлове."
 
 #: src/Form/ImportForm.php:99
 msgid "Added after"
-msgstr ""
+msgstr "Добавен след това"
 
 #: src/Form/ImportForm.php:100
 msgid "Only import items that have been added to Zotero after this datetime."
 msgstr ""
+"Импортирайте само елементи, които са добавени към Zotero след тази дата."
 
 #: src/Form/ImportForm.php:178
 msgid "An API key is required to import files."
-msgstr ""
+msgstr "За импортиране на файлове е необходим API ключ."
 
 #: src/Controller/IndexController.php:57
 msgid "Cannot import the Zotero library using the provided API key"
 msgstr ""
+"Не може да се импортира библиотеката Zotero с помощта на предоставения API "
+"ключ"
 
 #: src/Controller/IndexController.php:74
 #, php-format
 msgid "Importing from Zotero. %s"
-msgstr ""
+msgstr "Импортиране от Zotero. %s"
 
 #: src/Controller/IndexController.php:85
 #, php-format
 msgid "Error when requesting Zotero library: %s"
-msgstr ""
+msgstr "Грешка при обръщане към библиотека Zotero:%s"
 
 #: src/Controller/IndexController.php:140
 msgid "Undoing Zotero import"
-msgstr ""
+msgstr "Ненаправен Zotero импорт"

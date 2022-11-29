@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-01 16:43-0400\n"
+"POT-Creation-Date: 2022-11-29 12:53-0500\n"
 "PO-Revision-Date: 2017-09-14 20:17+0000\n"
 "Last-Translator: Bruna Santiago <bruna.santiago@campus.fcsh.unl.pt>, 2020\n"
 "Language-Team: Portuguese (Portugal) (https://www.transifex.com/omeka/teams/14184/pt_PT/)\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pt_PT\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #: src/Controller/IndexController.php:78
 msgid "Import another?"
@@ -83,24 +83,13 @@ msgstr ""
 "Tem a certeza de que gostaria de desfazer esta importação? Isto eliminará "
 "todos os itens importados."
 
-#: src/Controller/IndexController.php:57
-msgid "Cannot import the Zotero library using the provided API key"
-msgstr ""
-"Não é possível importar a biblioteca Zotero utilizando a chave API fornecida"
+#: config/module.config.php:32
+msgid "Zotero Import"
+msgstr "Importação Zotero"
 
-#: src/Controller/IndexController.php:74
-#, php-format
-msgid "Importing from Zotero. %s"
-msgstr "Importação a partir do Zotero. %s"
-
-#: src/Controller/IndexController.php:85
-#, php-format
-msgid "Error when requesting Zotero library: %s"
-msgstr "Erro ao solicitar a biblioteca Zotero: %s"
-
-#: src/Controller/IndexController.php:140
-msgid "Undoing Zotero import"
-msgstr "Desfazer importação Zotero"
+#: config/module.config.php:43
+msgid "Past Imports"
+msgstr "Importações Anteriores"
 
 #: src/Form/ImportForm.php:17
 msgid "Import into"
@@ -170,14 +159,25 @@ msgid "Only import items that have been added to Zotero after this datetime."
 msgstr ""
 "Importar apenas itens que tenham sido adicionados ao Zotero após esta data."
 
-#: src/Form/ImportForm.php:177
+#: src/Form/ImportForm.php:178
 msgid "An API key is required to import files."
 msgstr "Uma chave API é necessária para importar ficheiros."
 
-#: config/module.config.php:32
-msgid "Zotero Import"
-msgstr "Importação Zotero"
+#: src/Controller/IndexController.php:57
+msgid "Cannot import the Zotero library using the provided API key"
+msgstr ""
+"Não é possível importar a biblioteca Zotero utilizando a chave API fornecida"
 
-#: config/module.config.php:43
-msgid "Past Imports"
-msgstr "Importações Anteriores"
+#: src/Controller/IndexController.php:74
+#, php-format
+msgid "Importing from Zotero. %s"
+msgstr "Importação a partir do Zotero. %s"
+
+#: src/Controller/IndexController.php:85
+#, php-format
+msgid "Error when requesting Zotero library: %s"
+msgstr "Erro ao solicitar a biblioteca Zotero: %s"
+
+#: src/Controller/IndexController.php:140
+msgid "Undoing Zotero import"
+msgstr "Desfazer importação Zotero"

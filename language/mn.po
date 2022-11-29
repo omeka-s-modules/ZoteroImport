@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-01 16:43-0400\n"
+"POT-Creation-Date: 2022-11-29 12:53-0500\n"
 "PO-Revision-Date: 2017-09-14 20:17+0000\n"
 "Last-Translator: Khaidav T. <khaidaw@yahoo.com>, 2018\n"
 "Language-Team: Mongolian (https://www.transifex.com/omeka/teams/14184/mn/)\n"
@@ -81,22 +81,12 @@ msgid ""
 "imported items."
 msgstr ""
 
-#: src/Controller/IndexController.php:57
-msgid "Cannot import the Zotero library using the provided API key"
+#: config/module.config.php:32
+msgid "Zotero Import"
 msgstr ""
 
-#: src/Controller/IndexController.php:74
-#, php-format
-msgid "Importing from Zotero. %s"
-msgstr ""
-
-#: src/Controller/IndexController.php:85
-#, php-format
-msgid "Error when requesting Zotero library: %s"
-msgstr ""
-
-#: src/Controller/IndexController.php:140
-msgid "Undoing Zotero import"
+#: config/module.config.php:43
+msgid "Past Imports"
 msgstr ""
 
 #: src/Form/ImportForm.php:17
@@ -160,14 +150,24 @@ msgstr "Нэмэгдсэний дараа"
 msgid "Only import items that have been added to Zotero after this datetime."
 msgstr ""
 
-#: src/Form/ImportForm.php:177
+#: src/Form/ImportForm.php:178
 msgid "An API key is required to import files."
 msgstr ""
 
-#: config/module.config.php:32
-msgid "Zotero Import"
+#: src/Controller/IndexController.php:57
+msgid "Cannot import the Zotero library using the provided API key"
 msgstr ""
 
-#: config/module.config.php:43
-msgid "Past Imports"
+#: src/Controller/IndexController.php:74
+#, php-format
+msgid "Importing from Zotero. %s"
+msgstr ""
+
+#: src/Controller/IndexController.php:85
+#, php-format
+msgid "Error when requesting Zotero library: %s"
+msgstr ""
+
+#: src/Controller/IndexController.php:140
+msgid "Undoing Zotero import"
 msgstr ""

@@ -4,22 +4,23 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Adriana Hernández <adriana@fitbak.com>, 2019
+# Adriana Hernández, 2019
+# Alfonso Montejo <almontejor@gmail.com>, 2022
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-01 16:43-0400\n"
+"POT-Creation-Date: 2022-11-29 12:53-0500\n"
 "PO-Revision-Date: 2017-09-14 20:17+0000\n"
-"Last-Translator: Adriana Hernández <adriana@fitbak.com>, 2019\n"
+"Last-Translator: Alfonso Montejo <almontejor@gmail.com>, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/omeka/teams/14184/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #: src/Controller/IndexController.php:78
 msgid "Import another?"
@@ -27,7 +28,7 @@ msgstr "¿Importar otro?"
 
 #: view/zotero-import/index/browse.phtml:1
 msgid "Past Zotero Imports"
-msgstr "Previas importaciones de Zotero"
+msgstr "Importaciones anteriores de Zotero"
 
 #: view/zotero-import/index/browse.phtml:8
 msgid "There are no Zotero imports."
@@ -80,28 +81,16 @@ msgid ""
 "Are you sure you would like to undo this import? This will delete all "
 "imported items."
 msgstr ""
-"¿Está seguro que desea deshacer esta importación? Esta acción borrará todos "
-"los elementos importados."
+"¿Confirmar el deshacer esta importación? Esta acción borrará todos los "
+"elementos importados."
 
-#: src/Controller/IndexController.php:57
-msgid "Cannot import the Zotero library using the provided API key"
-msgstr ""
-"No se puede importar la librería de Zotero utilizando la clave API "
-"suministrada"
+#: config/module.config.php:32
+msgid "Zotero Import"
+msgstr "Importación de Zotero"
 
-#: src/Controller/IndexController.php:74
-#, php-format
-msgid "Importing from Zotero. %s"
-msgstr "Importando desde Zotero. %s"
-
-#: src/Controller/IndexController.php:85
-#, php-format
-msgid "Error when requesting Zotero library: %s"
-msgstr "Error al solicitar la librería de Zotero: %s"
-
-#: src/Controller/IndexController.php:140
-msgid "Undoing Zotero import"
-msgstr "Deshacer la importación de Zotero"
+#: config/module.config.php:43
+msgid "Past Imports"
+msgstr "Importaciones anteriores"
 
 #: src/Form/ImportForm.php:17
 msgid "Import into"
@@ -117,7 +106,7 @@ msgstr "Tipo de librería"
 
 #: src/Form/ImportForm.php:34
 msgid "Required. Is this a user or group library?"
-msgstr "Requerido. ¿Esto es una librería o un grupo de usuarios?"
+msgstr "Requerido. ¿Es una librería o un grupo de usuarios?"
 
 #: src/Form/ImportForm.php:49
 msgid "Library ID"
@@ -129,9 +118,10 @@ msgid ""
 "Zotero settings page. The group ID can be found on the Zotero group library "
 "page by looking at the URL of \"Subscribe to this feed\"."
 msgstr ""
-"Requerido. Puede encontrar el ID del usuario en la sección \"Feeds/API\" de "
-"la página de opciones de Zotero. El ID de grupo se encuentra en la página de"
-" la librería de grupo de Zotero, en la URL de \"Suscribirse a este feed\" "
+"Requerido. Puede encontrarse la ID del usuario en la sección \"Feeds/API\" "
+"de la página de opciones de Zotero. La ID de grupo se encuentra en la página"
+" de la librería de grupo de Zotero, en la URL de \"Suscribirse a este feed\""
+" "
 
 #: src/Form/ImportForm.php:62
 msgid "Collection Key"
@@ -142,8 +132,8 @@ msgid ""
 "Not required. The collection key can be found on the Zotero library page by "
 "looking at the URL when looking at the collection."
 msgstr ""
-"No requerido. La clave de la colección puede ser ubicada en la URL de la "
-"colección, dentro de la página de la librería de Zotero."
+"No requerido. La clave de la colección puede localizarse, en la página de la"
+" biblioteca de Zotero, consultando el URL al examinar la colección."
 
 #: src/Form/ImportForm.php:74
 msgid "API Key"
@@ -171,14 +161,26 @@ msgstr ""
 "Importar solamente los elementos que se hayan añadido a Zotero después de "
 "ésta fecha y hora."
 
-#: src/Form/ImportForm.php:177
+#: src/Form/ImportForm.php:178
 msgid "An API key is required to import files."
 msgstr "Se requiere una clave API para importar archivos."
 
-#: config/module.config.php:32
-msgid "Zotero Import"
-msgstr "Importación de Zotero"
+#: src/Controller/IndexController.php:57
+msgid "Cannot import the Zotero library using the provided API key"
+msgstr ""
+"No se puede importar la librería de Zotero utilizando la clave API "
+"suministrada"
 
-#: config/module.config.php:43
-msgid "Past Imports"
-msgstr "Importaciones anteriores"
+#: src/Controller/IndexController.php:74
+#, php-format
+msgid "Importing from Zotero. %s"
+msgstr "Importando desde Zotero. %s"
+
+#: src/Controller/IndexController.php:85
+#, php-format
+msgid "Error when requesting Zotero library: %s"
+msgstr "Error al solicitar la librería de Zotero: %s"
+
+#: src/Controller/IndexController.php:140
+msgid "Undoing Zotero import"
+msgstr "Deshacer la importación de Zotero"

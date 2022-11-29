@@ -2,108 +2,114 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
+# Translators:
+# Rubén Alcaraz Martínez <rubenalcarazmartinez@gmail.com>, 2022
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-11-29 12:53-0500\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2017-09-14 20:17+0000\n"
+"Last-Translator: Rubén Alcaraz Martínez <rubenalcarazmartinez@gmail.com>, 2022\n"
+"Language-Team: Catalan (Spain) (https://www.transifex.com/omeka/teams/14184/ca_ES/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: ca_ES\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: src/Controller/IndexController.php:78
 msgid "Import another?"
-msgstr ""
+msgstr "Voleu importar un altre?"
 
 #: view/zotero-import/index/browse.phtml:1
 msgid "Past Zotero Imports"
-msgstr ""
+msgstr "Importacions anteriors"
 
 #: view/zotero-import/index/browse.phtml:8
 msgid "There are no Zotero imports."
-msgstr ""
+msgstr "No hi ha cap importació."
 
 #: view/zotero-import/index/browse.phtml:16
 #: view/zotero-import/index/undo-confirm.phtml:5
 msgid "Zotero Library"
-msgstr ""
+msgstr "Biblioteca de Zotero"
 
 #: view/zotero-import/index/browse.phtml:17
 #: view/zotero-import/index/undo-confirm.phtml:7
 msgid "Items Added Before"
-msgstr ""
+msgstr "Recursos afegits amb anterioritat"
 
 #: view/zotero-import/index/browse.phtml:18
 #: view/zotero-import/index/undo-confirm.phtml:9
 msgid "Job Status"
-msgstr ""
+msgstr "Estat de la importació"
 
 #: view/zotero-import/index/browse.phtml:19
 msgid "Item Count"
-msgstr ""
+msgstr "Registres"
 
 #: view/zotero-import/index/browse.phtml:40
 #: view/zotero-import/index/browse.phtml:41
 msgid "Undo import"
-msgstr ""
+msgstr "Desfés la importació"
 
 #: view/zotero-import/index/browse.phtml:54
 #, php-format
 msgid "Import %s"
-msgstr ""
+msgstr "Importa %s"
 
 #: view/zotero-import/index/browse.phtml:57
 #, php-format
 msgid "Undo Import %s"
-msgstr ""
+msgstr "Desfés la importació %s"
 
 #: view/zotero-import/index/import.phtml:2
 msgid "Import from Zotero"
-msgstr ""
+msgstr "Importa des del Zotero"
 
 #: view/zotero-import/index/undo-confirm.phtml:2
 msgid "Undo Import"
-msgstr ""
+msgstr "Desfés la importació"
 
 #: view/zotero-import/index/undo-confirm.phtml:3
 msgid ""
 "Are you sure you would like to undo this import? This will delete all "
 "imported items."
 msgstr ""
+"Esteu segurs que voleu desfer la importació? Això suprimirà tots els "
+"registres importats."
 
 #: config/module.config.php:32
 msgid "Zotero Import"
-msgstr ""
+msgstr "Zotero Import"
 
 #: config/module.config.php:43
 msgid "Past Imports"
-msgstr ""
+msgstr "Importacions anteriors"
 
 #: src/Form/ImportForm.php:17
 msgid "Import into"
-msgstr ""
+msgstr "Importa a"
 
 #: src/Form/ImportForm.php:18
 msgid "Required. Import items into this item set."
-msgstr ""
+msgstr "Obligatori. Importa registres en aquest conjunt de recursos."
 
 #: src/Form/ImportForm.php:33
 msgid "Library Type"
-msgstr ""
+msgstr "Tipus de Biblioteca"
 
 #: src/Form/ImportForm.php:34
 msgid "Required. Is this a user or group library?"
-msgstr ""
+msgstr "Obligatori. És un usuario o biblioteca de grup?"
 
 #: src/Form/ImportForm.php:49
 msgid "Library ID"
-msgstr ""
+msgstr "ID de la biblioteca"
 
 #: src/Form/ImportForm.php:50
 msgid ""
@@ -111,59 +117,67 @@ msgid ""
 "Zotero settings page. The group ID can be found on the Zotero group library "
 "page by looking at the URL of \"Subscribe to this feed\"."
 msgstr ""
+"Requerit. L'ID d'usuari es pot trobar a la secció \"Feeds/API\" dins la "
+"pàgina de configuració del Zotero. L'ID del grup es pot trobar a la pàgina "
+"de la biblioteca del grup del Zotero dins de l'URL que es genera amb l'opció"
+" \"Subscribe to this feed\"."
 
 #: src/Form/ImportForm.php:62
 msgid "Collection Key"
-msgstr ""
+msgstr "Clau de la col·lecció"
 
 #: src/Form/ImportForm.php:63
 msgid ""
 "Not required. The collection key can be found on the Zotero library page by "
 "looking at the URL when looking at the collection."
 msgstr ""
+"No es requereix. La clau de la col·lecció es pot trobar a la pàgina de la "
+"biblioteca del Zotero dins l'URL de la col·lecció."
 
 #: src/Form/ImportForm.php:74
 msgid "API Key"
-msgstr ""
+msgstr "Clau API"
 
 #: src/Form/ImportForm.php:75
 msgid "Required for non-public libraries and file import."
-msgstr ""
+msgstr "Requerit per a les biblioteques privades i la importació de fitxers."
 
 #: src/Form/ImportForm.php:86
 msgid "Import Files"
-msgstr ""
+msgstr "Importa els fitxers"
 
 #: src/Form/ImportForm.php:87
 msgid "The API key is required to import files."
-msgstr ""
+msgstr "La clau API és necessària per importar registres."
 
 #: src/Form/ImportForm.php:99
 msgid "Added after"
-msgstr ""
+msgstr "Afegeix després"
 
 #: src/Form/ImportForm.php:100
 msgid "Only import items that have been added to Zotero after this datetime."
-msgstr ""
+msgstr "Importa només els registres afegits al Zotero després d'aquesta data."
 
 #: src/Form/ImportForm.php:178
 msgid "An API key is required to import files."
-msgstr ""
+msgstr "La clau API és necessària per importar registres."
 
 #: src/Controller/IndexController.php:57
 msgid "Cannot import the Zotero library using the provided API key"
 msgstr ""
+"No s'ha pogut importar la biblioteca des del Zotero amb la clau API "
+"proporcionada."
 
 #: src/Controller/IndexController.php:74
 #, php-format
 msgid "Importing from Zotero. %s"
-msgstr ""
+msgstr "Important des del Zotero. %s"
 
 #: src/Controller/IndexController.php:85
 #, php-format
 msgid "Error when requesting Zotero library: %s"
-msgstr ""
+msgstr "S'ha produït un error en la connexió a la biblioteca del Zotero: %s"
 
 #: src/Controller/IndexController.php:140
 msgid "Undoing Zotero import"
-msgstr ""
+msgstr "Desfés de la importació"

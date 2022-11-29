@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-01 16:43-0400\n"
+"POT-Creation-Date: 2022-11-29 12:53-0500\n"
 "PO-Revision-Date: 2017-09-14 20:17+0000\n"
 "Last-Translator: Naosuke Okamoto, 2018\n"
 "Language-Team: Japanese (https://www.transifex.com/omeka/teams/14184/ja/)\n"
@@ -81,23 +81,13 @@ msgid ""
 "imported items."
 msgstr "このインポートを元に戻してもよろしいですか？ インポートされたすべてのアイテムが削除されます。"
 
-#: src/Controller/IndexController.php:57
-msgid "Cannot import the Zotero library using the provided API key"
-msgstr "提供されたAPIキーを使用してZoteroライブラリをインポートできません"
+#: config/module.config.php:32
+msgid "Zotero Import"
+msgstr "Zotero（引用管理）インポート"
 
-#: src/Controller/IndexController.php:74
-#, php-format
-msgid "Importing from Zotero. %s"
-msgstr "Zoteroからインポート中。 %s"
-
-#: src/Controller/IndexController.php:85
-#, php-format
-msgid "Error when requesting Zotero library: %s"
-msgstr "Zoteroライブラリをリクエストした際のエラー： %s"
-
-#: src/Controller/IndexController.php:140
-msgid "Undoing Zotero import"
-msgstr "Zoteroインポートを元に戻しています"
+#: config/module.config.php:43
+msgid "Past Imports"
+msgstr "過去のインポート"
 
 #: src/Form/ImportForm.php:17
 msgid "Import into"
@@ -164,14 +154,24 @@ msgstr "後で追加"
 msgid "Only import items that have been added to Zotero after this datetime."
 msgstr "この日時の後にZoteroに追加されたアイテムのみをインポートします。"
 
-#: src/Form/ImportForm.php:177
+#: src/Form/ImportForm.php:178
 msgid "An API key is required to import files."
 msgstr "ファイルをインポートするには、APIキーが必要です。"
 
-#: config/module.config.php:32
-msgid "Zotero Import"
-msgstr "Zotero（引用管理）インポート"
+#: src/Controller/IndexController.php:57
+msgid "Cannot import the Zotero library using the provided API key"
+msgstr "提供されたAPIキーを使用してZoteroライブラリをインポートできません"
 
-#: config/module.config.php:43
-msgid "Past Imports"
-msgstr "過去のインポート"
+#: src/Controller/IndexController.php:74
+#, php-format
+msgid "Importing from Zotero. %s"
+msgstr "Zoteroからインポート中。 %s"
+
+#: src/Controller/IndexController.php:85
+#, php-format
+msgid "Error when requesting Zotero library: %s"
+msgstr "Zoteroライブラリをリクエストした際のエラー： %s"
+
+#: src/Controller/IndexController.php:140
+msgid "Undoing Zotero import"
+msgstr "Zoteroインポートを元に戻しています"
