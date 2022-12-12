@@ -4,7 +4,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Josip Ilic <josip.ilic@ericsson.com>, 2021
+# Iametza Interaktiboa, 2022
 # 
 #, fuzzy
 msgid ""
@@ -13,103 +13,103 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-12 16:31-0500\n"
 "PO-Revision-Date: 2017-09-14 20:17+0000\n"
-"Last-Translator: Josip Ilic <josip.ilic@ericsson.com>, 2021\n"
-"Language-Team: Croatian (https://www.transifex.com/omeka/teams/14184/hr/)\n"
+"Last-Translator: Iametza Interaktiboa, 2022\n"
+"Language-Team: Basque (https://www.transifex.com/omeka/teams/14184/eu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: hr\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Language: eu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: src/Controller/IndexController.php:78
 msgid "Import another?"
-msgstr "Uvedi još?"
+msgstr "Inportatu beste bat?"
 
 #: view/zotero-import/index/browse.phtml:1
 msgid "Past Zotero Imports"
-msgstr "Prošli Zotero Uvozi"
+msgstr "Aurreko Zoter Inportazioak"
 
 #: view/zotero-import/index/browse.phtml:8
 msgid "There are no Zotero imports."
-msgstr "Nema Zotero uvoza."
+msgstr "Ez dago Zotero inportaziorik."
 
 #: view/zotero-import/index/browse.phtml:16
 #: view/zotero-import/index/undo-confirm.phtml:5
 msgid "Zotero Library"
-msgstr "Zotero Zbirka"
+msgstr "Zotero Liburutegia"
 
 #: view/zotero-import/index/browse.phtml:17
 #: view/zotero-import/index/undo-confirm.phtml:7
 msgid "Items Added Before"
-msgstr "Predmeti Dodani Prije"
+msgstr "Aurretiaz Gehitutako Elementuak"
 
 #: view/zotero-import/index/browse.phtml:18
 #: view/zotero-import/index/undo-confirm.phtml:9
 msgid "Job Status"
-msgstr "Status Posla"
+msgstr "Lanaren Egoera"
 
 #: view/zotero-import/index/browse.phtml:19
 msgid "Item Count"
-msgstr "Broj Predmeta"
+msgstr "Elementu Kopurua"
 
 #: view/zotero-import/index/browse.phtml:40
 #: view/zotero-import/index/browse.phtml:41
 msgid "Undo import"
-msgstr "Poništi uvoz"
+msgstr "Desegin inportazioa"
 
 #: view/zotero-import/index/browse.phtml:54
 #, php-format
 msgid "Import %s"
-msgstr "Uvedi %s"
+msgstr "%s inportatu"
 
 #: view/zotero-import/index/browse.phtml:57
 #, php-format
 msgid "Undo Import %s"
-msgstr "Poništi Uvoz %s"
+msgstr "Desegin %s inportazioa"
 
 #: view/zotero-import/index/import.phtml:2
 msgid "Import from Zotero"
-msgstr "Uvedi iz Zotera"
+msgstr "Zotero bidez inportatu"
 
 #: view/zotero-import/index/undo-confirm.phtml:2
 msgid "Undo Import"
-msgstr "Poništi Uvoz"
+msgstr "Desegin Inportazioa"
 
 #: view/zotero-import/index/undo-confirm.phtml:3
 msgid ""
 "Are you sure you would like to undo this import? This will delete all "
 "imported items."
 msgstr ""
-"Jeste li sigurni da biste htjeli poništiti ovaj uvoz. Ovo će izbrisati sve "
-"uvezene predmete."
+"Ziur zaude inportazio hau desegin nahi duzula? Honek inportatutako elementu "
+"guztiak ezabatuko ditu."
 
 #: config/module.config.php:32
 msgid "Zotero Import"
-msgstr "Zotero Uvoz"
+msgstr "Zotero Inportazioak"
 
 #: config/module.config.php:43
 msgid "Past Imports"
-msgstr "Prošli Uvozi"
+msgstr "Aurreko Inportazioak"
 
 #: src/Form/ImportForm.php:17
 msgid "Import into"
-msgstr "Uvedi u"
+msgstr "Hemen inportatu"
 
 #: src/Form/ImportForm.php:18
 msgid "Required. Import items into this item set."
-msgstr "Potrebno. Uvezi predmete u ovaj set predmeta."
+msgstr "Beharrezkoa. Elementu multzo honetan inportatu elementuak."
 
 #: src/Form/ImportForm.php:33
 msgid "Library Type"
-msgstr "Vrsta Zbirke"
+msgstr "Liburutegi Mota"
 
 #: src/Form/ImportForm.php:34
 msgid "Required. Is this a user or group library?"
-msgstr "Potrebno. Je li ovo korisnik ili zbirka grupa?"
+msgstr "Beharrezkoa. Erabiltzaile edo talde liburutegia da?"
 
 #: src/Form/ImportForm.php:49
 msgid "Library ID"
-msgstr "ID Zbirke"
+msgstr "Liburutegi IDa"
 
 #: src/Form/ImportForm.php:50
 msgid ""
@@ -117,64 +117,66 @@ msgid ""
 "Zotero settings page. The group ID can be found on the Zotero group library "
 "page by looking at the URL of \"Subscribe to this feed\"."
 msgstr ""
-"Potrebno. ID korisnika se može pronaći u \"Feeds/API\" odjeljku na Zotero "
-"stranici postavki. ID grupe se može pronaći na Zotero stranici zbirke grupa "
-"tako da se pogleda URL \"Pretplatite se na ovaj feed\"."
+"Derrigorrezkoa. Erabiltzaile IDa Zotero ezarpen orriko \"Jarioak/API\" "
+"zatian aurkitu daiteke. Talde IDa Zotero talde liburutegi orrialdean aurkitu"
+" daiteke \"Jario honetara harpidetu\" URLan begiratuz."
 
 #: src/Form/ImportForm.php:62
 msgid "Collection Key"
-msgstr "Ključ Kolekcije"
+msgstr "Bilduma Giltza"
 
 #: src/Form/ImportForm.php:63
 msgid ""
 "Not required. The collection key can be found on the Zotero library page by "
 "looking at the URL when looking at the collection."
 msgstr ""
-"Nije potrebno. Ključ kolekcije se može pronaći na stranici Zotero zbirke "
-"tako da se pogleda URL kada budete gledali u kolekciju."
+"Hautazkoa. Bilduma giltza Zotero liburutegi orriko URL helbidean aurkitu "
+"daiteke bilduma bat errebisatzean."
 
 #: src/Form/ImportForm.php:74
 msgid "API Key"
-msgstr "Ključ API-a"
+msgstr "API Giltza"
 
 #: src/Form/ImportForm.php:75
 msgid "Required for non-public libraries and file import."
-msgstr "Potrebno za nejavne zbirke i uvoze datoteka."
+msgstr "Beharrezkoa publiko ez diren liburutegi eta fitxategi inportaziorako."
 
 #: src/Form/ImportForm.php:86
 msgid "Import Files"
-msgstr "Uvedi Datoteke"
+msgstr "Inportatu Fitxategiak"
 
 #: src/Form/ImportForm.php:87
 msgid "The API key is required to import files."
-msgstr "API ključ je potreban za uvoz datoteka."
+msgstr "API giltza beharrezkoa da fitxategiak inportatzeko."
 
 #: src/Form/ImportForm.php:99
 msgid "Added after"
-msgstr "Dodano nakon"
+msgstr "Gehitu ondoren"
 
 #: src/Form/ImportForm.php:100
 msgid "Only import items that have been added to Zotero after this datetime."
-msgstr "Samo uvezi predmete koji su dodani u Zotero nakon ovog datuma."
+msgstr ""
+"Zoterora data ordu hau baino beranduago gehitu diren elementuak bakarrik "
+"inportatu."
 
 #: src/Form/ImportForm.php:178
 msgid "An API key is required to import files."
-msgstr "API ključ je potreban za uvoz datoteka."
+msgstr "API giltza beharrezkoa da fitxategiak inportatzeko."
 
 #: src/Controller/IndexController.php:57
 msgid "Cannot import the Zotero library using the provided API key"
-msgstr "Zotero zbirka se ne može uvesti s pruženim API ključem"
+msgstr "Ezin da Zotero liburutegia inportatu adierazitako API giltza erabiliz"
 
 #: src/Controller/IndexController.php:74
 #, php-format
 msgid "Importing from Zotero. %s"
-msgstr "Uvoženje iz Zotera. %s"
+msgstr "Zotero bidez inportatzen. %s"
 
 #: src/Controller/IndexController.php:85
 #, php-format
 msgid "Error when requesting Zotero library: %s"
-msgstr "Greška prilikom zahtijeva Zotero zbirke: %s"
+msgstr "Errorea Zotero liburutegia eskatzean: %s"
 
 #: src/Controller/IndexController.php:140
 msgid "Undoing Zotero import"
-msgstr "Poništavanje Zotero uvoza"
+msgstr "Zotero inportazioa desegiten"
