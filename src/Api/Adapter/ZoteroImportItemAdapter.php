@@ -49,5 +49,11 @@ class ZoteroImportItemAdapter extends AbstractEntityAdapter
                 $this->createNamedParameter($qb, $query['import_id']))
             );
         }
+        if (isset($query['zoteroKey'])) {
+            $qb->andWhere($qb->expr()->eq(
+                'omeka_root.zoteroKey',
+                $this->createNamedParameter($qb, $query['zoteroKey']))
+            );
+        }
     }
 }
