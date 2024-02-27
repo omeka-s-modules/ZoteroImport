@@ -160,6 +160,10 @@ class Import extends AbstractJob
                     // that the timezone must be UTC.
                     continue;
                 }
+                $itemAlreadyImported = $api->search('zotero_import_items', ['zoteroKey' => $zItem['key']])->getContent()[0];
+                if ($this->getArg('matchingPoint', 1) && $itemAlreadyImported) {
+                    $zItem['oId'] = $itemAlreadyImported->item()->id();
+                }
 
                 // Unset unneeded data to save memory.
                 unset($zItem['library']);
@@ -179,6 +183,7 @@ class Import extends AbstractJob
         // Map Zotero items to Omeka items. Pass by reference so PHP doesn't
         // create a copy of the array, saving memory.
         $oItems = [];
+        $oItemsToUpdate = [];
         foreach ($zParentItems as $zParentItemKey => &$zParentItem) {
             $oItem = [];
             $oItem['o:item_set'] = [['o:id' => $itemSet->id()]];
@@ -192,7 +197,12 @@ class Import extends AbstractJob
                     $oItem = $this->mapAttachment($zChildItem, $oItem);
                 }
             }
-            $oItems[$zParentItemKey] = $oItem;
+            if ($zParentItem['oId']) {
+                $oItemsToUpdate[$zParentItem['oId']] = $oItem;
+                $oItemsToUpdate[$zParentItem['oId']]['zKey'] = $zParentItemKey;
+            } else {
+                $oItems[$zParentItemKey] = $oItem;
+            }
             // Unset unneeded data to save memory.
             unset($zParentItems[$zParentItemKey]);
         }
@@ -218,6 +228,23 @@ class Import extends AbstractJob
             // memory during batch create.
             $api->batchCreate('zotero_import_items', $importItems, [], ['continueOnError' => true]);
         }
+        // Batch update Omeka items.
+        $updatedImportItems = [];
+        if (!empty($oItemsToUpdate)) {
+            foreach ($oItemsToUpdate as $oId => $oItem) {
+                if ($this->shouldStop()) {
+                    return;
+                }
+                $api->update('items', $oId, $oItem, [], ['continueOnError' => true, 'collectionAction' => 'replace']);
+                $updatedImportItems[] = [
+                    'o:item' => ['o:id' => $oId],
+                    'o-module-zotero_import:import' => ['o:id' => $importId],
+                    'o-module-zotero_import:zotero_key' => $oItem['zKey'],
+                ];
+            }
+            $api->batchCreate('zotero_import_items', $updatedImportItems, [], ['continueOnError' => true]);
+        }
+
     }
 
     /**

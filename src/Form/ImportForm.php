@@ -105,6 +105,18 @@ class ImportForm extends Form
             ],
         ]);
 
+        $this->add([
+            'name' => 'matchingPoint',
+            'type' => Element\Checkbox::class,
+            'options' => [
+                'label' => 'Matching point', // @translate
+                'info' => 'If this box is checked, a check will be performed on zotero key to avoid duplicates.', // @translate
+            ],
+            'attributes' => [
+                'id' => 'matching-point',
+            ],
+        ]);
+
         $inputFilter = $this->getInputFilter();
 
         $inputFilter->add([
