@@ -4,10 +4,6 @@ Import items from Zotero to Omeka S
 
 See the [Omeka S user manual](http://omeka.org/s/docs/user-manual/modules/zoteroimport/) for user documentation.
 
-## Installation
-
-See general end user documentation for [Installing a module](http://omeka.org/s/docs/user-manual/modules/#installing-modules)
-
 # Copyright
 
 ZoteroImport is Copyright © 2015-present Corporation for Digital Scholarship, Vienna, Virginia, USA http://digitalscholar.org
